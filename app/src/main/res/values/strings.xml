@@ -1,3 +1,53 @@
 <resources>
     <string name="app_name">FindIt@TLU</string>
+    <!-- Màn hình Đăng nhập -->
+    <string name="logo_description">Logo Trường Đại học Thủy Lợi</string>
+    <string name="app_title">Tìm đồ thất lạc TLU</string>
+    <string name="email_hint">Email trường đại học Thủy Lợi</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="login_button">Đăng nhập</string>
+    <string name="no_account_prompt">Bạn chưa có tài khoản ?</string>
+    <string name="register_now">Đăng ký ngay</string>
+    <string name="forgot_password">Quên mật khẩu ?</string>
+    <string name="divider">|</string>
+    <string name="title_activity_login">Đăng nhập sadasfaf</string>
+    <string name="welcome">Xin chào</string>
+    <string name="login_failed">Đăng nhập thất bại</string>
+    <string name="invalid_username">Email không đuợc để trống</string>
+    <string name="invalid_password">Mật khẩu không được để trống</string>
+    <!-- Strings for Login screen -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_search">Tìm kiếm</string>
+    <string name="nav_post">Đăng tin</string>
+    <string name="nav_notifications">Thông báo</string>
+    <string name="nav_profile">Cá nhân</string>
+    <!--Màn hình Đăng tin-->
+    <string name="post_button">Đăng tin</string>
+    <string name="show_my_phone">Hiển thị số điện thoại của tôi</string>
+    <string name="show_my_email">Hiển thị email của tôi</string>
+    <string name="contact_information">Thông tin liên hệ</string>
+    <string name="selected_image_description">Ảnh đã chọn</string>
+    <string name="remove_image_button">Xóa ảnh này</string>
+    <string name="post_item_title">Đăng tin đồ vật</string>
+    <string name="select_post_type">Chọn loại tin đăng</string>
+    <string name="lost_item">Mất đồ</string>
+    <string name="found_item">Nhặt đồ</string>
+    <string name="item_information">Thông tin đồ vật</string>
+    <string name="title_label">Tiêu đề tin*</string>
+    <string name="title_hint_vd">VD: Nhặt được ví màu đen ở thư viện</string>
+    <string name="description_label">Mô tả chi tiết*</string>
+    <string name="description_hint_vd">Mô tả chi tiết về đồ vật (đặc điểm, nhãn hiệu, tình trạng…), hoàn cảnh mất/tìm thấy.</string>
+    <string name="category_label">Danh mục đồ vật*</string>
+    <string name="location_label">Địa điểm*</string>
+    <string name="location_hint_vd">VD: Sân C1, Nhà ăn, Thư viện tầng 3…</string>
+    <string name="date_label">Ngày mất/nhặt được*</string>
+    <string name="date_hint">Chọn ngày</string>
+    <string name="add_image_icon_desc">Biểu tượng thêm ảnh</string>
+    <string name="add_images_optional">Thêm hình ảnh (Tùy chọn)</string>
+    <string name="tap_to_add_images">Nhấn để thêm ảnh (Tối đa 3 ảnh)</string>
 </resources>
