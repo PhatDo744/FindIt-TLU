@@ -1,15 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Default screen margins -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Bottom Navigation -->
+    <dimen name="bottom_nav_height">56dp</dimen>
     
-    <!-- Login screen dimensions -->
-    <dimen name="logo_margin_top">48dp</dimen>
+    <!-- Profile Image Sizes -->
+    <dimen name="profile_avatar_size">80dp</dimen>
+    <dimen name="edit_profile_avatar_size">120dp</dimen>
     
-    <!-- Common dimensions -->
-    <dimen name="standard_margin">16dp</dimen>
-    <dimen name="small_margin">8dp</dimen>
-    <dimen name="large_margin">24dp</dimen>
-    <dimen name="extra_large_margin">32dp</dimen>
+    <!-- Common spacing -->
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">24dp</dimen>
+    
+    <!-- Minimum touch target size -->
+    <dimen name="min_touch_target_size">48dp</dimen>
+    
+    <!-- Text sizes -->
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_xlarge">18sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_large">20dp</dimen>
+
+    <!-- Kích thước chữ -->
+    <dimen name="title_text_size">18sp</dimen>
+    <dimen name="body_text_size">16sp</dimen>
+    <dimen name="caption_text_size">14sp</dimen>
+
+    <!-- CardView -->
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
 </resources>

@@ -17,4 +17,13 @@
     <color name="border_grey">#E0E0E0</color>
     <color name="input_background_grey">#F5F5F5</color>
     <color name="section_title_blue">#004E95</color>
+    <color name="logout_red">#E53935</color>
+
+    <!-- Các màu nền và viền -->
+    <color name="background_gray">#F5F5F5</color>
+    <color name="divider_color">#F0F0F0</color>
+    <color name="ripple_gray">#1f757575</color>
+
+    <color name="primary_blue_light">#BBDEFB</color>
+    <color name="tlu_info">#2196F3</color>
 </resources>

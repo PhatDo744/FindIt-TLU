@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">FindIt@TLU</string>
+
     <!-- Màn hình Đăng nhập -->
     <string name="logo_description">Logo Trường Đại học Thủy Lợi</string>
     <string name="app_title">Tìm đồ thất lạc TLU</string>
@@ -10,31 +11,28 @@
     <string name="register_now">Đăng ký ngay</string>
     <string name="forgot_password">Quên mật khẩu ?</string>
     <string name="divider">|</string>
-    <string name="title_activity_login">Đăng nhập sadasfaf</string>
+    <string name="title_activity_login">Đăng nhập</string>
     <string name="welcome">Xin chào</string>
     <string name="login_failed">Đăng nhập thất bại</string>
     <string name="invalid_username">Email không đuợc để trống</string>
     <string name="invalid_password">Mật khẩu không được để trống</string>
-    <!-- Strings for Login screen -->
+
+    <!-- Strings mặc định cho các màn hình lớn -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+
     <!-- Bottom Navigation -->
     <string name="nav_home">Trang chủ</string>
     <string name="nav_search">Tìm kiếm</string>
     <string name="nav_post">Đăng tin</string>
     <string name="nav_notifications">Thông báo</string>
     <string name="nav_profile">Cá nhân</string>
-    <!--Màn hình Đăng tin-->
-    <string name="post_button">Đăng tin</string>
-    <string name="show_my_phone">Hiển thị số điện thoại của tôi</string>
-    <string name="show_my_email">Hiển thị email của tôi</string>
-    <string name="contact_information">Thông tin liên hệ</string>
-    <string name="selected_image_description">Ảnh đã chọn</string>
-    <string name="remove_image_button">Xóa ảnh này</string>
+
+    <!-- Màn hình Đăng tin -->
     <string name="post_item_title">Đăng tin đồ vật</string>
-    <string name="select_post_type">Chọn loại tin đăng</string>
+    <string name="select_post_type">Chọn loại tin đăng*</string>
     <string name="lost_item">Mất đồ</string>
     <string name="found_item">Nhặt đồ</string>
     <string name="item_information">Thông tin đồ vật</string>
@@ -45,9 +43,55 @@
     <string name="category_label">Danh mục đồ vật*</string>
     <string name="location_label">Địa điểm*</string>
     <string name="location_hint_vd">VD: Sân C1, Nhà ăn, Thư viện tầng 3…</string>
-    <string name="date_label">Ngày mất/nhặt được*</string>
+    <string name="date_label">Ngày*</string>
+    <string name="date_lost_label">Ngày mất*</string>
+    <string name="date_found_label">Ngày nhặt được*</string>
     <string name="date_hint">Chọn ngày</string>
-    <string name="add_image_icon_desc">Biểu tượng thêm ảnh</string>
     <string name="add_images_optional">Thêm hình ảnh (Tùy chọn)</string>
     <string name="tap_to_add_images">Nhấn để thêm ảnh (Tối đa 3 ảnh)</string>
+    <string name="add_image_icon_desc">Biểu tượng thêm ảnh</string>
+    <string name="selected_image_description">Ảnh đã chọn</string>
+    <string name="remove_image_button">Xóa ảnh này</string>
+    <string name="contact_information">Thông tin liên hệ</string>
+    <string name="show_my_email">Hiển thị email của tôi</string>
+    <string name="show_my_phone">Hiển thị số điện thoại của tôi</string>
+    <string name="post_button">Đăng tin</string>
+
+    <!-- Màn hình Chỉnh sửa thông tin cá nhân -->
+    <string name="title_edit_profile">Thông tin cá nhân</string>
+    <string name="change_avatar">Thay đổi ảnh đại diện</string>
+    <string name="change_avatar_desc">Thay đổi ảnh đại diện</string>
+    <string name="section_basic_info">Thông tin cơ bản</string>
+    <string name="hint_full_name">Họ và tên</string>
+    <string name="hint_student_id">Mã số sinh viên</string>
+    <string name="helper_student_id_uneditable">Mã số sinh viên không thể thay đổi</string>
+    <string name="section_contact_info">Thông tin liên hệ</string>
+    <string name="hint_phone_number">Số điện thoại</string>
+    <string name="hint_email">Email</string>
+    <string name="button_save_changes">Lưu thay đổi</string>
+    <string name="button_cancel">Hủy bỏ</string>
+
+    <!-- Màn hình Trang cá nhân -->
+    <string name="title_profile">Trang cá nhân</string>
+    <string name="edit_profile_desc">Chỉnh sửa hồ sơ</string>
+    <string name="section_manage_account">QUẢN LÝ TÀI KHOẢN</string>
+    <string name="option_personal_info">Thông tin cá nhân</string>
+    <string name="option_my_posts">Tin đăng của tôi</string>
+    <string name="section_support">HỖ TRỢ &amp; PHẢN HỒI</string>
+    <string name="option_help">Trợ giúp</string>
+    <string name="option_policy">Chính sách và quy định</string>
+    <string name="option_logout">Đăng xuất</string>
+
+    <string name="title_my_posts">Tin đăng của tôi</string>
+    <string name="hint_search_item">Tìm kiếm đồ vật...</string>
+    <string name="item_image_desc">Hình ảnh đồ vật</string>
+
+    <string name="action_edit">Sửa</string>
+    <string name="action_delete">Xóa</string>
+    <string name="action_complete">Đã xong</string>
+
+    <string name="tab_all">Tất cả</string>
+    <string name="tab_searching">Tìm kiếm</string>
+    <string name="tab_found">Tìm thấy</string>
+    <string name="tab_completed">Đã xong</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.example.findittlu;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,8 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,12 +26,11 @@ import java.util.Locale;
 
 public class PostItemActivity extends AppCompatActivity {
 
-    private EditText dateEditText;
+    private EditText dateEditText, titleEditText;
     private Spinner categorySpinner;
     private TextView dateLabelTextView;
-    private EditText titleEditText;
     private MaterialButton lostItemButton, foundItemButton;
-    private boolean isFoundSelected = true; // Bắt đầu với "Nhặt đồ" được chọn
+    private boolean isFoundSelected = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,7 @@ public class PostItemActivity extends AppCompatActivity {
         setupToolbar();
 
         // Thiết lập Bottom Navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.navigation_post);
+        setupBottomNavigation();
 
         // Thiết lập các listener và UI ban đầu
         setupDatePicker();
@@ -53,9 +54,9 @@ public class PostItemActivity extends AppCompatActivity {
 
     private void initViews() {
         dateEditText = findViewById(R.id.dateEditText);
+        titleEditText = findViewById(R.id.titleEditText);
         categorySpinner = findViewById(R.id.categorySpinner);
         dateLabelTextView = findViewById(R.id.dateLabelTextView);
-        titleEditText = findViewById(R.id.titleEditText);
         lostItemButton = findViewById(R.id.lostItemButton);
         foundItemButton = findViewById(R.id.foundItemButton);
     }
@@ -69,6 +70,32 @@ public class PostItemActivity extends AppCompatActivity {
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
+
+    // ================== PHẦN ĐƯỢC CẬP NHẬT ==================
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        // Đánh dấu mục hiện tại là "Đăng tin"
+        bottomNavigationView.setSelectedItemId(R.id.navigation_post);
+
+        // Lắng nghe sự kiện click trên thanh điều hướng
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.navigation_profile) {
+                // Nếu nhấn vào "Cá nhân", chuyển sang ProfileActivity
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                // Xóa hiệu ứng chuyển cảnh mặc định
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            // Thêm các trường hợp khác nếu cần (ví dụ: Trang chủ, Tìm kiếm...)
+            // else if (itemId == R.id.navigation_home) { ... }
+
+            // Nếu nhấn vào mục hiện tại, không làm gì cả
+            return itemId == R.id.navigation_post;
+        });
+    }
+    // =======================================================
+
 
     private void setupDatePicker() {
         dateEditText.setOnClickListener(v -> {
@@ -117,7 +144,6 @@ public class PostItemActivity extends AppCompatActivity {
     }
 
     private void setupPostTypeButtons() {
-        // Thiết lập trạng thái ban đầu
         updateButtonSelection();
 
         lostItemButton.setOnClickListener(v -> {
@@ -136,19 +162,16 @@ public class PostItemActivity extends AppCompatActivity {
     }
 
     private void updateButtonSelection() {
-        // Chỉ cần cập nhật trạng thái selected, XML selectors sẽ tự động xử lý giao diện
         foundItemButton.setSelected(isFoundSelected);
         lostItemButton.setSelected(!isFoundSelected);
         updateHintsAndLabels();
     }
 
     private void updateHintsAndLabels() {
-        if (!isFoundSelected) { // Tức là Mất đồ được chọn
-            dateLabelTextView.setText("Ngày mất*");
-            titleEditText.setHint("VD: Mất ví màu đen gần thư viện");
-        } else { // Tức là Nhặt đồ được chọn
-            dateLabelTextView.setText("Ngày nhặt được*");
-            titleEditText.setHint("VD: Nhặt được ví màu đen ở thư viện");
+        if (!isFoundSelected) {
+            dateLabelTextView.setText(getString(R.string.date_lost_label));
+        } else {
+            dateLabelTextView.setText(getString(R.string.date_found_label));
         }
     }
 }
