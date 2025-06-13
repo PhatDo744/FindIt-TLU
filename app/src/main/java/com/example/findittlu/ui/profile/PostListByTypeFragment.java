@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.findittlu.R;
-import com.example.findittlu.ui.common.adapter.MyPostsAdapter;
+import com.example.findittlu.ui.profile.adapter.MyPostsAdapter;
 
 import java.util.ArrayList;
 
@@ -54,8 +54,25 @@ public class PostListByTypeFragment extends Fragment {
         adapter = new MyPostsAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        viewModel.getPostsByType(postType).observe(getViewLifecycleOwner(), posts -> {
-            adapter.updateData(posts);
+        // Lấy userId từ đâu đó (ví dụ từ SharedPreferences hoặc ViewModel)
+        long userId = 1; // TODO: Thay bằng userId thực tế
+        viewModel.getMyPosts(userId).observe(getViewLifecycleOwner(), posts -> {
+            if (posts != null) {
+                if ("ALL".equals(postType)) {
+                    adapter.updateData(posts);
+                } else {
+                    java.util.List<com.example.findittlu.data.model.Post> filtered = new java.util.ArrayList<>();
+                    for (com.example.findittlu.data.model.Post p : posts) {
+                        if (postType.equalsIgnoreCase(p.getStatus())) {
+                            filtered.add(p);
+                        }
+                    }
+                    adapter.updateData(filtered);
+                }
+            } else {
+                android.widget.Toast.makeText(getContext(), "Lỗi API hoặc thiếu userId. Vui lòng kiểm tra lại!", android.widget.Toast.LENGTH_LONG).show();
+                if (getActivity() != null) getActivity().onBackPressed();
+            }
         });
     }
 } 

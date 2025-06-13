@@ -1,4 +1,4 @@
-package com.example.findittlu.ui.common.adapter;
+package com.example.findittlu.ui.profile.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

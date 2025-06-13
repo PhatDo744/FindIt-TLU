@@ -4,6 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.findittlu.data.model.Post;
+import com.example.findittlu.data.api.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +41,6 @@ public class PostRepository {
         return data;
     }
 
-    public void createPost(Post post) {
-        // Giả lập việc thêm bài đăng mới vào danh sách
-        allPosts.add(0, post); // Thêm vào đầu danh sách
-    }
-
     private void createDummyData() {
         allPosts = new ArrayList<>();
         allPosts.add(new Post("Mất thẻ sinh viên khu giảng đường A2", "Ngày đăng: 22/05/2025", "SEARCHING"));
@@ -49,5 +48,75 @@ public class PostRepository {
         allPosts.add(new Post("Tìm thấy chìa khóa xe máy gần nhà xe C1", "Ngày đăng: 20/05/2025", "FOUND"));
         allPosts.add(new Post("Đã tìm lại được ví ở căng tin", "Ngày đăng: 19/05/2025", "COMPLETED"));
         allPosts.add(new Post("Mất sách Giải tích 1 tại phòng tự học B101", "Ngày đăng: 18/05/2025", "SEARCHING"));
+    }
+
+    // Lấy danh sách tin đăng của user từ API
+    public LiveData<List<Post>> getPostsFromApi(long userId) {
+        MutableLiveData<List<Post>> data = new MutableLiveData<>();
+        RetrofitClient.getApiService().getMyPosts(userId).enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                if (response.isSuccessful()) {
+                    data.setValue(response.body());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                data.setValue(null);
+            }
+        });
+        return data;
+    }
+
+    // Tạo mới tin đăng
+    public LiveData<Post> createPost(Post post) {
+        MutableLiveData<Post> data = new MutableLiveData<>();
+        RetrofitClient.getApiService().createPost(post).enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    data.setValue(response.body());
+                }
+            }
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                data.setValue(null);
+            }
+        });
+        return data;
+    }
+
+    // Sửa tin đăng
+    public LiveData<Post> updatePost(long id, Post post) {
+        MutableLiveData<Post> data = new MutableLiveData<>();
+        RetrofitClient.getApiService().updatePost(id, post).enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    data.setValue(response.body());
+                }
+            }
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                data.setValue(null);
+            }
+        });
+        return data;
+    }
+
+    // Xóa tin đăng
+    public LiveData<Boolean> deletePost(long id) {
+        MutableLiveData<Boolean> data = new MutableLiveData<>();
+        RetrofitClient.getApiService().deletePost(id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                data.setValue(response.isSuccessful());
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                data.setValue(false);
+            }
+        });
+        return data;
     }
 }

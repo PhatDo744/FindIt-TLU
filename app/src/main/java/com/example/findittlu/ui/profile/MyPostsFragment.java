@@ -14,8 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.example.findittlu.R;
-import com.example.findittlu.ui.common.adapter.MyPostsViewPagerAdapter;
+import com.example.findittlu.ui.profile.adapter.MyPostsViewPagerAdapter;
 import com.example.findittlu.databinding.ActivityMyPostsBinding;
 import com.google.android.material.tabs.TabLayoutMediator;
 

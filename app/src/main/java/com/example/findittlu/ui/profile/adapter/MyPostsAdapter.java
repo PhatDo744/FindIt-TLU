@@ -1,4 +1,4 @@
-package com.example.findittlu.ui.common.adapter;
+package com.example.findittlu.ui.profile.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.findittlu.R;
 import com.example.findittlu.data.model.Post;
 import com.google.android.material.button.MaterialButton;
+import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
@@ -39,6 +40,26 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
             holder.titleTextView.setText(post.getTitle());
             holder.dateTextView.setText(post.getDate());
             holder.statusChip.setText(post.getStatusText());
+
+            // Set màu và nền cho trạng thái
+            switch (post.getStatus().toUpperCase()) {
+                case "SEARCHING":
+                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.lost_red));
+                    holder.statusChip.setBackgroundResource(R.drawable.status_searching_background);
+                    break;
+                case "FOUND":
+                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.found_green));
+                    holder.statusChip.setBackgroundResource(R.drawable.status_found_background);
+                    break;
+                case "COMPLETED":
+                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary));
+                    holder.statusChip.setBackgroundResource(R.drawable.status_completed_background);
+                    break;
+                default:
+                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_primary));
+                    holder.statusChip.setBackgroundResource(0);
+            }
+
             // Hiển thị nút theo trạng thái
             if (post.getStatus().equalsIgnoreCase("COMPLETED")) {
                 holder.deleteButton.setVisibility(View.VISIBLE);

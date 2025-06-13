@@ -1,5 +1,7 @@
 package com.example.findittlu.ui.profile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,10 +74,11 @@ public class ProfileFragment extends Fragment {
             navController.navigate(R.id.action_profileFragment_to_helpFragment);
         });
         logout.setOnClickListener(v -> {
-            // Xử lý logic đăng xuất ở đây
-            Toast.makeText(getContext(), "Đăng xuất", Toast.LENGTH_SHORT).show();
-            // Ví dụ: điều hướng về màn hình đăng nhập
-            // navController.navigate(R.id.action_profileFragment_to_loginFragment);
+            // Xử lý logic đăng xuất
+            SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+            prefs.edit().clear().apply();
+            Toast.makeText(getContext(), "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+            navController.navigate(R.id.loginFragment);
         });
     }
 } 
