@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_gray"
-    tools:context=".ProfileActivity">
+    tools:context=".ui.activity.ProfileActivity">
 
     <!-- Thanh tiêu đề (App Bar) -->
     <com.google.android.material.appbar.AppBarLayout

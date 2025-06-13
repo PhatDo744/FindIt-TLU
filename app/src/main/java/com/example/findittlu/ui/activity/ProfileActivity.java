@@ -1,4 +1,4 @@
-package com.example.findittlu;
+package com.example.findittlu.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.findittlu.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -52,13 +53,28 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setupMenuItems() {
         TextView personalInfo = findViewById(R.id.personalInfoTextView);
+        TextView myPosts = findViewById(R.id.myPostsTextView);
         TextView logout = findViewById(R.id.logoutTextView);
+        TextView policy = findViewById(R.id.policyTextView);
+        TextView help = findViewById(R.id.helpTextView);
 
         personalInfo.setOnClickListener(v -> {
             // Chuyển sang màn hình Chỉnh sửa thông tin cá nhân
             startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
         });
-
+        myPosts.setOnClickListener(v -> {
+            // Chuyển sang màn hình Tin đăng của tôi
+            Intent intent = new Intent(ProfileActivity.this, MyPostsActivity.class);
+            startActivity(intent);
+        });
+        policy.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, PolicyActivity.class);
+            startActivity(intent);
+        });
+        help.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, HelpActivity.class);
+            startActivity(intent);
+        });
         logout.setOnClickListener(v -> {
             // Xử lý logic đăng xuất ở đây
             Toast.makeText(this, "Đăng xuất", Toast.LENGTH_SHORT).show();

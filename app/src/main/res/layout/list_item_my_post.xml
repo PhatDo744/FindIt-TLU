@@ -51,17 +51,17 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"/>
 
+            <!-- Action Buttons (UPDATED) -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/itemStatusChip"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Chip.Suggestion"
-                app:chipBackgroundColor="@color/lost_red_light"
-                tools:text="Đang tìm"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/lost_red"
-                android:layout_marginTop="8dp"/>
+                app:chipBackgroundColor="@color/lost_red_light"
+                tools:text="Đang tìm" />
 
-            <!-- Action Buttons (UPDATED) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -13,16 +13,25 @@
         android:theme="@style/Theme.FindItTLU"
         tools:targetApi="31">
         <activity
-            android:name=".ProfileActivity"
+            android:name=".ui.activity.HelpActivity"
             android:exported="false" />
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".ui.activity.PolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".PostItemActivity"
+            android:name=".ui.activity.MyPostsActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.PostItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

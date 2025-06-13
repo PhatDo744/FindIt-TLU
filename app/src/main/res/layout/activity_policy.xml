@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.activity.PolicyActivity">
+
+    <!-- Thanh tiêu đề (App Bar) -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_blue"
+        app:liftOnScroll="false">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/option_policy"
+            app:titleTextColor="@color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Nội dung có thể cuộn -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_large">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/policy_last_updated"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="italic" />
+
+            <!-- Mục 1: Điều khoản sử dụng -->
+            <TextView
+                style="@style/PolicySectionTitle"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/policy_section_1_title" />
+
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="@string/policy_s1_p1" />
+
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/policy_s1_p2" />
+
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/policy_s1_p3" />
+
+            <!-- Mục 2: Quy định đăng tin -->
+            <TextView
+                style="@style/PolicySectionTitle"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:text="@string/policy_section_2_title" />
+
+            <TextView
+                style="@style/PolicySectionContent.Bold"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="@string/policy_s2_intro" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="vertical">
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s2_rule1" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s2_rule2" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s2_rule3" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s2_rule4" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s2_rule5" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s2_rule6" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/policy_s2_conclusion" />
+
+            <!-- Mục 3: Chính sách bảo mật -->
+            <TextView
+                style="@style/PolicySectionTitle"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:text="@string/policy_section_3_title" />
+
+            <TextView
+                style="@style/PolicySectionContent.Bold"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="@string/policy_s3_collect_title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="vertical">
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_collect_item1" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_collect_item2" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_collect_item3" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/PolicySectionContent.Bold"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/policy_s3_use_title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="vertical">
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_use_item1" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_use_item2" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_use_item3" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_use_item4" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/PolicySectionContent.Bold"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/policy_s3_protect_title" />
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="@string/policy_s3_protect_content" />
+
+            <TextView
+                style="@style/PolicySectionContent.Bold"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:text="@string/policy_s3_share_title" />
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="@string/policy_s3_share_intro" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="vertical">
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_share_item1" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_share_item2" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s3_share_item3" />
+            </LinearLayout>
+
+            <!-- Mục 4: Quy trình giải quyết tranh chấp -->
+            <TextView
+                style="@style/PolicySectionTitle"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:text="@string/policy_section_4_title" />
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="@string/policy_s4_intro" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="vertical">
+                <TextView style="@style/PolicyListItem.Ordered" android:text="@string/policy_s4_step1" />
+                <TextView style="@style/PolicyListItem.Ordered" android:text="@string/policy_s4_step2" />
+                <TextView style="@style/PolicyListItem.Ordered" android:text="@string/policy_s4_step3" />
+                <TextView style="@style/PolicyListItem.Ordered" android:text="@string/policy_s4_step4" />
+                <TextView style="@style/PolicyListItem.Ordered" android:text="@string/policy_s4_step5" />
+            </LinearLayout>
+
+            <!-- Mục 5: Liên hệ -->
+            <TextView
+                style="@style/PolicySectionTitle"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:text="@string/policy_section_5_title" />
+            <TextView
+                style="@style/PolicySectionContent"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="@string/policy_s5_intro" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:orientation="vertical">
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s5_contact1" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s5_contact2" />
+                <TextView style="@style/PolicyListItem" android:text="@string/policy_s5_contact3" />
+            </LinearLayout>
+
+            <!-- Khoảng trống để không bị che bởi Bottom Nav -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Thanh điều hướng dưới cùng -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        style="@style/CustomBottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
