@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.activity.EditProfileActivity">
+    tools:context=".ui.profile.EditProfileFragment">
 
     <!-- Thanh tiêu đề (App Bar) -->
     <com.google.android.material.appbar.AppBarLayout
@@ -41,8 +41,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="16dp"
-            android:clipToPadding="false"
-            android:paddingBottom="30dp">
+            android:clipToPadding="false">
 
             <!-- Phần ảnh đại diện -->
             <com.google.android.material.imageview.ShapeableImageView
@@ -167,7 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
@@ -194,13 +193,4 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        style="@style/CustomBottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_gray"
-    tools:context=".ui.activity.ProfileActivity">
+    tools:context=".ui.profile.ProfileFragment">
 
     <!-- Thanh tiêu đề (App Bar) -->
     <com.google.android.material.appbar.AppBarLayout
@@ -18,7 +18,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="match_parent"
             app:title="@string/title_profile"
             app:titleTextColor="@color/white" />
 
@@ -31,190 +31,180 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </androidx.core.widget.NestedScrollView>
-
-    <!-- Thanh điều hướng dưới cùng -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        style="@style/CustomBottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_anchor="@+id/nestedScrollView"
-        app:layout_anchorGravity="center">
-
-        <!-- Card thông tin người dùng -->
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- Card thông tin người dùng -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="16dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/avatarImageView"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@color/input_background_grey"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                    tools:src="@drawable/ic_person" />
-
-                <ImageView
-                    android:id="@+id/editIcon"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:contentDescription="@string/edit_profile_desc"
-                    android:src="@drawable/ic_edit_circle"
-                    app:layout_constraintBottom_toBottomOf="@+id/avatarImageView"
-                    app:layout_constraintEnd_toEndOf="@+id/avatarImageView" />
-
-                <TextView
-                    android:id="@+id/userNameTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Nguyễn Văn A"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/avatarImageView"
-                    app:layout_constraintTop_toTopOf="@+id/avatarImageView" />
-
-                <TextView
-                    android:id="@+id/joinDateTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Thành viên từ 05/2025"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/avatarImageView"
-                    app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
-                    app:layout_constraintStart_toStartOf="@+id/userNameTextView" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Nhóm Quản lý tài khoản -->
-        <TextView
-            style="@style/ProfileSectionHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/section_manage_account" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/personalInfoTextView"
-                    style="@style/ProfileMenuItem"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/option_personal_info"
-                    app:drawableEndCompat="@drawable/ic_arrow_forward"
-                    app:drawableStartCompat="@drawable/ic_person" />
+                    android:background="@color/white"
+                    android:padding="16dp">
 
-                <View style="@style/Divider" />
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/avatarImageView"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@color/input_background_grey"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                        tools:src="@drawable/ic_person" />
 
-                <TextView
-                    android:id="@+id/myPostsTextView"
-                    style="@style/ProfileMenuItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_my_posts"
-                    app:drawableEndCompat="@drawable/ic_arrow_forward"
-                    app:drawableStartCompat="@drawable/ic_my_posts" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:id="@+id/editIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:contentDescription="@string/edit_profile_desc"
+                        android:src="@drawable/ic_edit_circle"
+                        app:layout_constraintBottom_toBottomOf="@+id/avatarImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/avatarImageView" />
 
-        <!-- Nhóm Hỗ trợ & Phản hồi -->
-        <TextView
-            style="@style/ProfileSectionHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/section_support" />
+                    <TextView
+                        android:id="@+id/userNameTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Nguyễn Văn A"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/avatarImageView"
+                        app:layout_constraintTop_toTopOf="@+id/avatarImageView" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+                    <TextView
+                        android:id="@+id/joinDateTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Thành viên từ 05/2025"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/avatarImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
+                        app:layout_constraintStart_toStartOf="@+id/userNameTextView" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/helpTextView"
-                    style="@style/ProfileMenuItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_help"
-                    app:drawableEndCompat="@drawable/ic_arrow_forward"
-                    app:drawableStartCompat="@drawable/ic_help" />
-
-                <View style="@style/Divider" />
-
-                <TextView
-                    android:id="@+id/policyTextView"
-                    style="@style/ProfileMenuItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_policy"
-                    app:drawableEndCompat="@drawable/ic_arrow_forward"
-                    app:drawableStartCompat="@drawable/ic_policy" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Nút Đăng xuất -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="80dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
-
+            <!-- Nhóm Quản lý tài khoản -->
             <TextView
-                android:id="@+id/logoutTextView"
-                style="@style/ProfileMenuItem"
+                style="@style/ProfileSectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_manage_account" />
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:text="@string/option_logout"
-                android:textColor="@color/lost_red"
-                app:drawableStartCompat="@drawable/ic_logout"
-                app:drawableTint="@color/lost_red" />
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
 
-        </com.google.android.material.card.MaterialCardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/personalInfoTextView"
+                        style="@style/ProfileMenuItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_personal_info"
+                        app:drawableEndCompat="@drawable/ic_arrow_forward"
+                        app:drawableStartCompat="@drawable/ic_person" />
+
+                    <View style="@style/Divider" />
+
+                    <TextView
+                        android:id="@+id/myPostsTextView"
+                        style="@style/ProfileMenuItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_my_posts"
+                        app:drawableEndCompat="@drawable/ic_arrow_forward"
+                        app:drawableStartCompat="@drawable/ic_my_posts" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Nhóm Hỗ trợ & Phản hồi -->
+            <TextView
+                style="@style/ProfileSectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_support" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/helpTextView"
+                        style="@style/ProfileMenuItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_help"
+                        app:drawableEndCompat="@drawable/ic_arrow_forward"
+                        app:drawableStartCompat="@drawable/ic_help" />
+
+                    <View style="@style/Divider" />
+
+                    <TextView
+                        android:id="@+id/policyTextView"
+                        style="@style/ProfileMenuItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_policy"
+                        app:drawableEndCompat="@drawable/ic_arrow_forward"
+                        app:drawableStartCompat="@drawable/ic_policy" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Nút Đăng xuất -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <TextView
+                    android:id="@+id/logoutTextView"
+                    style="@style/ProfileMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="@string/option_logout"
+                    android:textColor="@color/lost_red"
+                    app:drawableStartCompat="@drawable/ic_logout"
+                    app:drawableTint="@color/lost_red" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

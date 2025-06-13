@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_gray"
-    tools:context=".ui.activity.MyPostsActivity">
+    tools:context=".ui.profile.MyPostsFragment">
 
     <!-- Thanh ứng dụng (App Bar) bao gồm Toolbar, thanh tìm kiếm và Tabs -->
     <com.google.android.material.appbar.AppBarLayout
@@ -87,15 +87,5 @@
         android:layout_height="match_parent"
         android:background="@color/ripple_gray"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <!-- Thanh điều hướng dưới cùng -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        style="@style/CustomBottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

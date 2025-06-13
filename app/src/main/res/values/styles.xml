@@ -74,7 +74,6 @@
         <item name="strokeColor">@color/background_gray</item>
         <item name="strokeWidth">1dp</item>
     </style>
-
     <style name="CustomBottomNavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <!-- Đặt màu của chỉ báo thành trong suốt để ẩn nó đi -->
         <item name="android:color">@android:color/transparent</item>
