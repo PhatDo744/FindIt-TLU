@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class PostRepository {
     private List<Post> allPosts;
+    public static final boolean USE_REAL_API = false; // true: gọi API, false: giả lập
 
     public PostRepository() {
         // Khởi tạo dữ liệu mẫu
@@ -50,21 +51,26 @@ public class PostRepository {
         allPosts.add(new Post("Mất sách Giải tích 1 tại phòng tự học B101", "Ngày đăng: 18/05/2025", "SEARCHING"));
     }
 
-    // Lấy danh sách tin đăng của user từ API
+    // Lấy danh sách tin đăng của user từ API hoặc giả lập
     public LiveData<List<Post>> getPostsFromApi(long userId) {
         MutableLiveData<List<Post>> data = new MutableLiveData<>();
-        RetrofitClient.getApiService().getMyPosts(userId).enqueue(new Callback<List<Post>>() {
-            @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                if (response.isSuccessful()) {
-                    data.setValue(response.body());
+        if (USE_REAL_API) {
+            RetrofitClient.getApiService().getMyPosts(userId).enqueue(new Callback<List<Post>>() {
+                @Override
+                public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                    if (response.isSuccessful()) {
+                        data.setValue(response.body());
+                    }
                 }
-            }
-            @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
-                data.setValue(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Post>> call, Throwable t) {
+                    data.setValue(null);
+                }
+            });
+        } else {
+            // Giả lập: lọc dummy data theo userId (nếu cần)
+            data.setValue(allPosts); // hoặc lọc theo userId nếu muốn
+        }
         return data;
     }
 
