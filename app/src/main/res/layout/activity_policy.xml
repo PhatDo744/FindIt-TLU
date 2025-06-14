@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.activity.PolicyActivity">
+    tools:context=".ui.common.PolicyFragment">
 
     <!-- Thanh tiêu đề (App Bar) -->
     <com.google.android.material.appbar.AppBarLayout
@@ -29,14 +29,14 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_large">
+            android:padding="@dimen/spacing_large"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -199,22 +199,7 @@
                 <TextView style="@style/PolicyListItem" android:text="@string/policy_s5_contact3" />
             </LinearLayout>
 
-            <!-- Khoảng trống để không bị che bởi Bottom Nav -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!-- Thanh điều hướng dưới cùng -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        style="@style/CustomBottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

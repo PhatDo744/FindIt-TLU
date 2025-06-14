@@ -8,18 +8,20 @@
     android:background="@color/white">
 
     <!-- Logo trường đại học -->
+
+    <!-- Tiêu đề ứng dụng -->
     <ImageView
         android:id="@+id/logoImageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         android:contentDescription="@string/logo_description"
         android:src="@drawable/tlu_logo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Tiêu đề ứng dụng -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
@@ -69,25 +71,36 @@
         app:layout_constraintStart_toStartOf="@+id/emailEditText"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
-        <!-- Nút Đăng nhập -->
     <!-- Nút Đăng nhập -->
+
+    <!-- Layout chứa các link đăng ký và quên mật khẩu -->
+
+    <CheckBox
+        android:id="@+id/rememberEmailCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Ghi nhớ email"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintStart_toStartOf="@+id/passwordEditText"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginTop="24dp"
-        app:backgroundTint="@color/primary_blue"
+        android:layout_marginTop="52dp"
         android:text="@string/login_button"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:backgroundTint="@color/primary_blue"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="@+id/passwordEditText"
         app:layout_constraintStart_toStartOf="@+id/passwordEditText"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
-    <!-- Layout chứa các link đăng ký và quên mật khẩu -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

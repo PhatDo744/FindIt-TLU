@@ -11,16 +11,18 @@ import java.util.List;
 import android.content.Context;
 
 import com.example.findittlu.R;
-import com.example.findittlu.ui.activity.DetailActivity;
+import com.example.findittlu.ui.common.DetailFragment;
 
 public class LostFoundItemAdapter extends RecyclerView.Adapter<LostFoundItemAdapter.LostFoundItemViewHolder> {
 
     private List<LostFoundItem> itemList;
     private Context context;
+    private androidx.fragment.app.Fragment fragment;
 
-    public LostFoundItemAdapter(Context context, List<LostFoundItem> itemList) {
-        this.context = context;
+    public LostFoundItemAdapter(androidx.fragment.app.Fragment fragment, List<LostFoundItem> itemList) {
+        this.fragment = fragment;
         this.itemList = itemList;
+        this.context = fragment.requireContext();
     }
 
     @NonNull
@@ -50,13 +52,14 @@ public class LostFoundItemAdapter extends RecyclerView.Adapter<LostFoundItemAdap
 
         // Sự kiện click mở chi tiết
         holder.itemView.setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(context, DetailActivity.class);
-            intent.putExtra("title", item.getTitle());
-            intent.putExtra("location", item.getLocation());
-            intent.putExtra("date", item.getDate());
-            intent.putExtra("isLost", item.isLost());
-            intent.putExtra("imageRes", item.getImageUrl());
-            context.startActivity(intent);
+            android.os.Bundle args = new android.os.Bundle();
+            args.putString("title", item.getTitle());
+            args.putString("location", item.getLocation());
+            args.putString("date", item.getDate());
+            args.putBoolean("isLost", item.isLost());
+            args.putInt("imageRes", item.getImageUrl());
+            androidx.navigation.NavController navController = androidx.navigation.Navigation.findNavController(holder.itemView);
+            navController.navigate(com.example.findittlu.R.id.detailFragment, args);
         });
     }
 

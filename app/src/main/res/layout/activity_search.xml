@@ -4,12 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-
-    tools:context=".ui.activity.SearchActivity">
+    android:background="@color/white">
 
     <!-- Header -->
     <com.google.android.material.appbar.AppBarLayout
+        app:liftOnScroll="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary_blue">
@@ -219,14 +218,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        style="@style/CustomBottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout> 

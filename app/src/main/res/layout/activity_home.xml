@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_gray"
-    tools:context=".ui.activity.HomeActivity">
+    android:background="@color/background_gray">
 
     <!-- AppBar custom với logo, tiêu đề lớn, tiêu đề phụ, menu -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:liftOnScroll="false"
         android:background="@color/primary_blue">
 
         <LinearLayout
@@ -55,14 +55,7 @@
                     android:alpha="0.8" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/menu_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_menu"
-                android:tint="@color/white"
-                android:contentDescription="Menu" />
+
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -200,14 +193,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        style="@style/CustomBottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

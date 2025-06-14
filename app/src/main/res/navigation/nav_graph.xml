@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <!-- Main Destinations (for BottomNavigationView) -->
+    <fragment
+        android:id="@+id/homeFragment2"
+        android:name="com.example.findittlu.ui.home.HomeFragment"
+        android:label="fragment_home2"
+        tools:layout="@layout/activity_home" />
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.example.findittlu.ui.post.CreatePostFragment"
+        android:label="fragment_create_post"
+        tools:layout="@layout/activity_post_item" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.findittlu.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/activity_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_myPostsFragment"
+            app:destination="@id/myPostsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_policyFragment"
+            app:destination="@id/policyFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
+    </fragment>
+
+    <!-- Other Destinations -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.findittlu.ui.auth.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.findittlu.ui.auth.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/activity_register" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.findittlu.ui.profile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/activity_edit_profile" />
+    <fragment
+        android:id="@+id/myPostsFragment"
+        android:name="com.example.findittlu.ui.profile.MyPostsFragment"
+        android:label="fragment_my_posts"
+        tools:layout="@layout/activity_my_posts" />
+    <fragment
+        android:id="@+id/policyFragment"
+        android:name="com.example.findittlu.ui.common.PolicyFragment"
+        android:label="fragment_policy"
+        tools:layout="@layout/activity_policy" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.example.findittlu.ui.common.HelpFragment"
+        android:label="fragment_help"
+        tools:layout="@layout/activity_help" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.findittlu.ui.common.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/activity_detail" />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.findittlu.ui.common.NotificationsFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/activity_notifications" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.findittlu.ui.common.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/activity_search" />
+
+</navigation> 

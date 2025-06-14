@@ -43,9 +43,24 @@ dependencies {
     implementation(libs.annotation)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
+
+    // AndroidX Navigation Component
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+    implementation(libs.navigation.runtime.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.material.v150)
     implementation(libs.circleimageview)
+    // Retrofit
+    implementation(libs.retrofit)
+// Converter Gson cho Retrofit
+    implementation(libs.converter.gson)
+// OkHttp (nếu cần logging)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+// Nếu dùng LiveData adapter cho Retrofit (không bắt buộc)
+    implementation(libs.adapter.rxjava2)
 }
