@@ -71,14 +71,14 @@ public class MyPostsActivity extends AppCompatActivity {
             if (itemId == R.id.navigation_home) {
                 // TODO: Thay thế bằng Intent để mở HomeActivity
                 Toast.makeText(this, "Chuyển đến Trang chủ", Toast.LENGTH_SHORT).show();
-                // startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                // overridePendingTransition(0, 0);
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.navigation_search) {
                 // TODO: Thay thế bằng Intent để mở SearchActivity
                 Toast.makeText(this, "Chuyển đến Tìm kiếm", Toast.LENGTH_SHORT).show();
-                // startActivity(new Intent(getApplicationContext(), SearchActivity.class));
-                // overridePendingTransition(0, 0);
+                 startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                 overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.navigation_post) {
                 startActivity(new Intent(getApplicationContext(), PostItemActivity.class));
@@ -87,8 +87,8 @@ public class MyPostsActivity extends AppCompatActivity {
             } else if (itemId == R.id.navigation_notifications) {
                 // TODO: Thay thế bằng Intent để mở NotificationsActivity
                 Toast.makeText(this, "Chuyển đến Thông báo", Toast.LENGTH_SHORT).show();
-                // startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
-                // overridePendingTransition(0, 0);
+                 startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                 overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.navigation_profile) {
                 // Chuyển về màn hình Profile chính khi nhấn vào mục này.

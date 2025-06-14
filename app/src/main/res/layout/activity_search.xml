@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+
+    tools:context=".ui.activity.SearchActivity">
+
+    <!-- Header -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_blue">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:title="Tìm kiếm đồ vật"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        android:paddingBottom="72dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="0dp">
+
+            <!-- Thanh tìm kiếm -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_search_box">
+
+                    <EditText
+                        android:id="@+id/searchEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Nhập tên đồ vật cần tìm..."
+                        android:background="@android:color/transparent"
+                        android:padding="8dp"
+
+                        android:textSize="16sp" />
+
+                    <ImageButton
+                        android:id="@+id/searchButton"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_search_button"
+                        android:contentDescription="Tìm kiếm"
+                        android:src="@drawable/ic_search"
+                        android:tint="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Bộ lọc trạng thái -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trạng thái"
+                android:textColor="#BDBDBD"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="0dp" />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStatusAll"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tất cả"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/text_secondary"
+                        app:strokeColor="@color/divider_color" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStatusLost"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đã mất"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/text_secondary"
+                        app:strokeColor="@color/divider_color" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStatusFound"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đã tìm thấy"
+                        android:textColor="@color/text_secondary"
+                        app:strokeColor="@color/divider_color" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Bộ lọc danh mục -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Danh mục"
+                android:textColor="#BDBDBD"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="0dp" />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCategoryAll"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tất cả"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/text_secondary"
+                        app:strokeColor="@color/divider_color" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCategoryElectronics"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đồ điện tử"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/text_secondary"
+                        app:strokeColor="@color/divider_color" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCategoryPaper"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giấy tờ"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/text_secondary"
+                        app:strokeColor="@color/divider_color" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCategoryWallet"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ví/Túi"
+                        android:textColor="@color/text_secondary"
+                        app:strokeColor="@color/divider_color" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Kết quả tìm kiếm -->
+            <TextView
+                android:id="@+id/tvResultCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tìm thấy 5 kết quả"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp" />
+
+            <!-- Danh sách kết quả -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchResultRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Nút xem thêm -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLoadMore"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Xem thêm kết quả"
+                android:textStyle="bold"
+                android:textColor="@color/primary_blue"
+                app:backgroundTint="@color/white"
+                app:strokeColor="@color/primary_blue"
+                app:strokeWidth="2dp"
+                app:cornerRadius="24dp"
+                android:layout_margin="16dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:gravity="center" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        style="@style/CustomBottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout> 
