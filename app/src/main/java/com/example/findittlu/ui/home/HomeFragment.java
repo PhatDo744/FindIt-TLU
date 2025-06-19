@@ -14,6 +14,10 @@ import com.example.findittlu.adapter.LostFoundItem;
 import com.example.findittlu.adapter.LostFoundItemAdapter;
 import com.google.android.material.button.MaterialButton;
 import android.widget.LinearLayout;
+import com.example.findittlu.data.model.Post;
+import com.example.findittlu.ui.profile.adapter.MyPostsAdapter;
+import com.example.findittlu.viewmodel.HomeViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,7 +36,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_home, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
@@ -95,4 +99,4 @@ public class HomeFragment extends Fragment {
         lostFoundItemAdapter = new LostFoundItemAdapter(this, filteredList);
         recentItemsRecyclerView.setAdapter(lostFoundItemAdapter);
     }
-} 
+}

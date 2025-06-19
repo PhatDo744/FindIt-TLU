@@ -73,6 +73,19 @@
                 tools:text="Đang tìm"
                 tools:textColor="@color/lost_red" />
 
+            <!-- Cảnh báo hết hạn -->
+            <TextView
+                android:id="@+id/expiryWarningTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/warning_orange"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="⚠️ Sắp hết hạn (còn 1 ngày)"
+                tools:visibility="visible" />
+
             <!-- Hàng chứa các nút hành động -->
             <LinearLayout
                 android:id="@+id/actionsLayout"

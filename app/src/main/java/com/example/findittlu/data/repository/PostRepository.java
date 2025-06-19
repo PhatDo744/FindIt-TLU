@@ -10,6 +10,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,30 +27,91 @@ public class PostRepository {
     // Giả lập việc lấy dữ liệu từ API hoặc DB
     public LiveData<List<Post>> getPosts() {
         MutableLiveData<List<Post>> data = new MutableLiveData<>();
-        data.setValue(allPosts);
+        // Lọc bỏ các bài đăng đã hết hạn
+        List<Post> activePosts = allPosts.stream()
+                                        .filter(p -> !p.isExpired())
+                                        .collect(Collectors.toList());
+        data.setValue(activePosts);
         return data;
     }
 
     public LiveData<List<Post>> getPostsByType(String type) {
         MutableLiveData<List<Post>> data = new MutableLiveData<>();
+        List<Post> filteredPosts;
+        
         if (type.equals("ALL")) {
-            data.setValue(allPosts);
+            filteredPosts = allPosts.stream()
+                                   .filter(p -> !p.isExpired())
+                                   .collect(Collectors.toList());
         } else {
-            List<Post> filteredPosts = allPosts.stream()
-                                               .filter(p -> p.getStatus().equalsIgnoreCase(type))
-                                               .collect(Collectors.toList());
-            data.setValue(filteredPosts);
+            filteredPosts = allPosts.stream()
+                                   .filter(p -> p.getStatus().equalsIgnoreCase(type) && !p.isExpired())
+                                   .collect(Collectors.toList());
         }
+        data.setValue(filteredPosts);
         return data;
     }
 
     private void createDummyData() {
         allPosts = new ArrayList<>();
-        allPosts.add(new Post("Mất thẻ sinh viên khu giảng đường A2", "Ngày đăng: 22/05/2025", "SEARCHING"));
-        allPosts.add(new Post("Nhặt được tai nghe Bluetooth màu trắng ở thư viện", "Ngày đăng: 21/05/2025", "FOUND"));
-        allPosts.add(new Post("Tìm thấy chìa khóa xe máy gần nhà xe C1", "Ngày đăng: 20/05/2025", "FOUND"));
-        allPosts.add(new Post("Đã tìm lại được ví ở căng tin", "Ngày đăng: 19/05/2025", "COMPLETED"));
-        allPosts.add(new Post("Mất sách Giải tích 1 tại phòng tự học B101", "Ngày đăng: 18/05/2025", "SEARCHING"));
+        
+        // Tạo các bài đăng mẫu với ngày hết hạn khác nhau
+        Calendar cal = Calendar.getInstance();
+        
+        // Bài đăng còn hạn
+        Post post1 = new Post();
+        post1.setTitle("Mất thẻ sinh viên khu giảng đường A2");
+        post1.setStatus("SEARCHING");
+        post1.setDateLostOrFound(new Date());
+        post1.setCreatedAt(new Date());
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, 10); // Còn 10 ngày
+        post1.setExpirationDate(cal.getTime());
+        allPosts.add(post1);
+        
+        // Bài đăng sắp hết hạn (còn 1 ngày)
+        Post post2 = new Post();
+        post2.setTitle("Nhặt được tai nghe Bluetooth màu trắng ở thư viện");
+        post2.setStatus("FOUND");
+        post2.setDateLostOrFound(new Date());
+        post2.setCreatedAt(new Date());
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, 1); // Còn 1 ngày
+        post2.setExpirationDate(cal.getTime());
+        allPosts.add(post2);
+        
+        // Bài đăng đã hết hạn (không hiển thị)
+        Post post3 = new Post();
+        post3.setTitle("Tìm thấy chìa khóa xe máy gần nhà xe C1");
+        post3.setStatus("FOUND");
+        post3.setDateLostOrFound(new Date());
+        post3.setCreatedAt(new Date());
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, -1); // Đã hết hạn
+        post3.setExpirationDate(cal.getTime());
+        allPosts.add(post3);
+        
+        // Bài đăng hoàn thành còn hạn
+        Post post4 = new Post();
+        post4.setTitle("Đã tìm lại được ví ở căng tin");
+        post4.setStatus("COMPLETED");
+        post4.setDateLostOrFound(new Date());
+        post4.setCreatedAt(new Date());
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, 5); // Còn 5 ngày
+        post4.setExpirationDate(cal.getTime());
+        allPosts.add(post4);
+        
+        // Bài đăng mới
+        Post post5 = new Post();
+        post5.setTitle("Mất sách Giải tích 1 tại phòng tự học B101");
+        post5.setStatus("SEARCHING");
+        post5.setDateLostOrFound(new Date());
+        post5.setCreatedAt(new Date());
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, 14); // Còn 14 ngày (mới tạo)
+        post5.setExpirationDate(cal.getTime());
+        allPosts.add(post5);
     }
 
     // Lấy danh sách tin đăng của user từ API hoặc giả lập
@@ -58,8 +121,12 @@ public class PostRepository {
             RetrofitClient.getApiService().getMyPosts(userId).enqueue(new Callback<List<Post>>() {
                 @Override
                 public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                    if (response.isSuccessful()) {
-                        data.setValue(response.body());
+                    if (response.isSuccessful() && response.body() != null) {
+                        // Lọc bỏ các bài đăng đã hết hạn từ API
+                        List<Post> activePosts = response.body().stream()
+                                                               .filter(p -> !p.isExpired())
+                                                               .collect(Collectors.toList());
+                        data.setValue(activePosts);
                     }
                 }
                 @Override
@@ -68,8 +135,11 @@ public class PostRepository {
                 }
             });
         } else {
-            // Giả lập: lọc dummy data theo userId (nếu cần)
-            data.setValue(allPosts); // hoặc lọc theo userId nếu muốn
+            // Giả lập: lọc dummy data theo userId (nếu cần) và lọc bài hết hạn
+            List<Post> userPosts = allPosts.stream()
+                                          .filter(p -> !p.isExpired())
+                                          .collect(Collectors.toList());
+            data.setValue(userPosts);
         }
         return data;
     }
@@ -77,18 +147,32 @@ public class PostRepository {
     // Tạo mới tin đăng
     public LiveData<Post> createPost(Post post) {
         MutableLiveData<Post> data = new MutableLiveData<>();
-        RetrofitClient.getApiService().createPost(post).enqueue(new Callback<Post>() {
-            @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
-                if (response.isSuccessful()) {
-                    data.setValue(response.body());
+        
+        // Đảm bảo set expiration date nếu chưa có
+        if (post.getExpirationDate() == null) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, 14);
+            post.setExpirationDate(cal.getTime());
+        }
+        
+        if (USE_REAL_API) {
+            RetrofitClient.getApiService().createPost(post).enqueue(new Callback<Post>() {
+                @Override
+                public void onResponse(Call<Post> call, Response<Post> response) {
+                    if (response.isSuccessful()) {
+                        data.setValue(response.body());
+                    }
                 }
-            }
-            @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-                data.setValue(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<Post> call, Throwable t) {
+                    data.setValue(null);
+                }
+            });
+        } else {
+            // Giả lập: thêm vào danh sách và trả về
+            allPosts.add(post);
+            data.setValue(post);
+        }
         return data;
     }
 

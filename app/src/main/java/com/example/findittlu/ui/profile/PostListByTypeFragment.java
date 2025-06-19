@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.findittlu.R;
 import com.example.findittlu.ui.profile.adapter.MyPostsAdapter;
+import com.example.findittlu.viewmodel.MyPostsViewModel;
 
 import java.util.ArrayList;
 

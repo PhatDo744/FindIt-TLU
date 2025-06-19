@@ -16,6 +16,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.findittlu.R;
+import com.example.findittlu.viewmodel.LoginViewModel;
 
 public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
@@ -29,12 +30,12 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_login, container, false);
 
-        // Kiểm tra nếu đã đăng nhập thì chuyển sang HomeFragment2
+        // Kiểm tra nếu đã đăng nhập thì chuyển sang HomeFragment
         SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         long userId = prefs.getLong("user_id", -1);
         if (userId != -1) {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-            navController.navigate(R.id.homeFragment2);
+            navController.navigate(R.id.homeFragment);
             return view;
         }
 
@@ -71,9 +72,9 @@ public class LoginFragment extends Fragment {
                         .putLong("user_id", response.getUser().getId())
                         .putString("token", response.getToken())
                         .apply();
-                    // Chuyển sang HomeFragment2
+                    // Chuyển sang HomeFragment
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                    navController.navigate(R.id.homeFragment2);
+                    navController.navigate(R.id.homeFragment);
                 } else {
                     Toast.makeText(getContext(), "Sai tài khoản hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
                 }

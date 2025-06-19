@@ -1,4 +1,4 @@
-package com.example.findittlu.ui.auth;
+package com.example.findittlu.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;

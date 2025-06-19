@@ -41,12 +41,22 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
             holder.dateTextView.setText(post.getDate());
             holder.statusChip.setText(post.getStatusText());
 
+            // Hiển thị cảnh báo nếu sắp hết hạn
+            if (post.isExpiringSoon()) {
+                holder.expiryWarningTextView.setVisibility(View.VISIBLE);
+                holder.expiryWarningTextView.setText("⚠️ Sắp hết hạn (còn " + post.getDaysUntilExpiration() + " ngày)");
+                holder.expiryWarningTextView.setTextColor(ContextCompat.getColor(context, R.color.warning_orange));
+            } else {
+                holder.expiryWarningTextView.setVisibility(View.GONE);
+            }
+
             // Set màu và nền cho trạng thái
             switch (post.getStatus().toUpperCase()) {
                 case "SEARCHING":
                     holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.lost_red));
                     holder.statusChip.setBackgroundResource(R.drawable.status_searching_background);
                     break;
+                case "HOLDING":
                 case "FOUND":
                     holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.found_green));
                     holder.statusChip.setBackgroundResource(R.drawable.status_found_background);
@@ -70,8 +80,15 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
                 holder.editButton.setVisibility(View.VISIBLE);
                 holder.completeButton.setVisibility(View.VISIBLE);
             }
-            // Lỗi tiềm ẩn: Model Post không có imageResource. Sẽ cần sửa sau.
-            // holder.imageView.setImageResource(post.getImageResource());
+            
+            // Xử lý hình ảnh nếu có
+            if (post.getImages() != null && !post.getImages().isEmpty()) {
+                // Load hình ảnh đầu tiên nếu có
+                // TODO: Sử dụng Glide/Picasso để load ảnh từ URL
+                holder.imageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.imageView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -89,6 +106,7 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
     public class PostViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView;
         public TextView dateTextView;
+        public TextView expiryWarningTextView;
         public com.google.android.material.textview.MaterialTextView statusChip;
         public ImageView imageView;
         public MaterialButton editButton, deleteButton, completeButton;
@@ -98,6 +116,7 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
             super(itemView);
             titleTextView = itemView.findViewById(R.id.itemTitleTextView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
+            expiryWarningTextView = itemView.findViewById(R.id.expiryWarningTextView);
             statusChip = itemView.findViewById(R.id.statusTextView);
             imageView = itemView.findViewById(R.id.itemImageView);
             editButton = itemView.findViewById(R.id.editButton);

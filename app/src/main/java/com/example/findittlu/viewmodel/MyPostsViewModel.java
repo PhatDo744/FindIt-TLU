@@ -1,4 +1,4 @@
-package com.example.findittlu.ui.profile;
+package com.example.findittlu.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -24,4 +24,4 @@ public class MyPostsViewModel extends ViewModel {
     public LiveData<Boolean> deletePost(long id) {
         return postRepository.deletePost(id);
     }
-}
+} 
