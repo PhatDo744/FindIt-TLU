@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.findittlu.data.model.Post;
 import com.example.findittlu.data.api.RetrofitClient;
+import com.example.findittlu.data.model.PostListResponse;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class PostRepository {
     private List<Post> allPosts;
-    public static final boolean USE_REAL_API = false; // true: gọi API, false: giả lập
+    public static final boolean USE_REAL_API = true; // true: gọi API, false: giả lập
 
     public PostRepository() {
         // Khởi tạo dữ liệu mẫu
@@ -118,19 +120,20 @@ public class PostRepository {
     public LiveData<List<Post>> getPostsFromApi(long userId) {
         MutableLiveData<List<Post>> data = new MutableLiveData<>();
         if (USE_REAL_API) {
-            RetrofitClient.getApiService().getMyPosts(userId).enqueue(new Callback<List<Post>>() {
+            RetrofitClient.getApiService().getMyPosts(userId).enqueue(new Callback<PostListResponse>() {
                 @Override
-                public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        // Lọc bỏ các bài đăng đã hết hạn từ API
-                        List<Post> activePosts = response.body().stream()
-                                                               .filter(p -> !p.isExpired())
-                                                               .collect(Collectors.toList());
+                public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        List<Post> activePosts = response.body().getData().stream()
+                            .filter(p -> !p.isExpired())
+                            .collect(Collectors.toList());
                         data.setValue(activePosts);
+                    } else {
+                        data.setValue(null);
                     }
                 }
                 @Override
-                public void onFailure(Call<List<Post>> call, Throwable t) {
+                public void onFailure(Call<PostListResponse> call, Throwable t) {
                     data.setValue(null);
                 }
             });
@@ -147,29 +150,34 @@ public class PostRepository {
     // Tạo mới tin đăng
     public LiveData<Post> createPost(Post post) {
         MutableLiveData<Post> data = new MutableLiveData<>();
-        
-        // Đảm bảo set expiration date nếu chưa có
         if (post.getExpirationDate() == null) {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, 14);
             post.setExpirationDate(cal.getTime());
         }
-        
         if (USE_REAL_API) {
             RetrofitClient.getApiService().createPost(post).enqueue(new Callback<Post>() {
                 @Override
                 public void onResponse(Call<Post> call, Response<Post> response) {
+                    android.util.Log.d("DEBUG_CreatePost", "onResponse: code=" + response.code() + ", body=" + response.body());
+                    if (!response.isSuccessful()) {
+                        try {
+                            android.util.Log.e("DEBUG_CreatePost", "errorBody: " + response.errorBody().string());
+                        } catch (Exception e) {
+                            android.util.Log.e("DEBUG_CreatePost", "errorBody: cannot parse", e);
+                        }
+                    }
                     if (response.isSuccessful()) {
                         data.setValue(response.body());
                     }
                 }
                 @Override
                 public void onFailure(Call<Post> call, Throwable t) {
+                    android.util.Log.e("DEBUG_CreatePost", "onFailure: " + t.getMessage(), t);
                     data.setValue(null);
                 }
             });
         } else {
-            // Giả lập: thêm vào danh sách và trả về
             allPosts.add(post);
             data.setValue(post);
         }
@@ -208,5 +216,33 @@ public class PostRepository {
             }
         });
         return data;
+    }
+
+    public interface PostsCallback {
+        void onResult(List<Post> data, boolean success);
+    }
+
+    public void fetchPostsFromApi(PostsCallback callback) {
+        if (USE_REAL_API) {
+            RetrofitClient.getApiService().getAllPosts(1, 20, null, null, null).enqueue(new Callback<PostListResponse>() {
+                @Override
+                public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                    android.util.Log.d("DEBUG_HomeAPI", "onResponse: code=" + response.code() + ", body=" + response.body());
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        callback.onResult(response.body().getData(), true);
+                    } else {
+                        android.util.Log.d("DEBUG_HomeAPI", "onResponse: response not successful or body null");
+                        callback.onResult(null, false);
+                    }
+                }
+                @Override
+                public void onFailure(Call<PostListResponse> call, Throwable t) {
+                    android.util.Log.e("DEBUG_HomeAPI", "onFailure: " + t.getMessage(), t);
+                    callback.onResult(null, false);
+                }
+            });
+        } else {
+            callback.onResult(allPosts, true);
+        }
     }
 }

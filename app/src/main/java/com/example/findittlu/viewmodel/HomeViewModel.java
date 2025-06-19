@@ -12,35 +12,42 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel {
     private PostRepository postRepository;
-    private LiveData<List<Post>> posts;
-    private LiveData<List<LostFoundItem>> postList;
+    private MutableLiveData<List<Post>> posts = new MutableLiveData<>();
+    private MutableLiveData<List<LostFoundItem>> postList = new MutableLiveData<>();
     private MutableLiveData<Boolean> isApiConnected = new MutableLiveData<>(true);
 
     public HomeViewModel() {
         postRepository = new PostRepository();
-        posts = postRepository.getPosts();
-        
-        // Transform Post objects to LostFoundItem objects
-        postList = Transformations.map(posts, postList -> {
-            List<LostFoundItem> items = new ArrayList<>();
-            if (postList != null) {
-                for (Post post : postList) {
-                    // Convert Post to LostFoundItem
-                    boolean isLost = "SEARCHING".equalsIgnoreCase(post.getStatus());
-                    String location = post.getLocationDescription() != null ? 
-                        post.getLocationDescription() : "Không xác định";
-                    
+    }
+
+    public void fetchPosts() {
+        postRepository.fetchPostsFromApi((data, success) -> {
+            isApiConnected.postValue(success);
+            if (success && data != null) {
+                posts.postValue(data);
+                // Convert sang LostFoundItem
+                List<LostFoundItem> items = new ArrayList<>();
+                for (Post post : data) {
+                    boolean isLost = "lost".equalsIgnoreCase(post.getItemType());
+                    String location = post.getLocationDescription() != null ? post.getLocationDescription() : "Không xác định";
+                    String date = "";
+                    if (post.getDateLostOrFound() != null) {
+                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                        date = sdf.format(post.getDateLostOrFound());
+                    }
                     LostFoundItem item = new LostFoundItem(
                         post.getTitle(),
                         location,
-                        post.getDate(),
+                        date,
                         isLost,
                         com.example.findittlu.R.drawable.image_placeholder_background
                     );
                     items.add(item);
                 }
+                postList.postValue(items);
+            } else {
+                postList.postValue(new ArrayList<>());
             }
-            return items;
         });
     }
 
@@ -54,12 +61,5 @@ public class HomeViewModel extends ViewModel {
     
     public LiveData<Boolean> getIsApiConnected() {
         return isApiConnected;
-    }
-    
-    // Phương thức này sẽ gọi repository để lấy dữ liệu thực
-    public void fetchPosts() {
-        // Trong tương lai, có thể gọi API thực tại đây
-        // Hiện tại PostRepository đã tự động load dữ liệu khi khởi tạo
-        isApiConnected.setValue(!PostRepository.USE_REAL_API);
     }
 } 

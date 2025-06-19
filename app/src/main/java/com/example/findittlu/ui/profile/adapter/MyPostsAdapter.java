@@ -36,10 +36,26 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = posts.get(position);
+        android.util.Log.d("DEBUG_Adapter", "Bind post: " + (post == null ? "null" : post.getTitle()));
         if (post != null) {
             holder.titleTextView.setText(post.getTitle());
             holder.dateTextView.setText(post.getDate());
-            holder.statusChip.setText(post.getStatusText());
+            String statusText = post.getStatusText();
+            holder.statusChip.setText(statusText);
+            // Đổi màu chữ và nền theo trạng thái
+            if ("Đang tìm".equals(statusText)) {
+                holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.lost_red));
+                holder.statusChip.setBackgroundResource(R.drawable.status_searching_background);
+            } else if ("Đang giữ".equals(statusText)) {
+                holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.found_green));
+                holder.statusChip.setBackgroundResource(R.drawable.status_found_background);
+            } else if ("Đã xong".equals(statusText)) {
+                holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary));
+                holder.statusChip.setBackgroundResource(R.drawable.status_completed_background);
+            } else {
+                holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_primary));
+                holder.statusChip.setBackgroundResource(0);
+            }
 
             // Hiển thị cảnh báo nếu sắp hết hạn
             if (post.isExpiringSoon()) {
@@ -48,26 +64,6 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
                 holder.expiryWarningTextView.setTextColor(ContextCompat.getColor(context, R.color.warning_orange));
             } else {
                 holder.expiryWarningTextView.setVisibility(View.GONE);
-            }
-
-            // Set màu và nền cho trạng thái
-            switch (post.getStatus().toUpperCase()) {
-                case "SEARCHING":
-                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.lost_red));
-                    holder.statusChip.setBackgroundResource(R.drawable.status_searching_background);
-                    break;
-                case "HOLDING":
-                case "FOUND":
-                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.found_green));
-                    holder.statusChip.setBackgroundResource(R.drawable.status_found_background);
-                    break;
-                case "COMPLETED":
-                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary));
-                    holder.statusChip.setBackgroundResource(R.drawable.status_completed_background);
-                    break;
-                default:
-                    holder.statusChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_primary));
-                    holder.statusChip.setBackgroundResource(0);
             }
 
             // Hiển thị nút theo trạng thái
@@ -98,8 +94,12 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
     }
 
     public void updateData(List<Post> newPosts) {
-        this.posts.clear();
-        this.posts.addAll(newPosts);
+        android.util.Log.d("DEBUG_Adapter", "updateData: newPosts size = " + (newPosts == null ? "null" : newPosts.size()));
+        if (newPosts == null) {
+            this.posts = new java.util.ArrayList<>();
+        } else {
+            this.posts = new java.util.ArrayList<>(newPosts);
+        }
         notifyDataSetChanged();
     }
 

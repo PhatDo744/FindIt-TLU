@@ -42,7 +42,7 @@ public class NotificationsFragment extends Fragment {
         notificationsViewModel.getNotifications().observe(getViewLifecycleOwner(), list -> {
             recyclerView.setAdapter(new NotificationsAdapter(list));
         });
-        notificationsViewModel.fetchNotifications();
+        notificationsViewModel.fetchNotifications(1, 20);
         // TODO: Xử lý Toolbar và BottomNavigationView nếu cần (nên đặt ở MainActivity)
     }
 } 

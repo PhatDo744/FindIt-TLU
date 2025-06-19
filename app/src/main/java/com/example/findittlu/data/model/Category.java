@@ -1,10 +1,17 @@
 package com.example.findittlu.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Category {
+    @SerializedName("id")
     private long id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("description")
     private String description;
+    @SerializedName("created_at")
     private String createdAt;
+    @SerializedName("updated_at")
     private String updatedAt;
 
     // Getter & Setter

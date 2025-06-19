@@ -1,11 +1,19 @@
 package com.example.findittlu.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ItemImage {
+    @SerializedName("id")
     private long id;
+    @SerializedName("item_id")
     private long itemId;
+    @SerializedName("image_url")
     private String imageUrl;
+    @SerializedName("caption")
     private String caption;
+    @SerializedName("created_at")
     private String createdAt;
+    @SerializedName("updated_at")
     private String updatedAt;
 
     // Getter & Setter

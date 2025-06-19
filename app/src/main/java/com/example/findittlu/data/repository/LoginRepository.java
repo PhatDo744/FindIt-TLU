@@ -12,7 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginRepository {
-    public static final boolean USE_REAL_LOGIN = false; // true: gọi API, false: login giả lập
+    public static final boolean USE_REAL_LOGIN = true; // true: gọi API, false: login giả lập
 
     public LiveData<LoginResponse> login(String email, String password) {
         MutableLiveData<LoginResponse> data = new MutableLiveData<>();

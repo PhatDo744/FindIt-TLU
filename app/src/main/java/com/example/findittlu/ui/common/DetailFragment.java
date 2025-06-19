@@ -44,7 +44,7 @@ public class DetailFragment extends Fragment {
             ((TextView) view.findViewById(R.id.detail_status)).setText(data.isLost ? "Đồ vật bị mất" : "Đồ vật đã tìm thấy");
             ((TextView) view.findViewById(R.id.detail_user_name)).setText(data.userName);
         });
-        detailViewModel.fetchDetail(id);
+        detailViewModel.fetchDetail(Long.parseLong(id));
         Button btnContact = view.findViewById(R.id.btn_contact);
         btnContact.setOnClickListener(v -> {
             // TODO: Xử lý logic liên hệ (ví dụ mở email hoặc gọi điện)

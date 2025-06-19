@@ -63,4 +63,6 @@ dependencies {
     implementation(libs.logging.interceptor)
 // Nếu dùng LiveData adapter cho Retrofit (không bắt buộc)
     implementation(libs.adapter.rxjava2)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

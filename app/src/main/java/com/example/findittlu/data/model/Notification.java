@@ -1,16 +1,26 @@
 package com.example.findittlu.data.model;
 
 import java.util.Date;
+import com.google.gson.annotations.SerializedName;
 
 public class Notification {
+    @SerializedName("id")
     private String id; // UUID
+    @SerializedName("type")
     private String type;
+    @SerializedName("notifiable_type")
     private String notifiableType;
+    @SerializedName("notifiable_id")
     private long notifiableId;
-    private String data;
+    @SerializedName("data")
+    private Data data;
+    @SerializedName("read_at")
     private Date readAt;
+    @SerializedName("item_id")
     private long itemId;
-    private Date createdAt;
+    @SerializedName("created_at")
+    private String createdAt;
+    @SerializedName("updated_at")
     private Date updatedAt;
     
     // Quan hệ
@@ -52,11 +62,11 @@ public class Notification {
         this.notifiableId = notifiableId;
     }
     
-    public String getData() {
+    public Data getData() {
         return data;
     }
     
-    public void setData(String data) {
+    public void setData(Data data) {
         this.data = data;
     }
     
@@ -76,11 +86,11 @@ public class Notification {
         this.itemId = itemId;
     }
     
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
     
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
     
@@ -108,6 +118,39 @@ public class Notification {
     public String getNotificationMessage() {
         // Parse data JSON để lấy message
         // TODO: Implement JSON parsing
-        return data;
+        return data.getTitle();
+    }
+
+    public static class Data {
+        @SerializedName("title")
+        private String title;
+        @SerializedName("item_id")
+        private int item_id;
+        @SerializedName("type")
+        private String type;
+        
+        public String getTitle() {
+            return title;
+        }
+        
+        public void setTitle(String title) {
+            this.title = title;
+        }
+        
+        public int getItem_id() {
+            return item_id;
+        }
+        
+        public void setItem_id(int item_id) {
+            this.item_id = item_id;
+        }
+        
+        public String getType() {
+            return type;
+        }
+        
+        public void setType(String type) {
+            this.type = type;
+        }
     }
 } 

@@ -20,17 +20,17 @@ public class CreatePostViewModel extends ViewModel {
         this.postRepository = new PostRepository();
     }
 
-    public void createPost(String title, String date, String status) {
-        // Validation logic can be added here
-        if (title.isEmpty() || date.isEmpty()) {
+    public void createPost(String title, String date, String status, String description, String location, int categoryId, boolean isContactInfoPublic) {
+        if (title.isEmpty() || date.isEmpty() || description.isEmpty() || location.isEmpty() || categoryId == 0) {
             creationResult.setValue(false);
             return;
         }
-        
         Post newPost = new Post();
         newPost.setTitle(title);
         newPost.setStatus(status);
-        
+        newPost.setDescription(description);
+        newPost.setLocationDescription(location);
+        newPost.setCategoryId(categoryId);
         // Parse date
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -39,23 +39,16 @@ public class CreatePostViewModel extends ViewModel {
         } catch (ParseException e) {
             newPost.setDateLostOrFound(new Date());
         }
-        
-        // Set creation date
         newPost.setCreatedAt(new Date());
         newPost.setUpdatedAt(new Date());
-        
-        // Set expiration date = current date + 14 days
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_MONTH, 14);
         newPost.setExpirationDate(cal.getTime());
-        
-        // Set default values
-        newPost.setContactInfoPublic(true); // Mặc định cho phép hiển thị thông tin liên hệ
+        newPost.setContactInfoPublic(isContactInfoPublic);
         newPost.setItemType(status.equals("FOUND") ? "found" : "lost");
-        
         postRepository.createPost(newPost);
-        creationResult.setValue(true); // Assume success for now
+        creationResult.setValue(true);
     }
 
     public LiveData<Boolean> getCreationResult() {

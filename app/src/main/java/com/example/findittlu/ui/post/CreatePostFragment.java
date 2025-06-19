@@ -28,12 +28,13 @@ import java.util.Locale;
 
 public class CreatePostFragment extends Fragment {
 
-    private EditText dateEditText, titleEditText;
+    private EditText dateEditText, titleEditText, descriptionEditText, locationEditText;
     private Spinner categorySpinner;
     private TextView dateLabelTextView;
     private MaterialButton lostItemButton, foundItemButton, submitButton;
     private boolean isFoundSelected = true;
     private CreatePostViewModel viewModel;
+    private android.widget.CheckBox showEmailCheckBox, showPhoneCheckBox;
 
     public CreatePostFragment() {
         // Required empty public constructor
@@ -64,11 +65,15 @@ public class CreatePostFragment extends Fragment {
     private void initViews(View view) {
         dateEditText = view.findViewById(R.id.dateEditText);
         titleEditText = view.findViewById(R.id.titleEditText);
+        descriptionEditText = view.findViewById(R.id.descriptionEditText);
+        locationEditText = view.findViewById(R.id.locationEditText);
         categorySpinner = view.findViewById(R.id.categorySpinner);
         dateLabelTextView = view.findViewById(R.id.dateLabelTextView);
         lostItemButton = view.findViewById(R.id.lostItemButton);
         foundItemButton = view.findViewById(R.id.foundItemButton);
         submitButton = view.findViewById(R.id.postButton);
+        showEmailCheckBox = view.findViewById(R.id.showEmailCheckBox);
+        showPhoneCheckBox = view.findViewById(R.id.showPhoneCheckBox);
     }
 
     private void setupToolbar(View view, NavController navController) {
@@ -163,13 +168,16 @@ public class CreatePostFragment extends Fragment {
         submitButton.setOnClickListener(v -> {
             String title = titleEditText.getText().toString().trim();
             String date = dateEditText.getText().toString().trim();
+            String description = descriptionEditText.getText().toString().trim();
+            String location = locationEditText.getText().toString().trim();
+            int categoryId = categorySpinner.getSelectedItemPosition();
             String status = isFoundSelected ? "FOUND" : "SEARCHING";
-            // Simple validation
-            if (title.isEmpty() || date.isEmpty() || categorySpinner.getSelectedItemPosition() == 0) {
+            boolean isContactInfoPublic = showEmailCheckBox.isChecked() || showPhoneCheckBox.isChecked();
+            if (title.isEmpty() || date.isEmpty() || categoryId == 0 || description.isEmpty() || location.isEmpty()) {
                 Snackbar.make(v, "Vui lòng điền đầy đủ thông tin", Snackbar.LENGTH_SHORT).show();
                 return;
             }
-            viewModel.createPost(title, date, status);
+            viewModel.createPost(title, date, status, description, location, categoryId, isContactInfoPublic);
         });
     }
 

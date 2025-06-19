@@ -13,9 +13,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.findittlu.R;
 import com.google.android.material.button.MaterialButton;
+import com.example.findittlu.viewmodel.UserViewModel;
+import com.example.findittlu.data.model.User;
+import android.widget.EditText;
+import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 
 public class EditProfileFragment extends Fragment {
 
@@ -40,6 +46,47 @@ public class EditProfileFragment extends Fragment {
 
         // Thiết lập các nút
         setupButtons(view, navController);
+
+        // Lấy dữ liệu user và bind lên UI
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        EditText fullNameEditText = view.findViewById(R.id.fullNameEditText);
+        EditText phoneEditText = view.findViewById(R.id.phoneEditText);
+        EditText emailEditText = view.findViewById(R.id.emailEditText);
+        ImageView avatarImageView = view.findViewById(R.id.avatarImageView);
+        userViewModel.getProfile().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                fullNameEditText.setText(user.getFullName());
+                phoneEditText.setText(user.getPhoneNumber());
+                emailEditText.setText(user.getEmail());
+                if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
+                    String url = user.getPhotoUrl();
+                    if (!url.startsWith("http")) {
+                        url = "http://10.0.2.2:8000" + url;
+                    }
+                    Glide.with(this).load(url).placeholder(R.drawable.ic_person).into(avatarImageView);
+                } else {
+                    avatarImageView.setImageResource(R.drawable.ic_person);
+                }
+            }
+        });
+
+        // Lưu thay đổi
+        MaterialButton saveButton = view.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(v -> {
+            String newName = fullNameEditText.getText().toString().trim();
+            String newPhone = phoneEditText.getText().toString().trim();
+            User updateUser = new User();
+            updateUser.setFullName(newName);
+            updateUser.setPhoneNumber(newPhone);
+            userViewModel.updateProfile(updateUser).observe(getViewLifecycleOwner(), updatedUser -> {
+                if (updatedUser != null) {
+                    Toast.makeText(getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+                    navController.popBackStack();
+                } else {
+                    Toast.makeText(getContext(), "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     private void setupToolbar(View view, NavController navController) {

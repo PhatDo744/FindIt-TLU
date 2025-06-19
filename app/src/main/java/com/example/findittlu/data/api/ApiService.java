@@ -6,6 +6,7 @@ import com.example.findittlu.data.model.Category;
 import com.example.findittlu.data.model.ItemImage;
 import com.example.findittlu.data.model.LoginResponse;
 import com.example.findittlu.data.model.Notification;
+import com.example.findittlu.data.model.PostListResponse;
 
 import java.util.List;
 
@@ -73,7 +74,7 @@ public interface ApiService {
 
     // Posts/Items - Public endpoints
     @GET("items")
-    Call<List<Post>> getAllPosts(
+    Call<PostListResponse> getAllPosts(
         @Query("page") int page,
         @Query("per_page") int perPage,
         @Query("item_type") String itemType, // 'lost' hoặc 'found'
@@ -86,7 +87,7 @@ public interface ApiService {
     
     // Posts/Items - User specific
     @GET("user/items")
-    Call<List<Post>> getMyPosts(@Query("user_id") long userId);
+    Call<PostListResponse> getMyPosts(@Query("user_id") long userId);
 
     @POST("items")
     Call<Post> createPost(@Body Post post);
@@ -118,7 +119,7 @@ public interface ApiService {
     
     // Notifications
     @GET("notifications")
-    Call<List<Notification>> getNotifications(
+    Call<com.example.findittlu.data.model.NotificationListResponse> getNotifications(
         @Query("page") int page,
         @Query("per_page") int perPage
     );

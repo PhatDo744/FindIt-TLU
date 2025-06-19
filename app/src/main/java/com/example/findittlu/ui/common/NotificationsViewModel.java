@@ -4,8 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.findittlu.adapter.NotificationItem;
+import com.example.findittlu.data.api.RetrofitClient;
+import com.example.findittlu.data.model.Notification;
 import java.util.ArrayList;
 import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NotificationsViewModel extends ViewModel {
     private final MutableLiveData<List<NotificationItem>> notifications = new MutableLiveData<>();
@@ -17,14 +22,28 @@ public class NotificationsViewModel extends ViewModel {
     public LiveData<Boolean> getIsApiConnected() {
         return isApiConnected;
     }
-    // Giả lập lấy dữ liệu từ API
-    public void fetchNotifications() {
-        isApiConnected.setValue(true); // Đổi thành false để giả lập mất kết nối
-        List<NotificationItem> list = new ArrayList<>();
-        list.add(new NotificationItem(NotificationItem.TYPE_SUCCESS, "Tin đăng 'Mất thẻ sinh viên khu A2' của bạn đã được duyệt.", "5 phút trước"));
-        list.add(new NotificationItem(NotificationItem.TYPE_SUCCESS, "Tin 'Nhặt được tai nghe Bluetooth' đã được bạn đánh dấu hoàn thành.", "1 giờ trước"));
-        list.add(new NotificationItem(NotificationItem.TYPE_INFO, "Chào mừng bạn đến với FindIt@TLU! Hãy bắt đầu tìm kiếm hoặc đăng tin.", "Hôm qua"));
-        list.add(new NotificationItem(NotificationItem.TYPE_WARNING, "Tin 'Mất chia khóa phòng KTX' của bạn sắp hết hạn hiển thị. Hãy gia hạn nếu cần.", "3 ngày trước"));
-        notifications.setValue(list);
+    // Lấy dữ liệu từ API thật
+    public void fetchNotifications(int page, int perPage) {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().getNotifications(page, perPage).enqueue(new Callback<com.example.findittlu.data.model.NotificationListResponse>() {
+            @Override
+            public void onResponse(Call<com.example.findittlu.data.model.NotificationListResponse> call, Response<com.example.findittlu.data.model.NotificationListResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    // Chuyển đổi sang NotificationItem nếu cần
+                    List<NotificationItem> list = new ArrayList<>();
+                    for (Notification n : response.body().getData()) {
+                        list.add(new NotificationItem(NotificationItem.TYPE_SUCCESS, n.getData().getTitle(), n.getCreatedAt()));
+                    }
+                    notifications.setValue(list);
+                } else {
+                    notifications.setValue(new ArrayList<>());
+                }
+            }
+            @Override
+            public void onFailure(Call<com.example.findittlu.data.model.NotificationListResponse> call, Throwable t) {
+                isApiConnected.setValue(false);
+                notifications.setValue(new ArrayList<>());
+            }
+        });
     }
 } 

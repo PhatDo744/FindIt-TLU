@@ -6,23 +6,40 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import com.google.gson.annotations.SerializedName;
 
 public class Post {
+    @SerializedName("id")
     private long id;
+    @SerializedName("user_id")
     private long userId;
+    @SerializedName("category_id")
     private long categoryId;
+    @SerializedName("title")
     private String title;
+    @SerializedName("description")
     private String description;
+    @SerializedName("location_type")
     private String locationType; // 'exact' hoặc 'area'
+    @SerializedName("location_description")
     private String locationDescription;
+    @SerializedName("item_type")
     private String itemType; // 'lost' hoặc 'found'
+    @SerializedName("status")
     private String status; // 'searching', 'holding', 'found', 'completed'
+    @SerializedName("date_lost_or_found")
     private Date dateLostOrFound;
+    @SerializedName("expiration_date")
     private Date expirationDate;
+    @SerializedName("is_contact_info_public")
     private boolean isContactInfoPublic;
+    @SerializedName("admin_comment")
     private String adminComment;
+    @SerializedName("created_at")
     private Date createdAt;
+    @SerializedName("updated_at")
     private Date updatedAt;
+    @SerializedName("deleted_at")
     private Date deletedAt;
     
     // Quan hệ
@@ -217,16 +234,30 @@ public class Post {
     // Phương thức để lấy text hiển thị từ status
     public String getStatusText() {
         if (status == null) return "Không xác định";
-        
-        switch (status.toUpperCase()) {
-            case "SEARCHING":
+        String type = itemType != null ? itemType.toLowerCase() : "";
+        String st = status.toLowerCase();
+        if ("returned".equals(st) || "completed".equals(st)) {
+            return "Đã xong";
+        }
+        if ("lost".equals(type)) {
+            // Tin mất: các trạng thái duyệt đều là Đang tìm
+            if ("approved".equals(st) || "pending_approval".equals(st) || "rejected".equals(st) || "expired".equals(st)) {
                 return "Đang tìm";
-            case "HOLDING":
+            }
+        } else if ("found".equals(type)) {
+            // Tin nhặt: các trạng thái duyệt đều là Đang giữ
+            if ("approved".equals(st) || "pending_approval".equals(st) || "rejected".equals(st) || "expired".equals(st)) {
                 return "Đang giữ";
-            case "FOUND":
+            }
+        }
+        // Fallback cho các trạng thái khác
+        switch (st) {
+            case "searching":
+                return "Đang tìm";
+            case "holding":
+                return "Đang giữ";
+            case "found":
                 return "Đã tìm thấy";
-            case "COMPLETED":
-                return "Đã xong";
             default:
                 return "Không xác định";
         }

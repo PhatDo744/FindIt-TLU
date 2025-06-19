@@ -4,8 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.findittlu.adapter.SearchResultItem;
+import com.example.findittlu.data.api.RetrofitClient;
+import com.example.findittlu.data.model.Post;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchViewModel extends ViewModel {
     private final MutableLiveData<List<SearchResultItem>> searchResults = new MutableLiveData<>();
@@ -17,13 +24,35 @@ public class SearchViewModel extends ViewModel {
     public LiveData<Boolean> getIsApiConnected() {
         return isApiConnected;
     }
-    // Giả lập lấy dữ liệu từ API
+    // Lấy dữ liệu từ API thật
     public void fetchSearchResults(String query) {
-        isApiConnected.setValue(true); // Đổi thành false để giả lập mất kết nối
-        List<SearchResultItem> list = new ArrayList<>();
-        list.add(new SearchResultItem(com.example.findittlu.R.drawable.image_placeholder_background, true, "Ví da màu đen hiệu Gucci", "Ví/Túi xách", "Thư viện T45", "15/05/2025"));
-        list.add(new SearchResultItem(com.example.findittlu.R.drawable.image_placeholder_background, false, "Thẻ sinh viên Hoàng Tiến Phúc", "Đồ điện tử", "Sân bóng TLU", "16/05/2025"));
-        list.add(new SearchResultItem(com.example.findittlu.R.drawable.image_placeholder_background, true, "Máy tính laptop", "Đồ điện tử", "Kí túc xá K1", "16/05/2025"));
-        searchResults.setValue(list);
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().getAllPosts(1, 20, null, null, query).enqueue(new Callback<com.example.findittlu.data.model.PostListResponse>() {
+            @Override
+            public void onResponse(Call<com.example.findittlu.data.model.PostListResponse> call, Response<com.example.findittlu.data.model.PostListResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<SearchResultItem> list = new ArrayList<>();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    for (Post post : response.body().getData()) {
+                        list.add(new SearchResultItem(
+                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            "lost".equalsIgnoreCase(post.getItemType()),
+                            post.getTitle(),
+                            post.getCategory() != null ? post.getCategory().getName() : "",
+                            post.getLocationDescription(),
+                            post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
+                        ));
+                    }
+                    searchResults.setValue(list);
+                } else {
+                    searchResults.setValue(new ArrayList<>());
+                }
+            }
+            @Override
+            public void onFailure(Call<com.example.findittlu.data.model.PostListResponse> call, Throwable t) {
+                isApiConnected.setValue(false);
+                searchResults.setValue(new ArrayList<>());
+            }
+        });
     }
 } 
