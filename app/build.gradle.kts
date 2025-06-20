@@ -29,6 +29,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -37,7 +40,30 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.annotation)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
+    // AndroidX Navigation Component
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+    implementation(libs.navigation.runtime.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.material.v150)
+    implementation(libs.circleimageview)
+    // Retrofit
+    implementation(libs.retrofit)
+// Converter Gson cho Retrofit
+    implementation(libs.converter.gson)
+// OkHttp (nếu cần logging)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+// Nếu dùng LiveData adapter cho Retrofit (không bắt buộc)
+    implementation(libs.adapter.rxjava2)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("com.google.android.material:material:1.9.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

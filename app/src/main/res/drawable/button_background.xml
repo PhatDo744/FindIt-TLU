@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shape cho nền của Button -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Bo góc -->
+    <corners android:radius="12dp" />
+
+    <!-- Màu nền -->
+    <solid android:color="@color/primary_blue" />
+
+</shape>

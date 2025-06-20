@@ -1,3 +1,177 @@
 <resources>
     <string name="app_name">FindIt@TLU</string>
+
+    <!-- Màn hình Đăng nhập -->
+    <string name="logo_description">Logo Trường Đại học Thủy Lợi</string>
+    <string name="app_title">Tìm đồ thất lạc TLU</string>
+    <string name="email_hint">Email trường đại học Thủy Lợi</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="login_button">Đăng nhập</string>
+    <string name="no_account_prompt">Bạn chưa có tài khoản ?</string>
+    <string name="register_now">Đăng ký ngay</string>
+    <string name="forgot_password">Quên mật khẩu ?</string>
+    <string name="divider">|</string>
+    <string name="title_activity_login">Đăng nhập</string>
+    <string name="welcome">Xin chào</string>
+    <string name="login_failed">Đăng nhập thất bại</string>
+    <string name="invalid_username">Email không đuợc để trống</string>
+    <string name="invalid_password">Mật khẩu không được để trống</string>
+
+    <!-- Strings mặc định cho các màn hình lớn -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_search">Tìm kiếm</string>
+    <string name="nav_post">Đăng tin</string>
+    <string name="nav_notifications">Thông báo</string>
+    <string name="nav_profile">Cá nhân</string>
+
+    <!-- Màn hình Đăng tin -->
+    <string name="post_item_title">Đăng tin đồ vật</string>
+    <string name="select_post_type">Chọn loại tin đăng*</string>
+    <string name="lost_item">Mất đồ</string>
+    <string name="found_item">Nhặt đồ</string>
+    <string name="item_information">Thông tin đồ vật</string>
+    <string name="title_label">Tiêu đề tin*</string>
+    <string name="title_hint_vd">VD: Nhặt được ví màu đen ở thư viện</string>
+    <string name="description_label">Mô tả chi tiết*</string>
+    <string name="description_hint_vd">Mô tả chi tiết về đồ vật (đặc điểm, nhãn hiệu, tình trạng…), hoàn cảnh mất/tìm thấy.</string>
+    <string name="category_label">Danh mục đồ vật*</string>
+    <string name="location_label">Địa điểm*</string>
+    <string name="location_hint_vd">VD: Sân C1, Nhà ăn, Thư viện tầng 3…</string>
+    <string name="date_label">Ngày*</string>
+    <string name="date_lost_label">Ngày mất*</string>
+    <string name="date_found_label">Ngày nhặt được*</string>
+    <string name="date_hint">Chọn ngày</string>
+    <string name="add_images_optional">Thêm hình ảnh (Tùy chọn)</string>
+    <string name="tap_to_add_images">Nhấn để thêm ảnh (Tối đa 3 ảnh)</string>
+    <string name="add_image_icon_desc">Biểu tượng thêm ảnh</string>
+    <string name="selected_image_description">Ảnh đã chọn</string>
+    <string name="remove_image_button">Xóa ảnh này</string>
+    <string name="contact_information">Thông tin liên hệ</string>
+    <string name="show_my_email">Hiển thị email của tôi</string>
+    <string name="show_my_phone">Hiển thị số điện thoại của tôi</string>
+    <string name="post_button">Đăng tin</string>
+
+    <!-- Màn hình Chỉnh sửa thông tin cá nhân -->
+    <string name="title_edit_profile">Thông tin cá nhân</string>
+    <string name="change_avatar">Thay đổi ảnh đại diện</string>
+    <string name="change_avatar_desc">Thay đổi ảnh đại diện</string>
+    <string name="section_basic_info">Thông tin cơ bản</string>
+    <string name="hint_full_name">Họ và tên</string>
+    <string name="hint_student_id">Mã số sinh viên</string>
+    <string name="helper_student_id_uneditable">Mã số sinh viên không thể thay đổi</string>
+    <string name="section_contact_info">Thông tin liên hệ</string>
+    <string name="hint_phone_number">Số điện thoại</string>
+    <string name="hint_email">Email</string>
+    <string name="button_save_changes">Lưu thay đổi</string>
+    <string name="button_cancel">Hủy bỏ</string>
+
+    <!-- Màn hình Trang cá nhân -->
+    <string name="title_profile">Trang cá nhân</string>
+    <string name="edit_profile_desc">Chỉnh sửa hồ sơ</string>
+    <string name="section_manage_account">QUẢN LÝ TÀI KHOẢN</string>
+    <string name="option_personal_info">Thông tin cá nhân</string>
+    <string name="option_my_posts">Tin đăng của tôi</string>
+    <string name="section_support">HỖ TRỢ &amp; PHẢN HỒI</string>
+    <string name="option_help">Trợ giúp</string>
+    <string name="option_policy">Chính sách và quy định</string>
+    <string name="option_logout">Đăng xuất</string>
+
+    <string name="title_my_posts">Tin đăng của tôi</string>
+    <string name="hint_search_item">Tìm kiếm đồ vật...</string>
+    <string name="item_image_desc">Hình ảnh đồ vật</string>
+
+    <string name="action_edit">Sửa</string>
+    <string name="action_delete">Xóa</string>
+    <string name="action_complete">Đã xong</string>
+
+    <string name="tab_all">Tất cả</string>
+    <string name="tab_searching">Tìm kiếm</string>
+    <string name="tab_found">Tìm thấy</string>
+    <string name="tab_completed">Đã xong</string>
+    <!-- Màn hình Chính sách và Quy định (Đã chia nhỏ) -->
+    <string name="policy_last_updated">Cập nhật lần cuối: 15/05/2025</string>
+
+    <string name="policy_section_1_title">1. Điều khoản sử dụng</string>
+    <string name="policy_s1_p1">Chào mừng bạn đến với ứng dụng Đồ thất lạc của Đại học Thủy Lợi. Bằng việc truy cập hoặc sử dụng ứng dụng của chúng tôi, bạn đồng ý chấp nhận và tuân theo các điều khoản và điều kiện dưới đây.</string>
+    <string name="policy_s1_p2">Ứng dụng này được phát triển nhằm mục đích giúp đỡ sinh viên, giảng viên và nhân viên của Đại học Thủy Lợi tìm lại đồ vật bị mất hoặc đăng tin về đồ vật nhặt được. Việc sử dụng ứng dụng phải tuân theo các quy định của nhà trường và pháp luật Việt Nam.</string>
+    <string name="policy_s1_p3">Chúng tôi có quyền thay đổi, sửa đổi hoặc cập nhật các điều khoản này vào bất kỳ lúc nào. Mọi thay đổi sẽ có hiệu lực ngay sau khi được đăng tải. Việc bạn tiếp tục sử dụng ứng dụng sau khi các thay đổi được công bố đồng nghĩa với việc bạn chấp nhận những thay đổi đó.</string>
+
+    <string name="policy_section_2_title">2. Quy định đăng tin</string>
+    <string name="policy_s2_intro">Khi đăng tin về đồ vật bị mất hoặc nhặt được, người dùng cần tuân theo các quy định sau:</string>
+    <string name="policy_s2_rule1">Cung cấp thông tin chính xác và đầy đủ về đồ vật, địa điểm và thời gian mất/nhặt được</string>
+    <string name="policy_s2_rule2">Không đăng các thông tin giả mạo hoặc có mục đích lừa đảo</string>
+    <string name="policy_s2_rule3">Không tiết lộ thông tin cá nhân nhạy cảm của bản thân hoặc người khác (số CMND/CCCD đầy đủ, mật khẩu, thông tin tài khoản ngân hàng, etc.)</string>
+    <string name="policy_s2_rule4">Không sử dụng ứng dụng để mua bán, trao đổi hoặc quảng cáo các sản phẩm, dịch vụ</string>
+    <string name="policy_s2_rule5">Không đăng nội dung vi phạm bản quyền hoặc sở hữu trí tuệ của người khác</string>
+    <string name="policy_s2_rule6">Không đăng nội dung có tính chất phỉ báng, khiêu dâm, quấy rối, đe dọa hoặc phân biệt đối xử</string>
+    <string name="policy_s2_conclusion">Chúng tôi có quyền xóa các tin đăng vi phạm các quy định trên mà không cần thông báo trước. Trong trường hợp tái phạm, tài khoản của người dùng có thể bị tạm khóa hoặc xóa vĩnh viễn.</string>
+
+    <string name="policy_section_3_title">3. Chính sách bảo mật</string>
+    <string name="policy_s3_collect_title">Thông tin chúng tôi thu thập:</string>
+    <string name="policy_s3_collect_item1">Thông tin cá nhân: Họ tên, mã số sinh viên/giảng viên/nhân viên, email, số điện thoại liên hệ</string>
+    <string name="policy_s3_collect_item2">Thông tin đăng nhập: Thông tin xác thực tài khoản</string>
+    <string name="policy_s3_collect_item3">Dữ liệu sử dụng: Thông tin về cách bạn sử dụng ứng dụng</string>
+
+    <string name="policy_s3_use_title">Cách chúng tôi sử dụng thông tin:</string>
+    <string name="policy_s3_use_item1">Cung cấp và duy trì dịch vụ</string>
+    <string name="policy_s3_use_item2">Xác minh danh tính để đảm bảo an toàn cho cộng đồng</string>
+    <string name="policy_s3_use_item3">Liên lạc với bạn về các cập nhật hoặc thông báo quan trọng</string>
+    <string name="policy_s3_use_item4">Cải thiện trải nghiệm người dùng và phát triển tính năng mới</string>
+
+    <string name="policy_s3_protect_title">Bảo vệ thông tin:</string>
+    <string name="policy_s3_protect_content">Chúng tôi thực hiện các biện pháp bảo mật hợp lý để bảo vệ thông tin của bạn. Tuy nhiên, không có phương thức truyền tải nào qua internet hoặc phương thức lưu trữ điện tử nào là an toàn 100%. Do đó, chúng tôi không thể đảm bảo an ninh tuyệt đối.</string>
+
+    <string name="policy_s3_share_title">Chia sẻ thông tin:</string>
+    <string name="policy_s3_share_intro">Chúng tôi không bán, trao đổi hoặc chuyển giao thông tin cá nhân của bạn cho bên thứ ba ngoại trừ trong các trường hợp sau:</string>
+    <string name="policy_s3_share_item1">Khi có sự đồng ý của bạn</string>
+    <string name="policy_s3_share_item2">Khi cần thiết để thực hiện một giao dịch mà bạn yêu cầu</string>
+    <string name="policy_s3_share_item3">Khi buộc phải tuân thủ theo quy định pháp luật, yêu cầu của cơ quan nhà nước có thẩm quyền</string>
+
+    <string name="policy_section_4_title">4. Quy trình giải quyết tranh chấp</string>
+    <string name="policy_s4_intro">Trong trường hợp phát sinh tranh chấp giữa các bên liên quan đến việc trả lại đồ vật thất lạc, quy trình giải quyết như sau:</string>
+    <string name="policy_s4_step1">1. Các bên tự thỏa thuận, giải quyết một cách thiện chí và dựa trên tinh thần hợp tác.</string>
+    <string name="policy_s4_step2">2. Nếu không thể tự giải quyết, các bên có thể yêu cầu sự hỗ trợ từ đội ngũ quản trị viên của ứng dụng.</string>
+    <string name="policy_s4_step3">3. Đội ngũ quản trị viên sẽ tiến hành xác minh thông tin và đưa ra quyết định dựa trên các bằng chứng được cung cấp.</string>
+    <string name="policy_s4_step4">4. Trong trường hợp cần thiết, vấn đề có thể được chuyển đến phòng công tác sinh viên hoặc ban giám hiệu nhà trường để giải quyết.</string>
+    <string name="policy_s4_step5">5. Đối với các trường hợp nghiêm trọng liên quan đến hành vi vi phạm pháp luật, vấn đề sẽ được chuyển đến cơ quan chức năng có thẩm quyền.</string>
+
+    <string name="policy_section_5_title">5. Liên hệ</string>
+    <string name="policy_s5_intro">Nếu bạn có bất kỳ câu hỏi nào về các điều khoản và chính sách này, vui lòng liên hệ với chúng tôi qua:</string>
+    <string name="policy_s5_contact1">Email: findit@e.tlu.edu.vn</string>
+    <string name="policy_s5_contact2">Điện thoại: 0123.456.789</string>
+    <string name="policy_s5_contact3">Văn phòng: Phòng A1-101, Đại học Thủy Lợi</string>
+
+    <!-- Màn hình Trợ giúp -->
+    <string name="help_welcome_title">Chào mừng đến với trung tâm trợ giúp</string>
+    <string name="help_welcome_desc">Tìm câu trả lời cho những câu hỏi thường gặp hoặc liên hệ với đội ngũ hỗ trợ của chúng tôi nếu bạn cần thêm thông tin.</string>
+    <string name="help_faq_section_title">Câu hỏi thường gặp</string>
+    <string name="help_contact_us">Liên hệ với chúng tôi</string>
+
+    <string name="help_q1">Làm thế nào để đăng tin về đồ vật bị mất?</string>
+    <string name="help_a1">Để đăng tin về đồ vật bị mất, bạn cần:\n1. Nhấn vào nút "Đăng tin" ở thanh điều hướng dưới cùng\n2. Chọn loại tin đăng là "Đã mất"\n3. Điền đầy đủ thông tin về đồ vật (tiêu đề, mô tả, danh mục, địa điểm, thời gian mất)\n4. Tải lên hình ảnh của đồ vật (nếu có)\n5. Điền thông tin liên hệ\n6. Nhấn "Đăng tin" để hoàn tất\n\nSau khi đăng, tin của bạn sẽ được hiển thị cho các thành viên khác có thể xem và liên hệ nếu họ tìm thấy đồ vật của bạn.</string>
+
+    <string name="help_q2">Làm thế nào để đăng tin về đồ vật nhặt được?</string>
+    <string name="help_a2">Để đăng tin về đồ vật nhặt được, bạn cần:\n1. Nhấn vào nút "Đăng tin" ở thanh điều hướng dưới cùng\n2. Chọn loại tin đăng là "Đã tìm thấy"\n3. Điền thông tin về đồ vật nhặt được (tiêu đề, mô tả, danh mục, địa điểm, thời gian nhặt được)\n4. Tải lên hình ảnh của đồ vật (nếu có, nhưng hãy cân nhắc không chụp hình những thông tin nhạy cảm như CMND/CCCD)\n5. Điền thông tin liên hệ để chủ nhân có thể tìm đến bạn\n6. Nhấn "Đăng tin" để hoàn tất\n\nHãy nhớ không tiết lộ quá nhiều thông tin về đồ vật để đảm bảo chỉ chủ sở hữu thực sự mới có thể nhận lại được đồ.</string>
+
+    <string name="help_q3">Làm thế nào để tìm kiếm đồ vật đã mất?</string>
+    <string name="help_a3">Để tìm kiếm đồ vật đã mất:\n1. Nhấn vào nút "Tìm kiếm" ở thanh điều hướng dưới cùng\n2. Sử dụng thanh tìm kiếm để nhập từ khóa liên quan đến đồ vật của bạn\n3. Bạn có thể lọc kết quả theo danh mục, ngày, địa điểm để tìm kiếm hiệu quả hơn\n4. Khi tìm thấy tin đăng phù hợp, nhấn vào để xem chi tiết\n5. Liên hệ với người đăng tin qua thông tin liên hệ được cung cấp\n\nNgoài ra, bạn cũng có thể đăng tin "Đã mất" để người khác có thể tìm thấy và liên hệ với bạn.</string>
+
+    <string name="help_q4">Làm thế nào để chỉnh sửa hoặc xóa tin đã đăng?</string>
+    <string name="help_a4">Để chỉnh sửa hoặc xóa tin đã đăng:\n1. Nhấn vào biểu tượng "Cá nhân" ở thanh điều hướng dưới cùng\n2. Chọn "Tin đăng của tôi" trong menu\n3. Tìm tin đăng bạn muốn chỉnh sửa hoặc xóa\n4. Để chỉnh sửa: Nhấn nút "Chỉnh sửa" và cập nhật thông tin tin đăng\n5. Để xóa: Nhấn nút "Xóa" và xác nhận hành động\n\nLưu ý rằng một số thông tin cốt lõi như loại tin đăng không thể thay đổi sau khi đã đăng.</string>
+
+    <string name="help_q5">Làm thế nào để đánh dấu tin đã hoàn thành?</string>
+    <string name="help_a5">Khi bạn đã tìm thấy đồ vật đã mất hoặc đã trả lại đồ vật nhặt được cho chủ sở hữu:\n1. Nhấn vào biểu tượng "Cá nhân" ở thanh điều hướng dưới cùng\n2. Chọn "Tin đăng của tôi" trong menu\n3. Tìm tin đăng cần đánh dấu hoàn thành\n4. Nhấn nút "Chỉnh sửa"\n5. Đánh dấu vào ô "Đã trả/Đã tìm thấy" trong phần "Trạng thái đồ vật"\n6. Lưu thay đổi\n\nTin đăng sau khi đánh dấu hoàn thành sẽ được chuyển vào tab "Đã hoàn thành" để bạn dễ dàng theo dõi.</string>
+
+    <string name="help_contact_email_label">Email</string>
+    <string name="help_contact_email_value">findit@e.tlu.edu.vn</string>
+    <string name="help_contact_hotline_label">Hotline</string>
+    <string name="help_contact_hotline_value">0123.456.789</string>
+    <string name="help_contact_office_label">Văn phòng</string>
+    <string name="help_contact_office_value">Phòng A1-101, Đại học Thủy Lợi</string>
 </resources>

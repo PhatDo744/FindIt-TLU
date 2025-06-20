@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/ProfileCardView"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/itemImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/image_placeholder_background"
+            android:background="@drawable/image_placeholder_background"
+            android:scaleType="center"
+            android:contentDescription="@string/item_image_desc"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/itemTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Mất thẻ sinh viên khu giảng đường A2"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/itemDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                tools:text="Ngày đăng: 22/05/2025"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"/>
+
+            <!-- Action Buttons (UPDATED) -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/itemStatusChip"
+                style="@style/Widget.Material3.Chip.Suggestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/lost_red"
+                app:chipBackgroundColor="@color/lost_red_light"
+                tools:text="Đang tìm" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editButton"
+                    style="@style/MyPostActionButton"
+                    android:text="@string/action_edit"
+                    android:textColor="@color/tlu_info"
+                    app:backgroundTint="@color/primary_blue_light"
+                    app:icon="@drawable/ic_edit_pencil"
+                    app:iconTint="@color/tlu_info" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteButton"
+                    style="@style/MyPostActionButton"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/action_delete"
+                    app:icon="@drawable/ic_delete"
+                    app:backgroundTint="@color/lost_red_light"
+                    app:iconTint="@color/logout_red"
+                    android:textColor="@color/logout_red" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/completeButton"
+                    style="@style/MyPostActionButton"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/action_complete"
+                    app:icon="@drawable/ic_check_circle"
+                    app:backgroundTint="@color/found_green_light"
+                    app:iconTint="@color/found_green"
+                    android:textColor="@color/found_green" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
