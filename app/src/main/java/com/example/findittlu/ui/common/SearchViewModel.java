@@ -35,6 +35,135 @@ public class SearchViewModel extends ViewModel {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     for (Post post : response.body().getData()) {
                         list.add(new SearchResultItem(
+                            post.getId(),
+                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            "lost".equalsIgnoreCase(post.getItemType()),
+                            post.getTitle(),
+                            post.getCategory() != null ? post.getCategory().getName() : "",
+                            post.getLocationDescription(),
+                            post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
+                        ));
+                    }
+                    searchResults.setValue(list);
+                } else {
+                    searchResults.setValue(new ArrayList<>());
+                }
+            }
+            @Override
+            public void onFailure(Call<com.example.findittlu.data.model.PostListResponse> call, Throwable t) {
+                isApiConnected.setValue(false);
+                searchResults.setValue(new ArrayList<>());
+            }
+        });
+    }
+
+    public void fetchSearchResultsByCategory(Long categoryId) {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().getItemsByCategory(categoryId).enqueue(new Callback<com.example.findittlu.data.model.PostListResponse>() {
+            @Override
+            public void onResponse(Call<com.example.findittlu.data.model.PostListResponse> call, Response<com.example.findittlu.data.model.PostListResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<SearchResultItem> list = new ArrayList<>();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    for (Post post : response.body().getData()) {
+                        list.add(new SearchResultItem(
+                            post.getId(),
+                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            "lost".equalsIgnoreCase(post.getItemType()),
+                            post.getTitle(),
+                            post.getCategory() != null ? post.getCategory().getName() : "",
+                            post.getLocationDescription(),
+                            post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
+                        ));
+                    }
+                    searchResults.setValue(list);
+                } else {
+                    searchResults.setValue(new ArrayList<>());
+                }
+            }
+            @Override
+            public void onFailure(Call<com.example.findittlu.data.model.PostListResponse> call, Throwable t) {
+                isApiConnected.setValue(false);
+                searchResults.setValue(new ArrayList<>());
+            }
+        });
+    }
+
+    public void fetchSearchResultsByType(String itemType) {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().getItemsByType(itemType).enqueue(new Callback<com.example.findittlu.data.model.PostListResponse>() {
+            @Override
+            public void onResponse(Call<com.example.findittlu.data.model.PostListResponse> call, Response<com.example.findittlu.data.model.PostListResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<SearchResultItem> list = new ArrayList<>();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    for (Post post : response.body().getData()) {
+                        list.add(new SearchResultItem(
+                            post.getId(),
+                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            "lost".equalsIgnoreCase(post.getItemType()),
+                            post.getTitle(),
+                            post.getCategory() != null ? post.getCategory().getName() : "",
+                            post.getLocationDescription(),
+                            post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
+                        ));
+                    }
+                    searchResults.setValue(list);
+                } else {
+                    searchResults.setValue(new ArrayList<>());
+                }
+            }
+            @Override
+            public void onFailure(Call<com.example.findittlu.data.model.PostListResponse> call, Throwable t) {
+                isApiConnected.setValue(false);
+                searchResults.setValue(new ArrayList<>());
+            }
+        });
+    }
+
+    public void fetchSearchResultsByCategoryAndType(Long categoryId, String itemType) {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().getItemsByCategoryAndType(categoryId, itemType).enqueue(new Callback<com.example.findittlu.data.model.PostListResponse>() {
+            @Override
+            public void onResponse(Call<com.example.findittlu.data.model.PostListResponse> call, Response<com.example.findittlu.data.model.PostListResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<SearchResultItem> list = new ArrayList<>();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    for (Post post : response.body().getData()) {
+                        list.add(new SearchResultItem(
+                            post.getId(),
+                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            "lost".equalsIgnoreCase(post.getItemType()),
+                            post.getTitle(),
+                            post.getCategory() != null ? post.getCategory().getName() : "",
+                            post.getLocationDescription(),
+                            post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
+                        ));
+                    }
+                    searchResults.setValue(list);
+                } else {
+                    searchResults.setValue(new ArrayList<>());
+                }
+            }
+            @Override
+            public void onFailure(Call<com.example.findittlu.data.model.PostListResponse> call, Throwable t) {
+                isApiConnected.setValue(false);
+                searchResults.setValue(new ArrayList<>());
+            }
+        });
+    }
+
+    public void fetchSearchResultsByKeyword(String keyword) {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().searchItems(keyword).enqueue(new Callback<com.example.findittlu.data.model.PostListResponse>() {
+            @Override
+            public void onResponse(Call<com.example.findittlu.data.model.PostListResponse> call, Response<com.example.findittlu.data.model.PostListResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<SearchResultItem> list = new ArrayList<>();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    for (Post post : response.body().getData()) {
+                        list.add(new SearchResultItem(
+                            post.getId(),
                             com.example.findittlu.R.drawable.image_placeholder_background,
                             "lost".equalsIgnoreCase(post.getItemType()),
                             post.getTitle(),

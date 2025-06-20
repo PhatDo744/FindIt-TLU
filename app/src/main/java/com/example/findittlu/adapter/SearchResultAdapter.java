@@ -41,6 +41,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             holder.itemStatus.setText("Đã tìm thấy");
             holder.itemStatus.setBackgroundResource(R.drawable.bg_status_found);
         }
+        // Sự kiện click mở chi tiết
+        holder.itemView.setOnClickListener(v -> {
+            android.os.Bundle args = new android.os.Bundle();
+            args.putLong("postId", item.getPostId());
+            androidx.navigation.NavController navController = androidx.navigation.Navigation.findNavController(holder.itemView);
+            navController.navigate(com.example.findittlu.R.id.detailFragment, args);
+        });
     }
 
     @Override

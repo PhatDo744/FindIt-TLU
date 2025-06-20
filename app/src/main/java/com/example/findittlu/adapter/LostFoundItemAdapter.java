@@ -58,6 +58,7 @@ public class LostFoundItemAdapter extends RecyclerView.Adapter<LostFoundItemAdap
             args.putString("date", item.getDate());
             args.putBoolean("isLost", item.isLost());
             args.putInt("imageRes", item.getImageUrl());
+            args.putLong("postId", item.getPostId());
             androidx.navigation.NavController navController = androidx.navigation.Navigation.findNavController(holder.itemView);
             navController.navigate(com.example.findittlu.R.id.detailFragment, args);
         });

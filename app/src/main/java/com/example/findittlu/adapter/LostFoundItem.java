@@ -6,8 +6,10 @@ public class LostFoundItem {
     private String date;
     private boolean isLost; // true if lost, false if found
     private int imageUrl; // For simplicity, using a drawable resource ID
+    private long postId;
 
-    public LostFoundItem(String title, String location, String date, boolean isLost, int imageUrl) {
+    public LostFoundItem(long postId, String title, String location, String date, boolean isLost, int imageUrl) {
+        this.postId = postId;
         this.title = title;
         this.location = location;
         this.date = date;
@@ -34,4 +36,8 @@ public class LostFoundItem {
     public int getImageUrl() {
         return imageUrl;
     }
-} 
+
+    public long getPostId() {
+        return postId;
+    }
+}
