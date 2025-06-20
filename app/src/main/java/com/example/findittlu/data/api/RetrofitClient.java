@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     private static final String TAG = "RetrofitClient";
     // TODO: Thay đổi URL khi có API thực tế
-    private static final String BASE_URL = "http://10.0.2.2:8000/api/"; // Localhost cho emulator
+    private static final String BASE_URL = "http://192.168.1.4:8000/api/"; // Localhost cho emulator
     //private static final String BASE_URL = "http://127.0.0.1:8000/"; // Test server
     // private static final String BASE_URL = "https://findit-tlu.com/api/"; // Production
     

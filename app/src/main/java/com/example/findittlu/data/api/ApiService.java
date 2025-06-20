@@ -38,7 +38,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("auth/register")
     Call<LoginResponse> register(
-        @Field("name") String name,
+        @Field("full_name") String fullName,
         @Field("email") String email,
         @Field("password") String password,
         @Field("password_confirmation") String passwordConfirmation,
