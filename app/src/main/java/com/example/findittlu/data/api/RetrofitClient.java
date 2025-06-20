@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -21,8 +22,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     private static final String TAG = "RetrofitClient";
     // TODO: Thay đổi URL khi có API thực tế
+<<<<<<< Updated upstream
     private static final String BASE_URL = "http://192.168.1.4:8000/api/"; // Localhost cho emulator
     //private static final String BASE_URL = "http://127.0.0.1:8000/"; // Test server
+=======
+    // private static final String BASE_URL = "http://10.0.2.2:8000/api/"; // Localhost cho emulator
+    private static final String BASE_URL = "http://192.168.1.5:8000/api/"; // Device IP
+>>>>>>> Stashed changes
     // private static final String BASE_URL = "https://findit-tlu.com/api/"; // Production
     
     private static Retrofit retrofit = null;
@@ -37,6 +43,7 @@ public class RetrofitClient {
             // Gson configuration
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                    .registerTypeAdapter(Date.class, new DateSerializer())
                     .create();
             
             // Logging interceptor (chỉ dùng trong debug)
@@ -60,11 +67,18 @@ public class RetrofitClient {
                     
                     // Thêm header Authorization nếu có token
                     Request.Builder requestBuilder = original.newBuilder()
-                            .header("Accept", "application/json")
-                            .header("Content-Type", "application/json");
+                            .header("Accept", "application/json");
+                    
+                    // Chỉ thêm Content-Type cho non-multipart requests và khi có body
+                    if (original.body() != null && !original.body().contentType().toString().contains("multipart")) {
+                        requestBuilder.header("Content-Type", "application/json");
+                    }
                     
                     if (token != null && !token.isEmpty()) {
                         requestBuilder.header("Authorization", "Bearer " + token);
+                        Log.d(TAG, "Thêm token vào request: " + token.substring(0, Math.min(20, token.length())) + "...");
+                    } else {
+                        Log.w(TAG, "Không có token cho request: " + original.url());
                     }
                     
                     Request request = requestBuilder.build();

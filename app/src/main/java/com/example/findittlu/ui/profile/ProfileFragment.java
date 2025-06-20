@@ -21,10 +21,21 @@ import com.example.findittlu.viewmodel.UserViewModel;
 import com.example.findittlu.data.model.User;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.example.findittlu.utils.ImageUtils;
+import android.content.Intent;
+import android.net.Uri;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.example.findittlu.R;
 
 public class ProfileFragment extends Fragment {
+
+    private ImageView avatarImageView;
+    private ImageView editIcon;
+    private ActivityResultLauncher<Intent> pickAvatarLauncher;
+    private UserViewModel userViewModel;
+    private Uri selectedAvatarUri;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -46,20 +57,55 @@ public class ProfileFragment extends Fragment {
         // Thiết lập Toolbar
         setupToolbar(view);
 
+        // Khởi tạo view và ViewModel
+        avatarImageView = view.findViewById(R.id.avatarImageView);
+        editIcon = view.findViewById(R.id.editIcon);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        // Đăng ký ActivityResultLauncher để chọn ảnh
+        pickAvatarLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    if (uri != null) {
+                        selectedAvatarUri = uri;
+                        avatarImageView.setImageURI(uri); // Preview
+                        // Upload lên server
+                        userViewModel.uploadAvatar(requireContext(), uri).observe(getViewLifecycleOwner(), user -> {
+                            if (user != null && user.getPhotoUrl() != null) {
+                                Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                                ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
+                            } else {
+                                // Có thể API trả về body rỗng nhưng thực tế đã thành công
+                                userViewModel.getProfile().observe(getViewLifecycleOwner(), refreshedUser -> {
+                                    if (refreshedUser != null && refreshedUser.getPhotoUrl() != null) {
+                                        ImageUtils.loadAvatar(requireContext(), refreshedUser.getPhotoUrl(), avatarImageView);
+                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thất bại!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+        // Bắt sự kiện click vào icon camera
+        editIcon.setOnClickListener(v -> openImagePicker());
+
         // Thiết lập các mục có thể click
         setupMenuItems(view, navController);
 
         // Lấy và hiển thị thông tin user
-        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         userViewModel.getProfile().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 TextView nameTextView = view.findViewById(R.id.userNameTextView);
                 TextView joinDateTextView = view.findViewById(R.id.joinDateTextView);
-                ImageView avatarImageView = view.findViewById(R.id.avatarImageView);
                 nameTextView.setText(user.getFullName());
                 // Hiển thị ngày tham gia nếu có trường createdAt
                 if (user.getCreatedAt() != null && !user.getCreatedAt().isEmpty()) {
-                    // Giả sử createdAt là yyyy-MM-dd hoặc yyyy-MM-ddTHH:mm:ssZ
                     String date = user.getCreatedAt().split("T")[0];
                     String[] parts = date.split("-");
                     if (parts.length >= 2) {
@@ -69,11 +115,7 @@ public class ProfileFragment extends Fragment {
                     }
                 }
                 if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
-                    String url = user.getPhotoUrl();
-                    if (!url.startsWith("http")) {
-                        url = "http://10.0.2.2:8000" + url;
-                    }
-                    Glide.with(this).load(url).placeholder(R.drawable.ic_person).into(avatarImageView);
+                    ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
                 } else {
                     avatarImageView.setImageResource(R.drawable.ic_person);
                 }
@@ -116,5 +158,11 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getContext(), "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
             navController.navigate(R.id.loginFragment);
         });
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        pickAvatarLauncher.launch(Intent.createChooser(intent, "Chọn ảnh đại diện"));
     }
 } 

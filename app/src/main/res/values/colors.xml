@@ -27,4 +27,5 @@
     <color name="primary_blue_light">#BBDEFB</color>
     <color name="tlu_info">#2196F3</color>
     <color name="warning_orange">#FF9800</color>
+    <color name="red_500">#F44336</color>
 </resources>

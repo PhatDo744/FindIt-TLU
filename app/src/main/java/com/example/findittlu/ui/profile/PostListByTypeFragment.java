@@ -11,17 +11,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.findittlu.R;
+import com.example.findittlu.data.model.Post;
 import com.example.findittlu.ui.profile.adapter.MyPostsAdapter;
 import com.example.findittlu.viewmodel.MyPostsViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class PostListByTypeFragment extends Fragment {
+public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.OnPostActionListener {
 
     private static final String ARG_POST_TYPE = "post_type";
     private String postType;
     private MyPostsViewModel viewModel;
     private MyPostsAdapter adapter;
+    private long userId;
 
     public static PostListByTypeFragment newInstance(String postType) {
         PostListByTypeFragment fragment = new PostListByTypeFragment();
@@ -52,73 +55,86 @@ public class PostListByTypeFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.postsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyPostsAdapter(getContext(), new ArrayList<>());
+        adapter = new MyPostsAdapter(getContext(), new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
 
         // Lấy userId từ SharedPreferences
         android.content.SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE);
-        long userId = prefs.getLong("user_id", -1);
+        userId = prefs.getLong("user_id", -1);
         if (userId == -1) {
             android.widget.Toast.makeText(getContext(), "Bạn chưa đăng nhập hoặc thiếu userId!", android.widget.Toast.LENGTH_LONG).show();
             if (getActivity() != null) getActivity().onBackPressed();
             return;
         }
+
+        fetchAndObservePosts();
+    }
+
+    private void fetchAndObservePosts() {
         viewModel.getMyPosts(userId).observe(getViewLifecycleOwner(), posts -> {
-            android.util.Log.d("DEBUG_MyPosts", "Số lượng posts nhận được: " + (posts == null ? "null" : posts.size()));
-            android.util.Log.d("DEBUG_MyPosts", "postType filter: " + postType);
-            if (posts != null) {
-                for (com.example.findittlu.data.model.Post p : posts) {
-                    android.util.Log.d("DEBUG_MyPosts", "Post: id=" + p.getId() + ", status=" + p.getStatus() + ", item_type=" + p.getItemType() + ", category_id=" + p.getCategoryId());
-                }
-                if ("ALL".equalsIgnoreCase(postType)) {
-                    adapter.updateData(posts);
-                } else if ("COMPLETED".equalsIgnoreCase(postType) || "returned".equalsIgnoreCase(postType)) {
-                    // Chỉ hiển thị các bài đăng đã hoàn thành (status = 'returned')
-                    java.util.List<com.example.findittlu.data.model.Post> filtered = new java.util.ArrayList<>();
-                    for (com.example.findittlu.data.model.Post p : posts) {
-                        if ("returned".equalsIgnoreCase(p.getStatus())) {
-                            filtered.add(p);
-                        }
-                    }
-                    android.util.Log.d("DEBUG_MyPosts", "Số lượng posts sau filter (returned): " + filtered.size());
-                    if (filtered.isEmpty()) {
-                        android.widget.Toast.makeText(getContext(), "Không có bài đăng nào đã hoàn thành!", android.widget.Toast.LENGTH_SHORT).show();
-                    }
-                    adapter.updateData(filtered);
-                } else if ("approved".equalsIgnoreCase(postType) || "pending_approval".equalsIgnoreCase(postType) || "rejected".equalsIgnoreCase(postType) || "expired".equalsIgnoreCase(postType)) {
-                    // Filter theo status khác
-                    java.util.List<com.example.findittlu.data.model.Post> filtered = new java.util.ArrayList<>();
-                    for (com.example.findittlu.data.model.Post p : posts) {
-                        if (postType.equalsIgnoreCase(p.getStatus())) {
-                            filtered.add(p);
-                        }
-                    }
-                    android.util.Log.d("DEBUG_MyPosts", "Số lượng posts sau filter (status): " + filtered.size());
-                    if (filtered.isEmpty()) {
-                        android.widget.Toast.makeText(getContext(), "Không có bài đăng nào phù hợp với bộ lọc!", android.widget.Toast.LENGTH_SHORT).show();
-                    }
-                    adapter.updateData(filtered);
-                } else if ("lost".equalsIgnoreCase(postType) || "found".equalsIgnoreCase(postType)) {
-                    // Filter theo item_type
-                    java.util.List<com.example.findittlu.data.model.Post> filtered = new java.util.ArrayList<>();
-                    for (com.example.findittlu.data.model.Post p : posts) {
-                        if (postType.equalsIgnoreCase(p.getItemType())) {
-                            filtered.add(p);
-                        }
-                    }
-                    android.util.Log.d("DEBUG_MyPosts", "Số lượng posts sau filter (item_type): " + filtered.size());
-                    if (filtered.isEmpty()) {
-                        android.widget.Toast.makeText(getContext(), "Không có bài đăng nào phù hợp với bộ lọc!", android.widget.Toast.LENGTH_SHORT).show();
-                    }
-                    adapter.updateData(filtered);
-                } else {
-                    // Nếu không khớp filter nào, hiển thị tất cả
-                    adapter.updateData(posts);
-                }
-            } else {
+            if (posts == null) {
                 android.util.Log.e("DEBUG_MyPosts", "posts null - Lỗi API hoặc thiếu userId");
                 android.widget.Toast.makeText(getContext(), "Lỗi API hoặc thiếu userId. Vui lòng kiểm tra lại!", android.widget.Toast.LENGTH_LONG).show();
-                if (getActivity() != null) getActivity().onBackPressed();
+                adapter.updateData(new ArrayList<>()); // Clear data on error
+                return;
+            }
+
+            android.util.Log.d("DEBUG_MyPosts", "Total posts received: " + posts.size() + " for filter: " + postType);
+
+            java.util.List<Post> filteredList = new ArrayList<>();
+            switch (postType.toLowerCase()) {
+                case "all":
+                    filteredList.addAll(posts);
+                    break;
+                case "lost":
+                    for (Post p : posts) {
+                        if ("lost".equalsIgnoreCase(p.getItemType()) && !"returned".equalsIgnoreCase(p.getStatus()) && !"completed".equalsIgnoreCase(p.getStatus())) {
+                            filteredList.add(p);
+                        }
+                    }
+                    break;
+                case "found":
+                    for (Post p : posts) {
+                        if ("found".equalsIgnoreCase(p.getItemType()) && !"returned".equalsIgnoreCase(p.getStatus()) && !"completed".equalsIgnoreCase(p.getStatus())) {
+                            filteredList.add(p);
+                        }
+                    }
+                    break;
+                case "completed":
+                    for (Post p : posts) {
+                        if ("returned".equalsIgnoreCase(p.getStatus()) || "completed".equalsIgnoreCase(p.getStatus())) {
+                            filteredList.add(p);
+                        }
+                    }
+                    break;
+            }
+            android.util.Log.d("DEBUG_MyPosts", "Filtered posts count: " + filteredList.size());
+            adapter.updateData(filteredList);
+        });
+    }
+
+    @Override
+    public void onCompleteClick(Post post) {
+        viewModel.markPostAsCompleted(post.getId()).observe(getViewLifecycleOwner(), success -> {
+            if (success) {
+                Snackbar.make(requireView(), "Đã đánh dấu hoàn thành!", Snackbar.LENGTH_SHORT).show();
+                // Refresh the list
+                fetchAndObservePosts();
+            } else {
+                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onDeleteClick(Post post) {
+        viewModel.deletePost(post.getId()).observe(getViewLifecycleOwner(), success -> {
+            if (success) {
+                Snackbar.make(requireView(), "Đã xóa bài đăng thành công!", Snackbar.LENGTH_SHORT).show();
+                // Refresh the list
+                fetchAndObservePosts();
+            } else {
+                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
             }
         });
     }

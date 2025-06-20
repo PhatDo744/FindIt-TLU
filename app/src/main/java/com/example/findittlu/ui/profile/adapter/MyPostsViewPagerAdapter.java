@@ -21,11 +21,11 @@ public class MyPostsViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 1:
-                return PostListByTypeFragment.newInstance("SEARCHING");
+                return PostListByTypeFragment.newInstance("lost");
             case 2:
-                return PostListByTypeFragment.newInstance("FOUND");
+                return PostListByTypeFragment.newInstance("found");
             case 3:
-                return PostListByTypeFragment.newInstance("COMPLETED");
+                return PostListByTypeFragment.newInstance("completed");
             case 0:
             default:
                 return PostListByTypeFragment.newInstance("ALL");

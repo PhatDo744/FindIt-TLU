@@ -2,6 +2,7 @@ package com.example.findittlu.data.api;
 
 import com.example.findittlu.data.model.User;
 import com.example.findittlu.data.model.Post;
+import com.example.findittlu.data.model.PostResponse;
 import com.example.findittlu.data.model.Category;
 import com.example.findittlu.data.model.ItemImage;
 import com.example.findittlu.data.model.LoginResponse;
@@ -90,16 +91,16 @@ public interface ApiService {
     Call<PostListResponse> getMyPosts(@Query("user_id") long userId);
 
     @POST("items")
-    Call<Post> createPost(@Body Post post);
+    Call<PostResponse> createPost(@Body Post post);
 
     @PUT("items/{id}")
-    Call<Post> updatePost(@Path("id") long id, @Body Post post);
+    Call<PostResponse> updatePost(@Path("id") long id, @Body Post post);
 
     @DELETE("items/{id}")
     Call<Void> deletePost(@Path("id") long id);
     
     @PUT("items/{id}/complete")
-    Call<Post> markAsCompleted(@Path("id") long id);
+    Call<PostResponse> markAsCompleted(@Path("id") long id);
 
     // Categories
     @GET("categories")
@@ -108,14 +109,13 @@ public interface ApiService {
     // Images
     @Multipart
     @POST("items/{id}/images")
-    Call<ItemImage> uploadItemImage(
+    Call<Void> uploadImage(
         @Path("id") long itemId,
-        @Part MultipartBody.Part image,
-        @Part("caption") RequestBody caption
+        @Part MultipartBody.Part image
     );
-    
+
     @DELETE("item-images/{id}")
-    Call<Void> deleteItemImage(@Path("id") long imageId);
+    Call<Void> deleteImage(@Path("id") long imageId);
     
     // Notifications
     @GET("notifications")

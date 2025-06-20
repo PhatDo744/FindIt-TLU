@@ -4,20 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+import android.app.Application;
+import androidx.lifecycle.AndroidViewModel;
 import com.example.findittlu.adapter.LostFoundItem;
 import com.example.findittlu.data.model.Post;
 import com.example.findittlu.data.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeViewModel extends ViewModel {
+public class HomeViewModel extends AndroidViewModel {
     private PostRepository postRepository;
     private MutableLiveData<List<Post>> posts = new MutableLiveData<>();
     private MutableLiveData<List<LostFoundItem>> postList = new MutableLiveData<>();
     private MutableLiveData<Boolean> isApiConnected = new MutableLiveData<>(true);
 
-    public HomeViewModel() {
-        postRepository = new PostRepository();
+    public HomeViewModel(Application application) {
+        super(application);
+        postRepository = new PostRepository(application);
     }
 
     public void fetchPosts() {

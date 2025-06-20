@@ -55,7 +55,11 @@
         android:id="@+id/myPostsFragment"
         android:name="com.example.findittlu.ui.profile.MyPostsFragment"
         android:label="fragment_my_posts"
-        tools:layout="@layout/activity_my_posts" />
+        tools:layout="@layout/activity_my_posts">
+        <action
+            android:id="@+id/action_myPostsFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/policyFragment"
         android:name="com.example.findittlu.ui.common.PolicyFragment"
@@ -81,5 +85,14 @@
         android:name="com.example.findittlu.ui.common.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/activity_search" />
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.example.findittlu.ui.post.EditPostFragment"
+        android:label="fragment_edit_post"
+        tools:layout="@layout/fragment_edit_post">
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
 
 </navigation> 

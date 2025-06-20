@@ -95,18 +95,13 @@
         <item name="android:insetBottom">0dp</item>
     </style>
 
-    <style name="MyPostTextActionButton" parent="Widget.Material3.Button.TextButton.Icon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">25dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:paddingStart">5dp</item>
-        <item name="android:paddingEnd">5dp</item>
+    <style name="MyPostTextActionButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textSize">12sp</item>
-        <item name="iconPadding">2dp</item>
-        <item name="iconSize">15dp</item>
+        <item name="android:letterSpacing">0.01</item>
         <item name="cornerRadius">8dp</item>
+        <item name="iconSize">14dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
     </style>
 
     <!-- Style cho chữ trên các tab -->
@@ -230,5 +225,18 @@
         <item name="cornerSizeTopRight">16dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialog.PositiveButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AlertDialog.NegativeButton</item>
+    </style>
+
+    <style name="AlertDialog.PositiveButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/lost_red</item>
+    </style>
+
+    <style name="AlertDialog.NegativeButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/text_secondary</item>
     </style>
 </resources>

@@ -16,4 +16,8 @@ public class UserViewModel extends ViewModel {
     public LiveData<User> updateProfile(User user) {
         return userRepository.updateProfile(user);
     }
+
+    public LiveData<User> uploadAvatar(android.content.Context context, android.net.Uri avatarUri) {
+        return userRepository.uploadAvatar(context, avatarUri);
+    }
 } 

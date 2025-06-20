@@ -1,18 +1,25 @@
 package com.example.findittlu.ui.profile.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.findittlu.R;
 import com.example.findittlu.data.model.Post;
 import com.google.android.material.button.MaterialButton;
 import androidx.core.content.ContextCompat;
+import com.bumptech.glide.Glide;
+import com.example.findittlu.utils.ImageUtils;
 
 import java.util.List;
 
@@ -20,10 +27,17 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
 
     private Context context;
     private List<Post> posts;
+    private OnPostActionListener listener;
 
-    public MyPostsAdapter(Context context, List<Post> posts) {
+    public interface OnPostActionListener {
+        void onCompleteClick(Post post);
+        void onDeleteClick(Post post);
+    }
+
+    public MyPostsAdapter(Context context, List<Post> posts, OnPostActionListener listener) {
         this.context = context;
         this.posts = posts;
+        this.listener = listener;
     }
 
     @NonNull
@@ -57,6 +71,52 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
                 holder.statusChip.setBackgroundResource(0);
             }
 
+            holder.editButton.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("postId", String.valueOf(post.getId()));
+                Navigation.findNavController(v).navigate(R.id.action_myPostsFragment_to_editPostFragment, bundle);
+            });
+
+            holder.completeButton.setOnClickListener(v -> {
+                if (listener != null) {
+                    new AlertDialog.Builder(context)
+                            .setTitle("Xác nhận hoàn thành")
+                            .setMessage("Bạn có chắc chắn muốn đánh dấu tin '" + post.getTitle() + "' là đã xong không?")
+                            .setPositiveButton("Xác nhận", (dialog, which) -> listener.onCompleteClick(post))
+                            .setNegativeButton("Hủy", null)
+                            .show();
+                }
+            });
+
+            holder.deleteButton.setOnClickListener(v -> {
+                if (listener != null) {
+                    // Create a new AlertDialog Builder
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    LayoutInflater inflater = LayoutInflater.from(context);
+                    View dialogView = inflater.inflate(R.layout.dialog_confirm_delete, null);
+                    builder.setView(dialogView);
+
+                    final AlertDialog dialog = builder.create();
+
+                    // Set onClick listeners for the custom buttons
+                    MaterialButton deleteButton = dialogView.findViewById(R.id.buttonDelete);
+                    MaterialButton cancelButton = dialogView.findViewById(R.id.buttonCancel);
+
+                    deleteButton.setOnClickListener(view -> {
+                        listener.onDeleteClick(post);
+                        dialog.dismiss();
+                    });
+
+                    cancelButton.setOnClickListener(view -> dialog.dismiss());
+                    
+                    if (dialog.getWindow() != null) {
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    }
+                    
+                    dialog.show();
+                }
+            });
+
             // Hiển thị cảnh báo nếu sắp hết hạn
             if (post.isExpiringSoon()) {
                 holder.expiryWarningTextView.setVisibility(View.VISIBLE);
@@ -67,23 +127,42 @@ public class MyPostsAdapter extends RecyclerView.Adapter<MyPostsAdapter.PostView
             }
 
             // Hiển thị nút theo trạng thái
-            if (post.getStatus().equalsIgnoreCase("COMPLETED")) {
-                holder.deleteButton.setVisibility(View.VISIBLE);
-                holder.editButton.setVisibility(View.GONE);
-                holder.completeButton.setVisibility(View.GONE);
-            } else {
-                holder.deleteButton.setVisibility(View.VISIBLE);
-                holder.editButton.setVisibility(View.VISIBLE);
-                holder.completeButton.setVisibility(View.VISIBLE);
+            String status = post.getStatus().toLowerCase();
+            switch (status) {
+                case "returned":
+                case "completed":
+                    // Tin đã xong: chỉ có nút Xóa
+                    holder.editButton.setVisibility(View.GONE);
+                    holder.completeButton.setVisibility(View.GONE);
+                    holder.deleteButton.setVisibility(View.VISIBLE);
+                    break;
+                case "approved":
+                    // Tin đã duyệt: có cả 3 nút Sửa, Xóa, Đã xong
+                    holder.editButton.setVisibility(View.VISIBLE);
+                    holder.completeButton.setVisibility(View.VISIBLE);
+                    holder.deleteButton.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    // Các trạng thái khác (pending, rejected, expired...): có nút Sửa, Xóa
+                    holder.editButton.setVisibility(View.VISIBLE);
+                    holder.completeButton.setVisibility(View.GONE);
+                    holder.deleteButton.setVisibility(View.VISIBLE);
+                    break;
             }
             
             // Xử lý hình ảnh nếu có
             if (post.getImages() != null && !post.getImages().isEmpty()) {
                 // Load hình ảnh đầu tiên nếu có
-                // TODO: Sử dụng Glide/Picasso để load ảnh từ URL
+                String imageUrl = post.getImages().get(0).getImageUrl();
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    ImageUtils.loadItemImage(holder.imageView.getContext(), imageUrl, holder.imageView);
+                } else {
+                    holder.imageView.setImageResource(com.example.findittlu.R.drawable.image_placeholder_background);
+                }
                 holder.imageView.setVisibility(View.VISIBLE);
             } else {
-                holder.imageView.setVisibility(View.GONE);
+                holder.imageView.setImageResource(com.example.findittlu.R.drawable.image_placeholder_background);
+                holder.imageView.setVisibility(View.VISIBLE);
             }
         }
     }

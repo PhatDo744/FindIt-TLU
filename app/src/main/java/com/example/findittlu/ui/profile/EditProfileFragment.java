@@ -22,8 +22,21 @@ import com.example.findittlu.data.model.User;
 import android.widget.EditText;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.example.findittlu.utils.ImageUtils;
+import android.content.Intent;
+import android.net.Uri;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import android.widget.TextView;
 
 public class EditProfileFragment extends Fragment {
+
+    private ImageView avatarImageView;
+    private ImageView cameraIcon;
+    private TextView changeAvatarTextView;
+    private ActivityResultLauncher<Intent> pickAvatarLauncher;
+    private UserViewModel userViewModel;
+    private Uri selectedAvatarUri;
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -47,23 +60,57 @@ public class EditProfileFragment extends Fragment {
         // Thiết lập các nút
         setupButtons(view, navController);
 
+        // Khởi tạo view và ViewModel
+        avatarImageView = view.findViewById(R.id.avatarImageView);
+        cameraIcon = view.findViewById(R.id.cameraIcon);
+        changeAvatarTextView = view.findViewById(R.id.changeAvatarTextView);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        // Đăng ký ActivityResultLauncher để chọn ảnh
+        pickAvatarLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    if (uri != null) {
+                        selectedAvatarUri = uri;
+                        avatarImageView.setImageURI(uri); // Preview
+                        // Upload lên server
+                        userViewModel.uploadAvatar(requireContext(), uri).observe(getViewLifecycleOwner(), user -> {
+                            if (user != null && user.getPhotoUrl() != null) {
+                                Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                                ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
+                            } else {
+                                // Có thể API trả về body rỗng nhưng thực tế đã thành công
+                                userViewModel.getProfile().observe(getViewLifecycleOwner(), refreshedUser -> {
+                                    if (refreshedUser != null && refreshedUser.getPhotoUrl() != null) {
+                                        ImageUtils.loadAvatar(requireContext(), refreshedUser.getPhotoUrl(), avatarImageView);
+                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thất bại!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+        // Bắt sự kiện click vào icon bút chì/camera và text đổi avatar
+        cameraIcon.setOnClickListener(v -> openImagePicker());
+        changeAvatarTextView.setOnClickListener(v -> openImagePicker());
+
         // Lấy dữ liệu user và bind lên UI
-        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         EditText fullNameEditText = view.findViewById(R.id.fullNameEditText);
         EditText phoneEditText = view.findViewById(R.id.phoneEditText);
         EditText emailEditText = view.findViewById(R.id.emailEditText);
-        ImageView avatarImageView = view.findViewById(R.id.avatarImageView);
         userViewModel.getProfile().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 fullNameEditText.setText(user.getFullName());
                 phoneEditText.setText(user.getPhoneNumber());
                 emailEditText.setText(user.getEmail());
                 if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
-                    String url = user.getPhotoUrl();
-                    if (!url.startsWith("http")) {
-                        url = "http://10.0.2.2:8000" + url;
-                    }
-                    Glide.with(this).load(url).placeholder(R.drawable.ic_person).into(avatarImageView);
+                    ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
                 } else {
                     avatarImageView.setImageResource(R.drawable.ic_person);
                 }
@@ -110,5 +157,11 @@ public class EditProfileFragment extends Fragment {
         cancelButton.setOnClickListener(v -> {
             navController.popBackStack();
         });
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        pickAvatarLauncher.launch(Intent.createChooser(intent, "Chọn ảnh đại diện"));
     }
 } 
