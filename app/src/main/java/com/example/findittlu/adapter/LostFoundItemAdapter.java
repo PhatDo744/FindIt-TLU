@@ -53,11 +53,7 @@ public class LostFoundItemAdapter extends RecyclerView.Adapter<LostFoundItemAdap
         // Sự kiện click mở chi tiết
         holder.itemView.setOnClickListener(v -> {
             android.os.Bundle args = new android.os.Bundle();
-            args.putString("title", item.getTitle());
-            args.putString("location", item.getLocation());
-            args.putString("date", item.getDate());
-            args.putBoolean("isLost", item.isLost());
-            args.putInt("imageRes", item.getImageUrl());
+            args.putLong("postId", item.getPostId());
             androidx.navigation.NavController navController = androidx.navigation.Navigation.findNavController(holder.itemView);
             navController.navigate(com.example.findittlu.R.id.detailFragment, args);
         });

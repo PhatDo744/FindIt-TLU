@@ -50,15 +50,31 @@ public class DetailViewModel extends ViewModel {
         });
     }
     public static class DetailData {
-        public String title, description, date, location, userName;
+        public String title, description, date, timeAgo, location, userName;
         public boolean isLost;
-        public DetailData(String title, String description, Date date, String location, boolean isLost, String userName) {
+        public DetailData(String title, String description, Date dateObj, String location, boolean isLost, String userName) {
             this.title = title;
             this.description = description;
-            this.date = String.valueOf(date);
+            // Định dạng ngày
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            this.date = dateObj != null ? sdf.format(dateObj) : "";
+            // Tính time ago
+            this.timeAgo = getTimeAgo(dateObj);
             this.location = location;
             this.isLost = isLost;
             this.userName = userName;
+        }
+        private String getTimeAgo(Date dateObj) {
+            if (dateObj == null) return "";
+            long diff = new Date().getTime() - dateObj.getTime();
+            long seconds = diff / 1000;
+            long minutes = seconds / 60;
+            long hours = minutes / 60;
+            long days = hours / 24;
+            if (days > 0) return days + " ngày trước";
+            if (hours > 0) return hours + " giờ trước";
+            if (minutes > 0) return minutes + " phút trước";
+            return "Vừa xong";
         }
     }
 } 

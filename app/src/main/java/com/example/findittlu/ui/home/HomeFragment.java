@@ -17,11 +17,15 @@ import android.widget.LinearLayout;
 import com.example.findittlu.data.model.Post;
 import com.example.findittlu.ui.profile.adapter.MyPostsAdapter;
 import com.example.findittlu.viewmodel.HomeViewModel;
+import com.example.findittlu.viewmodel.CategoryViewModel;
+import com.example.findittlu.data.model.Category;
 
 import java.util.ArrayList;
 import java.util.List;
 import androidx.lifecycle.ViewModelProvider;
 import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 public class HomeFragment extends Fragment {
     private RecyclerView recentItemsRecyclerView;
@@ -30,6 +34,9 @@ public class HomeFragment extends Fragment {
     private LinearLayout categoryLayout;
     private String selectedCategory = "Tất cả";
     private HomeViewModel homeViewModel;
+    private CategoryViewModel categoryViewModel;
+    // Lưu map tên -> id danh mục để lọc
+    private java.util.Map<String, Long> categoryNameToId = new java.util.HashMap<>();
 
     public HomeFragment() {}
 
@@ -43,11 +50,15 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         recentItemsRecyclerView = view.findViewById(R.id.recentItemsRecyclerView);
         recentItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         lostFoundItemAdapter = new LostFoundItemAdapter(this, new ArrayList<>());
         recentItemsRecyclerView.setAdapter(lostFoundItemAdapter);
-        setupCategoryButtons(view);
+        // Gọi API lấy danh mục
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            setupCategoryButtonsDynamic(view, categories);
+        });
         // Observe API connection
         homeViewModel.getIsApiConnected().observe(getViewLifecycleOwner(), connected -> {
             if (!connected) Toast.makeText(getContext(), "Không thể kết nối API!", Toast.LENGTH_SHORT).show();
@@ -58,34 +69,71 @@ public class HomeFragment extends Fragment {
             recentItemsRecyclerView.setAdapter(lostFoundItemAdapter);
         });
         homeViewModel.fetchPosts();
+        // Tìm kiếm theo từ khóa
+        EditText searchEditText = view.findViewById(R.id.searchEditText);
+        ImageButton searchButton = view.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(v -> {
+            String keyword = searchEditText.getText().toString().trim();
+            if (!keyword.isEmpty()) {
+                homeViewModel.fetchPostsByKeyword(keyword);
+            }
+        });
     }
 
-    private void setupCategoryButtons(View view) {
+    // Hàm mới: tạo button danh mục động từ API
+    private void setupCategoryButtonsDynamic(View view, java.util.List<Category> categories) {
         categoryLayout = view.findViewById(R.id.categoryLayout);
+        categoryLayout.removeAllViews();
+        categoryNameToId.clear();
+        // Thêm nút "Tất cả"
+        com.google.android.material.button.MaterialButton btnAll = new com.google.android.material.button.MaterialButton(requireContext(), null, R.style.CategoryButton);
+        LinearLayout.LayoutParams paramsAll = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        paramsAll.setMarginEnd(16);
+        btnAll.setLayoutParams(paramsAll);
+        btnAll.setText("Tất cả");
+        btnAll.setOnClickListener(v -> {
+            selectCategoryButton(btnAll);
+            selectedCategory = "Tất cả";
+            homeViewModel.fetchPosts();
+        });
+        categoryLayout.addView(btnAll);
+        // Thêm các button danh mục từ API
+        if (categories != null) {
+            for (Category cat : categories) {
+                categoryNameToId.put(cat.getName(), cat.getId());
+                com.google.android.material.button.MaterialButton btn = new com.google.android.material.button.MaterialButton(requireContext(), null, R.style.CategoryButton);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMarginEnd(16);
+                btn.setLayoutParams(params);
+                btn.setText(cat.getName());
+                btn.setOnClickListener(v -> {
+                    selectCategoryButton(btn);
+                    selectedCategory = cat.getName();
+                    Long catId = categoryNameToId.get(selectedCategory);
+                    if (catId != null) {
+                        homeViewModel.fetchPostsByCategory(catId);
+                    }
+                });
+                categoryLayout.addView(btn);
+            }
+        }
+        // Mặc định chọn "Tất cả"
+        selectCategoryButton(btnAll);
+    }
+
+    // Hàm chọn button danh mục (đổi màu)
+    private void selectCategoryButton(com.google.android.material.button.MaterialButton selectedBtn) {
         int count = categoryLayout.getChildCount();
         for (int i = 0; i < count; i++) {
             View v = categoryLayout.getChildAt(i);
-            if (v instanceof MaterialButton) {
-                MaterialButton btn = (MaterialButton) v;
-                btn.setOnClickListener(view1 -> {
-                    for (int j = 0; j < count; j++) {
-                        View v2 = categoryLayout.getChildAt(j);
-                        if (v2 instanceof MaterialButton) {
-                            MaterialButton btn2 = (MaterialButton) v2;
-                            btn2.setBackgroundTintList(android.content.res.ColorStateList.valueOf(requireContext().getResources().getColor(android.R.color.transparent)));
-                            btn2.setTextColor(requireContext().getResources().getColor(R.color.text_secondary));
-                        }
-                    }
-                    btn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(requireContext().getResources().getColor(R.color.primary_blue)));
-                    btn.setTextColor(requireContext().getResources().getColor(R.color.white));
-                    selectedCategory = btn.getText().toString();
-                    loadItemsByCategory(selectedCategory);
-                });
+            if (v instanceof com.google.android.material.button.MaterialButton) {
+                com.google.android.material.button.MaterialButton btn = (com.google.android.material.button.MaterialButton) v;
+                btn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(android.R.color.transparent)));
+                btn.setTextColor(getResources().getColor(R.color.text_secondary));
             }
         }
-        MaterialButton btnAll = (MaterialButton) categoryLayout.getChildAt(0);
-        btnAll.setBackgroundTintList(android.content.res.ColorStateList.valueOf(requireContext().getResources().getColor(R.color.primary_blue)));
-        btnAll.setTextColor(requireContext().getResources().getColor(R.color.white));
+        selectedBtn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.primary_blue)));
+        selectedBtn.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void loadItemsByCategory(String category) {

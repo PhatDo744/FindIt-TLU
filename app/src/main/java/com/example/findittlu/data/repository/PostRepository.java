@@ -245,4 +245,23 @@ public class PostRepository {
             callback.onResult(allPosts, true);
         }
     }
+
+    public LiveData<List<Post>> getPostsByCategory(long categoryId) {
+        MutableLiveData<List<Post>> data = new MutableLiveData<>();
+        RetrofitClient.getApiService().getItemsByCategory(categoryId).enqueue(new Callback<PostListResponse>() {
+            @Override
+            public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    data.setValue(response.body().getData());
+                } else {
+                    data.setValue(null);
+                }
+            }
+            @Override
+            public void onFailure(Call<PostListResponse> call, Throwable t) {
+                data.setValue(null);
+            }
+        });
+        return data;
+    }
 }

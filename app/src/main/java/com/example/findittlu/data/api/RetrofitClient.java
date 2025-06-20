@@ -17,6 +17,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import com.example.findittlu.data.api.ApiService;
 
 public class RetrofitClient {
     private static final String TAG = "RetrofitClient";

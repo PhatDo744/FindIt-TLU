@@ -135,6 +135,7 @@
                 android:layout_marginBottom="8dp"
                 android:scrollbars="none">
                 <LinearLayout
+                    android:id="@+id/categoryLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -173,6 +174,7 @@
                         android:text="Ví/Túi"
                         android:textColor="@color/text_secondary"
                         app:strokeColor="@color/divider_color" />
+                    <!-- Các button danh mục sẽ được thêm động ở đây -->
                 </LinearLayout>
             </HorizontalScrollView>
 

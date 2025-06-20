@@ -129,4 +129,16 @@ public interface ApiService {
     
     @PUT("notifications/read-all")
     Call<Void> markAllNotificationsAsRead();
+
+    @GET("items/category/{categoryId}")
+    Call<PostListResponse> getItemsByCategory(@Path("categoryId") long categoryId);
+
+    @GET("items/type/{itemType}")
+    Call<PostListResponse> getItemsByType(@Path("itemType") String itemType);
+
+    @GET("items/category/{categoryId}/type/{itemType}")
+    Call<PostListResponse> getItemsByCategoryAndType(@Path("categoryId") long categoryId, @Path("itemType") String itemType);
+
+    @GET("items/search/{keyword}")
+    Call<PostListResponse> searchItems(@Path("keyword") String keyword);
 }
