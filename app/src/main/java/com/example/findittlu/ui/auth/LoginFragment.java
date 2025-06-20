@@ -81,6 +81,12 @@ public class LoginFragment extends Fragment {
             });
         });
 
+        // Sự kiện chuyển sang giao diện đăng ký
+        view.findViewById(R.id.registerTextView).setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+            navController.navigate(R.id.registerFragment);
+        });
+
         return view;
     }
 }
