@@ -1,6 +1,7 @@
 package com.example.findittlu.viewmodel;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,29 +11,45 @@ import java.util.List;
 
 public class MyPostsViewModel extends AndroidViewModel {
     private final PostRepository postRepository;
+    private final MutableLiveData<Boolean> deletionResult = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> completionResult = new MutableLiveData<>();
+    private final MutableLiveData<List<Post>> myPosts = new MutableLiveData<>();
 
     public MyPostsViewModel(Application application) {
         super(application);
         postRepository = new PostRepository(application);
     }
 
-    public LiveData<List<Post>> getMyPosts(long userId) {
-        return postRepository.getPostsFromApi(userId);
+    // LiveData cho kết quả xóa
+    public LiveData<Boolean> getDeletionResult() {
+        return deletionResult;
     }
 
-    public LiveData<Post> createPost(Post post) {
-        return postRepository.createPost(post);
+    // LiveData cho kết quả hoàn thành
+    public LiveData<Boolean> getCompletionResult() {
+        return completionResult;
     }
 
-    public LiveData<Post> updatePost(long id, Post post) {
-        return postRepository.updatePost(id, post);
+    // LiveData cho danh sách bài đăng
+    public LiveData<List<Post>> getMyPosts() {
+        return myPosts;
     }
 
-    public LiveData<Boolean> deletePost(long id) {
-        return postRepository.deletePost(id);
+    public void fetchMyPosts(long userId) {
+        postRepository.getPostsFromApi(userId).observeForever(posts -> {
+            myPosts.setValue(posts);
+        });
     }
 
-    public LiveData<Boolean> markPostAsCompleted(long id) {
-        return postRepository.markAsCompleted(id);
+    public void deletePost(long id) {
+        postRepository.deletePost(id).observeForever(success -> {
+            deletionResult.setValue(success);
+        });
+    }
+
+    public void markPostAsCompleted(long id) {
+        postRepository.markAsCompleted(id).observeForever(success -> {
+            completionResult.setValue(success);
+        });
     }
 } 

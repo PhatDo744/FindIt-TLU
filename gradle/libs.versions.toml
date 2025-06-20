@@ -15,6 +15,7 @@ materialVersion = "1.5.0"
 navigationRuntimeAndroid = "2.9.0"
 okhttp = "4.9.3"
 retrofit = "2.9.0"
+media3Decoder = "1.7.1"
 
 [libraries]
 adapter-rxjava2 = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }
@@ -37,6 +38,7 @@ navigation-runtime-android = { group = "androidx.navigation", name = "navigation
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationRuntimeAndroid" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+media3-decoder = { group = "androidx.media3", name = "media3-decoder", version.ref = "media3Decoder" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

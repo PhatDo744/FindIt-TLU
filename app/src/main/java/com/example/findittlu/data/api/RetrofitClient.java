@@ -14,11 +14,14 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.findittlu.data.api.ApiService;
+
+import okio.Buffer;
 
 public class RetrofitClient {
     private static final String TAG = "RetrofitClient";
@@ -30,6 +33,14 @@ public class RetrofitClient {
     
     private static Retrofit retrofit = null;
     private static Context appContext;
+    
+    private static String getToken() {
+        if (appContext != null) {
+            SharedPreferences prefs = appContext.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+            return prefs.getString("token", null);
+        }
+        return null;
+    }
     
     public static void init(Context context) {
         appContext = context.getApplicationContext();
@@ -56,19 +67,18 @@ public class RetrofitClient {
                     Request original = chain.request();
                     
                     // Lấy token từ SharedPreferences
-                    String token = null;
-                    if (appContext != null) {
-                        SharedPreferences prefs = appContext.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-                        token = prefs.getString("token", null);
-                    }
+                    String token = getToken();
                     
                     // Thêm header Authorization nếu có token
                     Request.Builder requestBuilder = original.newBuilder()
                             .header("Accept", "application/json");
 
                     // Chỉ thêm Content-Type cho non-multipart requests và khi có body
-                    if (original.body() != null && !original.body().contentType().toString().contains("multipart")) {
-                        requestBuilder.header("Content-Type", "application/json");
+                    if (original.body() != null) {
+                        okhttp3.MediaType mediaType = original.body().contentType();
+                        if (mediaType != null && !mediaType.toString().contains("multipart")) {
+                            requestBuilder.header("Content-Type", "application/json");
+                        }
                     }
 
                     if (token != null && !token.isEmpty()) {
@@ -77,19 +87,19 @@ public class RetrofitClient {
                     } else {
                         Log.w(TAG, "Không có token cho request: " + original.url());
                     }
-                    
+
                     Request request = requestBuilder.build();
                     return chain.proceed(request);
                 }
             };
-            
+
             // OkHttpClient configuration
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
-                    .addInterceptor(authInterceptor)
                     .addInterceptor(loggingInterceptor)
+                    .addInterceptor(authInterceptor)
                     .build();
 
             // Build Retrofit
@@ -102,8 +112,35 @@ public class RetrofitClient {
         return retrofit;
     }
 
+    private static void logRequest(Request request) {
+        try {
+            Log.d(TAG, "--> " + request.method() + " " + request.url());
+            Log.d(TAG, "Headers: " + request.headers());
+
+            RequestBody body = request.body();
+            if (body != null) {
+                Buffer buffer = new Buffer();
+                body.writeTo(buffer);
+                Log.d(TAG, "Body: " + buffer.readUtf8());
+            } else {
+                Log.d(TAG, "Body: (empty)");
+            }
+            Log.d(TAG, "--> END " + request.method());
+        } catch (Exception e) {
+            Log.e(TAG, "Error logging request", e);
+        }
+    }
+
     public static ApiService getApiService() {
-        return getClient().create(ApiService.class);
+        if (retrofit == null) {
+            synchronized (RetrofitClient.class) {
+                if (retrofit == null) {
+                    init(appContext);
+                    getClient();
+                }
+            }
+        }
+        return retrofit.create(ApiService.class);
     }
     
     public static void clearInstance() {

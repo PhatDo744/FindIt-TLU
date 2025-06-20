@@ -66,12 +66,14 @@ public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.O
             if (getActivity() != null) getActivity().onBackPressed();
             return;
         }
-
-        fetchAndObservePosts();
+        
+        setupObservers();
+        viewModel.fetchMyPosts(userId); // Bắt đầu tải dữ liệu
     }
 
-    private void fetchAndObservePosts() {
-        viewModel.getMyPosts(userId).observe(getViewLifecycleOwner(), posts -> {
+    private void setupObservers() {
+        // Observer cho danh sách bài đăng
+        viewModel.getMyPosts().observe(getViewLifecycleOwner(), posts -> {
             if (posts == null) {
                 android.util.Log.e("DEBUG_MyPosts", "posts null - Lỗi API hoặc thiếu userId");
                 android.widget.Toast.makeText(getContext(), "Lỗi API hoặc thiếu userId. Vui lòng kiểm tra lại!", android.widget.Toast.LENGTH_LONG).show();
@@ -88,21 +90,21 @@ public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.O
                     break;
                 case "lost":
                     for (Post p : posts) {
-                        if ("lost".equalsIgnoreCase(p.getItemType()) && !"returned".equalsIgnoreCase(p.getStatus()) && !"completed".equalsIgnoreCase(p.getStatus())) {
+                        if (("lost".equalsIgnoreCase(p.getItemType()) || "searching".equalsIgnoreCase(p.getStatus())) && !"completed".equalsIgnoreCase(p.getStatus()) && !"returned".equalsIgnoreCase(p.getStatus())) {
                             filteredList.add(p);
                         }
                     }
                     break;
                 case "found":
                     for (Post p : posts) {
-                        if ("found".equalsIgnoreCase(p.getItemType()) && !"returned".equalsIgnoreCase(p.getStatus()) && !"completed".equalsIgnoreCase(p.getStatus())) {
+                        if ("found".equalsIgnoreCase(p.getItemType()) && !"completed".equalsIgnoreCase(p.getStatus()) && !"returned".equalsIgnoreCase(p.getStatus())) {
                             filteredList.add(p);
                         }
                     }
                     break;
                 case "completed":
                     for (Post p : posts) {
-                        if ("returned".equalsIgnoreCase(p.getStatus()) || "completed".equalsIgnoreCase(p.getStatus())) {
+                        if ("completed".equalsIgnoreCase(p.getStatus()) || "returned".equalsIgnoreCase(p.getStatus())) {
                             filteredList.add(p);
                         }
                     }
@@ -111,31 +113,35 @@ public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.O
             android.util.Log.d("DEBUG_MyPosts", "Filtered posts count: " + filteredList.size());
             adapter.updateData(filteredList);
         });
+
+        // Observer cho kết quả hoàn thành
+        viewModel.getCompletionResult().observe(getViewLifecycleOwner(), success -> {
+            if (success != null && success) {
+                Snackbar.make(requireView(), "Đã đánh dấu hoàn thành!", Snackbar.LENGTH_SHORT).show();
+                viewModel.fetchMyPosts(userId); // Tải lại danh sách
+            } else if (success != null) {
+                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+        // Observer cho kết quả xóa
+        viewModel.getDeletionResult().observe(getViewLifecycleOwner(), success -> {
+            if (success != null && success) {
+                Snackbar.make(requireView(), "Đã xóa bài đăng thành công!", Snackbar.LENGTH_SHORT).show();
+                viewModel.fetchMyPosts(userId); // Tải lại danh sách
+            } else if (success != null) {
+                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onCompleteClick(Post post) {
-        viewModel.markPostAsCompleted(post.getId()).observe(getViewLifecycleOwner(), success -> {
-            if (success) {
-                Snackbar.make(requireView(), "Đã đánh dấu hoàn thành!", Snackbar.LENGTH_SHORT).show();
-                // Refresh the list
-                fetchAndObservePosts();
-            } else {
-                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+        viewModel.markPostAsCompleted(post.getId());
     }
 
     @Override
     public void onDeleteClick(Post post) {
-        viewModel.deletePost(post.getId()).observe(getViewLifecycleOwner(), success -> {
-            if (success) {
-                Snackbar.make(requireView(), "Đã xóa bài đăng thành công!", Snackbar.LENGTH_SHORT).show();
-                // Refresh the list
-                fetchAndObservePosts();
-            } else {
-                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+        viewModel.deletePost(post.getId());
     }
 } 

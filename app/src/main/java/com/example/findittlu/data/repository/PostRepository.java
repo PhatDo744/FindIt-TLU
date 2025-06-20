@@ -37,6 +37,7 @@ public class PostRepository {
         createDummyData();
     }
     public PostRepository(Context context) {
+        this.context = context;
         createDummyData();
     }
 
@@ -288,13 +289,13 @@ public class PostRepository {
                 if (response.isSuccessful()) {
                     callback.onSuccess(null);
                 } else {
-                    callback.onError("Failed to delete image with code: " + response.code());
+                    callback.onError("Error deleting image: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                callback.onError(t.getMessage());
+                callback.onError("Failure deleting image: " + t.getMessage());
             }
         });
     }
@@ -314,45 +315,56 @@ public class PostRepository {
             callbacks.onUploadSuccess();
             return;
         }
+
         Uri uri = imageUris.get(index);
+        File file;
         try {
-            File file = getFileFromUri(uri);
-            RequestBody requestFile = RequestBody.create(MediaType.parse(context.getContentResolver().getType(uri)), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            RetrofitClient.getApiService().uploadImage(postId, body).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        // Upload ảnh tiếp theo
-                        uploadImageAtIndex(postId, imageUris, index + 1, callbacks);
-                    } else {
-                        callbacks.onUploadFailure("Upload failed with code: " + response.code());
-                    }
-                }
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    callbacks.onUploadFailure(t.getMessage());
-                }
-            });
+            file = getFileFromUri(uri);
         } catch (Exception e) {
             Log.e("UploadImages", "File creation failed", e);
-            callbacks.onUploadFailure("Could not process one of the images.");
+            callbacks.onUploadFailure("Không thể tạo file từ URI.");
+            return;
         }
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+
+        RetrofitClient.getApiService().uploadImage(postId, body).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // Tải lên ảnh tiếp theo
+                    uploadImageAtIndex(postId, imageUris, index + 1, callbacks);
+                } else {
+                    callbacks.onUploadFailure("Lỗi server: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callbacks.onUploadFailure("Lỗi mạng: " + t.getMessage());
+            }
+        });
     }
 
-    // Helper to get a file from a content URI
     private File getFileFromUri(Uri uri) throws Exception {
-        InputStream inputStream = context.getContentResolver().openInputStream(uri);
-        // Create a temporary file
-        File tempFile = File.createTempFile("upload_", ".jpg", context.getCacheDir());
+        if (this.context == null) {
+            throw new IllegalStateException("Context is null. Make sure PostRepository is initialized with a valid Context.");
+        }
+        InputStream inputStream = this.context.getContentResolver().openInputStream(uri);
+        File tempFile = File.createTempFile("upload_", ".jpg", this.context.getCacheDir());
         tempFile.deleteOnExit();
-        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[4 * 1024];
+        try (OutputStream output = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[4 * 1024]; // 4k buffer
             int read;
             while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
+                output.write(buffer, 0, read);
             }
-            outputStream.flush();
+            output.flush();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
         }
         return tempFile;
     }

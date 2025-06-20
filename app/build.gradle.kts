@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
     implementation(libs.navigation.runtime.android)
+    implementation(libs.media3.decoder)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
