@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
-import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
 import com.example.findittlu.adapter.LostFoundItem;
 import com.example.findittlu.data.api.RetrofitClient;
 import com.example.findittlu.data.model.Post;
@@ -18,7 +16,6 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<Post>> posts = new MutableLiveData<>();
     private MutableLiveData<List<LostFoundItem>> postList = new MutableLiveData<>();
     private MutableLiveData<Boolean> isApiConnected = new MutableLiveData<>(true);
-
     public HomeViewModel() {
         postRepository = new PostRepository();
     }
@@ -39,12 +36,12 @@ public class HomeViewModel extends ViewModel {
                         date = sdf.format(post.getDateLostOrFound());
                     }
                     LostFoundItem item = new LostFoundItem(
-                        post.getId(),
-                        post.getTitle(),
-                        location,
-                        date,
-                        isLost,
-                        com.example.findittlu.R.drawable.image_placeholder_background
+                            post.getId(),
+                            post.getTitle(),
+                            location,
+                            date,
+                            isLost,
+                            com.example.findittlu.R.drawable.image_placeholder_background
                     );
                     items.add(item);
                 }
@@ -68,12 +65,12 @@ public class HomeViewModel extends ViewModel {
                         date = sdf.format(post.getDateLostOrFound());
                     }
                     LostFoundItem item = new LostFoundItem(
-                        post.getId(),
-                        post.getTitle(),
-                        location,
-                        date,
-                        isLost,
-                        com.example.findittlu.R.drawable.image_placeholder_background
+                            post.getId(),
+                            post.getTitle(),
+                            location,
+                            date,
+                            isLost,
+                            com.example.findittlu.R.drawable.image_placeholder_background
                     );
                     items.add(item);
                 }
@@ -99,12 +96,12 @@ public class HomeViewModel extends ViewModel {
                             date = sdf.format(post.getDateLostOrFound());
                         }
                         LostFoundItem item = new LostFoundItem(
-                            post.getId(),
-                            post.getTitle(),
-                            location,
-                            date,
-                            isLost,
-                            com.example.findittlu.R.drawable.image_placeholder_background
+                                post.getId(),
+                                post.getTitle(),
+                                location,
+                                date,
+                                isLost,
+                                com.example.findittlu.R.drawable.image_placeholder_background
                         );
                         items.add(item);
                     }
@@ -123,12 +120,12 @@ public class HomeViewModel extends ViewModel {
     public LiveData<List<Post>> getPosts() {
         return posts;
     }
-    
+
     public LiveData<List<LostFoundItem>> getPostList() {
         return postList;
     }
-    
+
     public LiveData<Boolean> getIsApiConnected() {
         return isApiConnected;
     }
-} 
+}

@@ -33,9 +33,10 @@ public class PostRepository {
     private List<Post> allPosts;
     public static final boolean USE_REAL_API = true; // true: gọi API, false: giả lập
     private Context context;
-
+    public PostRepository() {
+        createDummyData();
+    }
     public PostRepository(Context context) {
-        this.context = context.getApplicationContext();
         createDummyData();
     }
 
@@ -53,7 +54,7 @@ public class PostRepository {
     public LiveData<List<Post>> getPostsByType(String type) {
         MutableLiveData<List<Post>> data = new MutableLiveData<>();
         List<Post> filteredPosts;
-        
+
         if (type.equals("ALL")) {
             filteredPosts = allPosts.stream()
                                    .filter(p -> !p.isExpired())
@@ -69,10 +70,10 @@ public class PostRepository {
 
     private void createDummyData() {
         allPosts = new ArrayList<>();
-        
+
         // Tạo các bài đăng mẫu với ngày hết hạn khác nhau
         Calendar cal = Calendar.getInstance();
-        
+
         // Bài đăng còn hạn
         Post post1 = new Post();
         post1.setTitle("Mất thẻ sinh viên khu giảng đường A2");
@@ -83,7 +84,7 @@ public class PostRepository {
         cal.add(Calendar.DAY_OF_MONTH, 10); // Còn 10 ngày
         post1.setExpirationDate(cal.getTime());
         allPosts.add(post1);
-        
+
         // Bài đăng sắp hết hạn (còn 1 ngày)
         Post post2 = new Post();
         post2.setTitle("Nhặt được tai nghe Bluetooth màu trắng ở thư viện");
@@ -94,7 +95,7 @@ public class PostRepository {
         cal.add(Calendar.DAY_OF_MONTH, 1); // Còn 1 ngày
         post2.setExpirationDate(cal.getTime());
         allPosts.add(post2);
-        
+
         // Bài đăng đã hết hạn (không hiển thị)
         Post post3 = new Post();
         post3.setTitle("Tìm thấy chìa khóa xe máy gần nhà xe C1");
@@ -105,7 +106,7 @@ public class PostRepository {
         cal.add(Calendar.DAY_OF_MONTH, -1); // Đã hết hạn
         post3.setExpirationDate(cal.getTime());
         allPosts.add(post3);
-        
+
         // Bài đăng hoàn thành còn hạn
         Post post4 = new Post();
         post4.setTitle("Đã tìm lại được ví ở căng tin");
@@ -116,7 +117,7 @@ public class PostRepository {
         cal.add(Calendar.DAY_OF_MONTH, 5); // Còn 5 ngày
         post4.setExpirationDate(cal.getTime());
         allPosts.add(post4);
-        
+
         // Bài đăng mới
         Post post5 = new Post();
         post5.setTitle("Mất sách Giải tích 1 tại phòng tự học B101");

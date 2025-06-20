@@ -50,9 +50,6 @@ public class SearchFragment extends Fragment {
         searchResultRecyclerView = view.findViewById(R.id.searchResultRecyclerView);
         searchResultRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         searchResultList = new ArrayList<>();
-        searchResultList.add(new SearchResultItem(R.drawable.image_placeholder_background, true, "Ví da màu đen hiệu Gucci", "Ví/Túi xách", "Thư viện T45", "15/05/2025"));
-        searchResultList.add(new SearchResultItem(R.drawable.image_placeholder_background, false, "Thẻ sinh viên Hoàng Tiến Phúc", "Đồ điện tử", "Sân bóng TLU", "16/05/2025"));
-        searchResultList.add(new SearchResultItem(R.drawable.image_placeholder_background, true, "Máy tính laptop", "Đồ điện tử", "Kí túc xá K1", "16/05/2025"));
         searchResultAdapter = new SearchResultAdapter(new ArrayList<>());
         searchResultRecyclerView.setAdapter(searchResultAdapter);
         categoryLayout = view.findViewById(R.id.categoryLayout);
