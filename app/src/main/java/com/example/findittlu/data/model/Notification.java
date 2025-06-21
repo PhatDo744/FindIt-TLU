@@ -128,6 +128,8 @@ public class Notification {
         private int item_id;
         @SerializedName("type")
         private String type;
+        @SerializedName("reason")
+        private String reason;
         
         public String getTitle() {
             return title;
@@ -151,6 +153,14 @@ public class Notification {
         
         public void setType(String type) {
             this.type = type;
+        }
+        
+        public String getReason() {
+            return reason;
+        }
+        
+        public void setReason(String reason) {
+            this.reason = reason;
         }
     }
 } 

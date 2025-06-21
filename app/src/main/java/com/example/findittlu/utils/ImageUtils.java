@@ -7,11 +7,10 @@ import android.widget.ImageView;
 
 public class ImageUtils {
     
-    //private static final String BASE_URL_EMULATOR = "http://10.0.2.2:8000";
- //   private static final String BASE_URL_DEVICE = "http://192.168.1.5:8000"; // Thay đổi IP theo mạng của Phát
-    private static final String BASE_URL_DEVICE = "http://192.168.1.4:8000"; // Thay đổi IP theo mạng của Quang
-  //  private static final String BASE_URL_DEVICE = "http://192.168.1.3:8000"; // Thay đổi IP theo mạng của Phát
-//    private static final String BASE_URL_DEVICE = "http://192.168.1.4:8000"; // Thay đổi IP theo mạng của Quang
+    // Xóa các dòng hardcode URL cũ
+    // private static final String BASE_URL_EMULATOR = "http://10.0.2.2:8000";
+    // private static final String BASE_URL_DEVICE = "http://192.168.1.4:8000"; // Thay đổi IP theo mạng của Quang
+    // private static final String BASE_URL_DEVICE = "http://192.168.1.3:8000"; // Thay đổi IP theo mạng của Phát
 
     /**
      * Chuyển đổi URL tương đối thành URL đầy đủ
@@ -24,12 +23,14 @@ public class ImageUtils {
         if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
             return imageUrl;
         }
-        // Nếu là đường dẫn bắt đầu bằng / thì nối BASE_URL_DEVICE
+        // Sử dụng Constants.getStorageBaseUrl() thay vì hardcode
+        String baseUrl = Constants.getStorageBaseUrl();
+        // Nếu là đường dẫn bắt đầu bằng / thì nối BASE_URL
         if (imageUrl.startsWith("/")) {
-            return BASE_URL_DEVICE + imageUrl;
+            return baseUrl + imageUrl;
         }
         // Trường hợp khác, thêm dấu / nếu thiếu
-        return BASE_URL_DEVICE + "/" + imageUrl;
+        return baseUrl + "/" + imageUrl;
     }
     
     /**

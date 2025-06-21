@@ -36,7 +36,10 @@ public class DetailViewModel extends ViewModel {
                     java.util.List<String> imageUrls = new java.util.ArrayList<>();
                     
                     if (post.getImages() != null && !post.getImages().isEmpty()) {
-                        imageUrl = post.getImages().get(0).getImageUrl();
+                        // Sử dụng UrlUtils cho imageUrl đầu tiên
+                        String firstImageUrl = post.getImages().get(0).getImageUrl();
+                        imageUrl = firstImageUrl != null ? UrlUtils.toAbsoluteImageUrl(firstImageUrl) : null;
+                        
                         for (com.example.findittlu.data.model.ItemImage img : post.getImages()) {
                             String url = img.getImageUrl();
                             if (url != null) {
@@ -46,7 +49,6 @@ public class DetailViewModel extends ViewModel {
                                     imageUrls.add(absoluteUrl);
                                 }
                             }
-                            imageUrls.add(url);
                         }
                     }
                     String userEmail = post.getUser() != null ? post.getUser().getEmail() : "";

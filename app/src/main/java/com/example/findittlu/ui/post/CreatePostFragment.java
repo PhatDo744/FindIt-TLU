@@ -35,6 +35,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -272,13 +273,6 @@ public class CreatePostFragment extends Fragment {
     private void setupToolbar(View view, NavController navController) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
-        if (((AppCompatActivity) requireActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        toolbar.setNavigationOnClickListener(v -> {
-            navController.popBackStack();
-        });
     }
 
     private void setupDatePicker() {
@@ -287,6 +281,25 @@ public class CreatePostFragment extends Fragment {
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            // Kiểm tra xem đã có ngày được chọn trước đó chưa
+            String currentDateText = dateEditText.getText().toString().trim();
+            if (!currentDateText.isEmpty()) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    Date selectedDate = sdf.parse(currentDateText);
+                    if (selectedDate != null) {
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.setTime(selectedDate);
+                        year = selectedCalendar.get(Calendar.YEAR);
+                        month = selectedCalendar.get(Calendar.MONTH);
+                        day = selectedCalendar.get(Calendar.DAY_OF_MONTH);
+                    }
+                } catch (Exception e) {
+                    // Nếu parse lỗi, sử dụng ngày hiện tại
+                    android.util.Log.w("CreatePostFragment", "Error parsing current date: " + e.getMessage());
+                }
+            }
 
             // Create a ContextThemeWrapper to apply the custom theme
             final Context themedContext = new ContextThemeWrapper(requireContext(), R.style.MyDatePickerTheme);

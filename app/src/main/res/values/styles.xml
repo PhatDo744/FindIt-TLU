@@ -250,6 +250,5 @@
     <style name="MyDatePickerTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/primary_blue</item>
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:textColorPrimary">@color/primary_blue</item>
     </style>
 </resources>

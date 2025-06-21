@@ -42,7 +42,7 @@ public class NotificationsViewModel extends ViewModel {
                                 type = NotificationItem.TYPE_SUCCESS;
                             } else if (notifType.toLowerCase().contains("pending") || notifType.toLowerCase().contains("chờ")) {
                                 type = NotificationItem.TYPE_INFO;
-                            } else if (notifType.toLowerCase().contains("rejected") || notifType.toLowerCase().contains("từ chối") || notifType.toLowerCase().contains("warning")) {
+                            } else if (notifType.toLowerCase().contains("rejected") || notifType.toLowerCase().contains("từ chối") || notifType.toLowerCase().contains("warning") || notifType.toLowerCase().contains("deleted") || notifType.toLowerCase().contains("xóa")) {
                                 type = NotificationItem.TYPE_WARNING;
                             }
                         }
