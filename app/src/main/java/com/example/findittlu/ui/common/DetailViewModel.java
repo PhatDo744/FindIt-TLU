@@ -34,6 +34,9 @@ public class DetailViewModel extends ViewModel {
                     if (post.getImages() != null && !post.getImages().isEmpty()) {
                         imageUrl = post.getImages().get(0).getImageUrl();
                     }
+                    String userEmail = post.getUser() != null ? post.getUser().getEmail() : "";
+                    String userPhone = post.getUser() != null ? post.getUser().getPhoneNumber() : "";
+                    String userAvatarUrl = post.getUser() != null ? post.getUser().getPhotoUrl() : "";
                     detailData.setValue(new DetailData(
                         post.getTitle(),
                         post.getDescription(),
@@ -41,7 +44,10 @@ public class DetailViewModel extends ViewModel {
                         post.getLocationDescription(),
                         "lost".equalsIgnoreCase(post.getItemType()),
                         post.getUser() != null ? post.getUser().getFullName() : "",
-                        imageUrl
+                        imageUrl,
+                        userEmail,
+                        userPhone,
+                        userAvatarUrl
                     ));
                 } else {
                     detailData.setValue(null);
@@ -55,9 +61,9 @@ public class DetailViewModel extends ViewModel {
         });
     }
     public static class DetailData {
-        public String title, description, date, timeAgo, location, userName, imageUrl;
+        public String title, description, date, timeAgo, location, userName, imageUrl, userEmail, userPhone, userAvatarUrl;
         public boolean isLost;
-        public DetailData(String title, String description, Date dateObj, String location, boolean isLost, String userName, String imageUrl) {
+        public DetailData(String title, String description, Date dateObj, String location, boolean isLost, String userName, String imageUrl, String userEmail, String userPhone, String userAvatarUrl) {
             this.title = title;
             this.description = description;
             // Định dạng ngày
@@ -69,6 +75,9 @@ public class DetailViewModel extends ViewModel {
             this.isLost = isLost;
             this.userName = userName;
             this.imageUrl = imageUrl;
+            this.userEmail = userEmail;
+            this.userPhone = userPhone;
+            this.userAvatarUrl = userAvatarUrl;
         }
         private String getTimeAgo(Date dateObj) {
             if (dateObj == null) return "";

@@ -71,23 +71,18 @@ public class ProfileFragment extends Fragment {
                     Uri uri = result.getData().getData();
                     if (uri != null) {
                         selectedAvatarUri = uri;
-                        avatarImageView.setImageURI(uri); // Preview
+                        avatarImageView.setImageURI(uri); // Preview tạm thời
                         // Upload lên server
                         userViewModel.uploadAvatar(requireContext(), uri).observe(getViewLifecycleOwner(), user -> {
-                            if (user != null && user.getPhotoUrl() != null) {
-                                Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
-                                ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
-                            } else {
-                                // Có thể API trả về body rỗng nhưng thực tế đã thành công
-                                userViewModel.getProfile().observe(getViewLifecycleOwner(), refreshedUser -> {
-                                    if (refreshedUser != null && refreshedUser.getPhotoUrl() != null) {
-                                        ImageUtils.loadAvatar(requireContext(), refreshedUser.getPhotoUrl(), avatarImageView);
-                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thất bại!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
+                            // Sau khi upload, luôn gọi lại getProfile để lấy link ảnh mới nhất từ server
+                            userViewModel.getProfile().observe(getViewLifecycleOwner(), refreshedUser -> {
+                                if (refreshedUser != null && refreshedUser.getPhotoUrl() != null) {
+                                    ImageUtils.loadAvatar(requireContext(), refreshedUser.getPhotoUrl(), avatarImageView);
+                                    Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Đổi ảnh đại diện thất bại!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         });
                     }
                 }

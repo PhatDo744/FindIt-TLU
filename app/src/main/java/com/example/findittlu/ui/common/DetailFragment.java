@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.widget.Toast;
 import com.example.findittlu.utils.ImageUtils;
 import com.example.findittlu.utils.CustomToast;
+import android.webkit.WebView;
 
 public class DetailFragment extends Fragment {
     private DetailViewModel detailViewModel;
@@ -50,6 +51,15 @@ public class DetailFragment extends Fragment {
             ((TextView) view.findViewById(R.id.detail_location)).setText(data.location);
             ((TextView) view.findViewById(R.id.detail_status)).setText(data.isLost ? "Đồ vật bị mất" : "Đồ vật đã tìm thấy");
             ((TextView) view.findViewById(R.id.detail_user_name)).setText(data.userName);
+            ((TextView) view.findViewById(R.id.detail_user_email)).setText(data.userEmail);
+            ((TextView) view.findViewById(R.id.detail_user_phone)).setText(data.userPhone);
+            // Hiển thị avatar user
+            ImageView avatarView = view.findViewById(R.id.detail_user_avatar);
+            if (data.userAvatarUrl != null && !data.userAvatarUrl.isEmpty()) {
+                ImageUtils.loadAvatar(requireContext(), data.userAvatarUrl, avatarView);
+            } else {
+                avatarView.setImageResource(R.drawable.ic_person);
+            }
             if ((imageUrl == null || imageUrl.isEmpty()) && data.imageUrl != null && !data.imageUrl.isEmpty()) {
                 com.example.findittlu.utils.ImageUtils.loadItemImage(requireContext(), data.imageUrl, imageView);
             }
@@ -59,5 +69,9 @@ public class DetailFragment extends Fragment {
         btnContact.setOnClickListener(v -> {
             // TODO: Xử lý logic liên hệ (ví dụ mở email hoặc gọi điện)
         });
+        WebView mapWebView = view.findViewById(R.id.detail_map_webview);
+        mapWebView.getSettings().setJavaScriptEnabled(true);
+        String mapHtml = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6374893374127!2d105.82223027596942!3d21.0071636885187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac8109765ba5%3A0xd84740ece05680ee!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBUaOG7p3kgbOG7o2k!5e0!3m2!1svi!2s!4v1750478363302!5m2!1svi!2s\" width=\"100%\" height=\"200\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>";
+        mapWebView.loadData(mapHtml, "text/html", "UTF-8");
     }
 } 
