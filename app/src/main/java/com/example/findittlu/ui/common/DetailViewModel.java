@@ -30,13 +30,18 @@ public class DetailViewModel extends ViewModel {
             public void onResponse(Call<Post> call, Response<Post> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Post post = response.body();
+                    String imageUrl = null;
+                    if (post.getImages() != null && !post.getImages().isEmpty()) {
+                        imageUrl = post.getImages().get(0).getImageUrl();
+                    }
                     detailData.setValue(new DetailData(
                         post.getTitle(),
                         post.getDescription(),
                         post.getDateLostOrFound(),
                         post.getLocationDescription(),
                         "lost".equalsIgnoreCase(post.getItemType()),
-                        post.getUser() != null ? post.getUser().getFullName() : ""
+                        post.getUser() != null ? post.getUser().getFullName() : "",
+                        imageUrl
                     ));
                 } else {
                     detailData.setValue(null);
@@ -50,9 +55,9 @@ public class DetailViewModel extends ViewModel {
         });
     }
     public static class DetailData {
-        public String title, description, date, timeAgo, location, userName;
+        public String title, description, date, timeAgo, location, userName, imageUrl;
         public boolean isLost;
-        public DetailData(String title, String description, Date dateObj, String location, boolean isLost, String userName) {
+        public DetailData(String title, String description, Date dateObj, String location, boolean isLost, String userName, String imageUrl) {
             this.title = title;
             this.description = description;
             // Định dạng ngày
@@ -63,6 +68,7 @@ public class DetailViewModel extends ViewModel {
             this.location = location;
             this.isLost = isLost;
             this.userName = userName;
+            this.imageUrl = imageUrl;
         }
         private String getTimeAgo(Date dateObj) {
             if (dateObj == null) return "";

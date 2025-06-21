@@ -1,5 +1,6 @@
 package com.example.findittlu.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.findittlu.ui.profile.adapter.MyPostsAdapter;
 import com.example.findittlu.viewmodel.HomeViewModel;
 import com.example.findittlu.viewmodel.CategoryViewModel;
 import com.example.findittlu.data.model.Category;
+import com.example.findittlu.utils.CustomToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.widget.Toast;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.view.ContextThemeWrapper;
 
 public class HomeFragment extends Fragment {
     private RecyclerView recentItemsRecyclerView;
@@ -61,7 +64,7 @@ public class HomeFragment extends Fragment {
         });
         // Observe API connection
         homeViewModel.getIsApiConnected().observe(getViewLifecycleOwner(), connected -> {
-            if (!connected) Toast.makeText(getContext(), "Không thể kết nối API!", Toast.LENGTH_SHORT).show();
+            if (!connected) CustomToast.showCustomToast(getContext(), "Lỗi kết nối", "Không thể kết nối API!");
         });
         // Observe post list
         homeViewModel.getPostList().observe(getViewLifecycleOwner(), list -> {
@@ -78,6 +81,10 @@ public class HomeFragment extends Fragment {
                 homeViewModel.fetchPostsByKeyword(keyword);
             }
         });
+        // Sự kiện bấm 'Xem tất cả'
+        view.findViewById(R.id.viewAllText).setOnClickListener(v -> {
+            homeViewModel.setShowAllPosts(true);
+        });
     }
 
     // Hàm mới: tạo button danh mục động từ API
@@ -86,11 +93,13 @@ public class HomeFragment extends Fragment {
         categoryLayout.removeAllViews();
         categoryNameToId.clear();
         // Thêm nút "Tất cả"
-        com.google.android.material.button.MaterialButton btnAll = new com.google.android.material.button.MaterialButton(requireContext(), null, R.style.CategoryButton);
+        Context themedContext = new android.view.ContextThemeWrapper(requireContext(), R.style.CategoryButton);
+        com.google.android.material.button.MaterialButton btnAll = new com.google.android.material.button.MaterialButton(themedContext, null, 0);
         LinearLayout.LayoutParams paramsAll = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        paramsAll.setMarginEnd(16);
+        paramsAll.setMarginEnd((int) getResources().getDimension(R.dimen.category_button_margin_end));
         btnAll.setLayoutParams(paramsAll);
         btnAll.setText("Tất cả");
+        btnAll.setAllCaps(false);
         btnAll.setOnClickListener(v -> {
             selectCategoryButton(btnAll);
             selectedCategory = "Tất cả";
@@ -101,11 +110,12 @@ public class HomeFragment extends Fragment {
         if (categories != null) {
             for (Category cat : categories) {
                 categoryNameToId.put(cat.getName(), cat.getId());
-                com.google.android.material.button.MaterialButton btn = new com.google.android.material.button.MaterialButton(requireContext(), null, R.style.CategoryButton);
+                com.google.android.material.button.MaterialButton btn = new com.google.android.material.button.MaterialButton(themedContext, null, 0);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMarginEnd(16);
+                params.setMarginEnd((int) getResources().getDimension(R.dimen.category_button_margin_end));
                 btn.setLayoutParams(params);
                 btn.setText(cat.getName());
+                btn.setAllCaps(false);
                 btn.setOnClickListener(v -> {
                     selectCategoryButton(btn);
                     selectedCategory = cat.getName();

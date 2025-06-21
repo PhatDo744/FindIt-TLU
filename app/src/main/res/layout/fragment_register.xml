@@ -56,91 +56,116 @@
             android:paddingBottom="24dp">
 
             <!-- Ô nhập họ và tên -->
-            <EditText
-                android:id="@+id/fullNameEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
-                android:autofillHints="name"
-                android:background="@drawable/edit_text_background"
                 android:hint="Họ và tên"
-                android:inputType="textPersonName"
-                android:padding="16dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_secondary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+                <EditText
+                    android:id="@+id/fullNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:autofillHints="name"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textPersonName"
+                    android:padding="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Ô nhập email -->
-            <EditText
-                android:id="@+id/emailEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:autofillHints="emailAddress"
-                android:background="@drawable/edit_text_background"
                 android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:padding="16dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_secondary"
-                app:layout_constraintEnd_toEndOf="@+id/fullNameEditText"
-                app:layout_constraintStart_toStartOf="@+id/fullNameEditText"
-                app:layout_constraintTop_toBottomOf="@+id/fullNameEditText" />
+                app:layout_constraintEnd_toEndOf="@+id/nameInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/nameInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/nameInputLayout">
+                <EditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:autofillHints="emailAddress"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textEmailAddress"
+                    android:padding="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Ô nhập mật khẩu -->
-            <EditText
-                android:id="@+id/passwordEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:autofillHints="password"
-                android:background="@drawable/edit_text_background"
                 android:hint="Mật khẩu"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_secondary"
-                app:layout_constraintEnd_toEndOf="@+id/emailEditText"
-                app:layout_constraintStart_toStartOf="@+id/emailEditText"
-                app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+                app:layout_constraintEnd_toEndOf="@+id/emailInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/emailInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/emailInputLayout">
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:autofillHints="password"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textPassword"
+                    android:padding="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Ô nhập xác nhận mật khẩu -->
-            <EditText
-                android:id="@+id/confirmPasswordEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirmPasswordInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:autofillHints="password"
-                android:background="@drawable/edit_text_background"
                 android:hint="Xác nhận mật khẩu"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_secondary"
-                app:layout_constraintEnd_toEndOf="@+id/passwordEditText"
-                app:layout_constraintStart_toStartOf="@+id/passwordEditText"
-                app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+                app:layout_constraintEnd_toEndOf="@+id/passwordInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/passwordInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout">
+                <EditText
+                    android:id="@+id/confirmPasswordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:autofillHints="password"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textPassword"
+                    android:padding="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Ô nhập số điện thoại -->
-            <EditText
-                android:id="@+id/phoneEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/phoneInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:autofillHints="phone"
-                android:background="@drawable/edit_text_background"
                 android:hint="Số điện thoại"
-                android:inputType="phone"
-                android:padding="16dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_secondary"
-                app:layout_constraintEnd_toEndOf="@+id/confirmPasswordEditText"
-                app:layout_constraintStart_toStartOf="@+id/confirmPasswordEditText"
-                app:layout_constraintTop_toBottomOf="@+id/confirmPasswordEditText" />
+                app:layout_constraintEnd_toEndOf="@+id/confirmPasswordInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/confirmPasswordInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/confirmPasswordInputLayout">
+                <EditText
+                    android:id="@+id/phoneEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:autofillHints="phone"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="phone"
+                    android:padding="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Checkbox điều khoản sử dụng -->
             <CheckBox
@@ -151,9 +176,9 @@
                 android:text="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/phoneEditText"
-                app:layout_constraintStart_toStartOf="@+id/phoneEditText"
-                app:layout_constraintTop_toBottomOf="@+id/phoneEditText" />
+                app:layout_constraintEnd_toEndOf="@+id/phoneInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/phoneInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/phoneInputLayout" />
 
             <!-- Nút Đăng ký -->
             <com.google.android.material.button.MaterialButton

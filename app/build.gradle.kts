@@ -37,7 +37,7 @@ android {
 dependencies {
 
     implementation(libs.appcompat)
-    implementation(libs.material)
+    // implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.annotation)
@@ -53,7 +53,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(libs.material.v150)
+    // implementation(libs.material.v150)
     implementation(libs.circleimageview)
     // Retrofit
     implementation(libs.retrofit)
@@ -65,6 +65,6 @@ dependencies {
 // Nếu dùng LiveData adapter cho Retrofit (không bắt buộc)
     implementation(libs.adapter.rxjava2)
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation ("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

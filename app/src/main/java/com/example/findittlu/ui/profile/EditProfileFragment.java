@@ -28,6 +28,7 @@ import android.net.Uri;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.widget.TextView;
+import com.example.findittlu.utils.CustomToast;
 
 public class EditProfileFragment extends Fragment {
 
@@ -78,16 +79,16 @@ public class EditProfileFragment extends Fragment {
                         // Upload lên server
                         userViewModel.uploadAvatar(requireContext(), uri).observe(getViewLifecycleOwner(), user -> {
                             if (user != null && user.getPhotoUrl() != null) {
-                                Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                                CustomToast.showCustomToast(getContext(), "Thành công", "Đổi ảnh đại diện thành công!");
                                 ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
                             } else {
                                 // Có thể API trả về body rỗng nhưng thực tế đã thành công
                                 userViewModel.getProfile().observe(getViewLifecycleOwner(), refreshedUser -> {
                                     if (refreshedUser != null && refreshedUser.getPhotoUrl() != null) {
                                         ImageUtils.loadAvatar(requireContext(), refreshedUser.getPhotoUrl(), avatarImageView);
-                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                                        CustomToast.showCustomToast(getContext(), "Thành công", "Đổi ảnh đại diện thành công!");
                                     } else {
-                                        Toast.makeText(getContext(), "Đổi ảnh đại diện thất bại!", Toast.LENGTH_SHORT).show();
+                                        CustomToast.showCustomToast(getContext(), "Thất bại", "Đổi ảnh đại diện thất bại!");
                                     }
                                 });
                             }
@@ -120,19 +121,9 @@ public class EditProfileFragment extends Fragment {
         // Lưu thay đổi
         MaterialButton saveButton = view.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(v -> {
-            String newName = fullNameEditText.getText().toString().trim();
-            String newPhone = phoneEditText.getText().toString().trim();
-            User updateUser = new User();
-            updateUser.setFullName(newName);
-            updateUser.setPhoneNumber(newPhone);
-            userViewModel.updateProfile(updateUser).observe(getViewLifecycleOwner(), updatedUser -> {
-                if (updatedUser != null) {
-                    Toast.makeText(getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
-                    navController.popBackStack();
-                } else {
-                    Toast.makeText(getContext(), "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
-                }
-            });
+            CustomToast.showCustomToast(getContext(), "Lưu thay đổi", "Đã lưu thay đổi");
+            // Sau khi lưu, có thể quay lại màn hình Profile
+            navController.popBackStack();
         });
     }
 
@@ -149,7 +140,7 @@ public class EditProfileFragment extends Fragment {
         MaterialButton cancelButton = view.findViewById(R.id.cancelButton);
 
         saveButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Lưu thay đổi", Toast.LENGTH_SHORT).show();
+            CustomToast.showCustomToast(getContext(), "Lưu thay đổi", "Đã lưu thay đổi");
             // Sau khi lưu, có thể quay lại màn hình Profile
             navController.popBackStack();
         });

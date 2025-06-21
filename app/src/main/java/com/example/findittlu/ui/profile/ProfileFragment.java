@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import com.example.findittlu.utils.CustomToast;
 
 import com.example.findittlu.R;
 
@@ -155,7 +156,7 @@ public class ProfileFragment extends Fragment {
             // Xử lý logic đăng xuất
             SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
             prefs.edit().clear().apply();
-            Toast.makeText(getContext(), "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+            CustomToast.showCustomToast(getContext(), "Đăng xuất", "Đăng xuất thành công!");
             navController.navigate(R.id.loginFragment);
         });
     }

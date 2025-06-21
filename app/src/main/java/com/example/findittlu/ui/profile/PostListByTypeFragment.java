@@ -15,6 +15,7 @@ import com.example.findittlu.data.model.Post;
 import com.example.findittlu.ui.profile.adapter.MyPostsAdapter;
 import com.example.findittlu.viewmodel.MyPostsViewModel;
 import com.google.android.material.snackbar.Snackbar;
+import com.example.findittlu.utils.CustomToast;
 
 import java.util.ArrayList;
 
@@ -76,7 +77,7 @@ public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.O
         viewModel.getMyPosts().observe(getViewLifecycleOwner(), posts -> {
             if (posts == null) {
                 android.util.Log.e("DEBUG_MyPosts", "posts null - Lỗi API hoặc thiếu userId");
-                android.widget.Toast.makeText(getContext(), "Lỗi API hoặc thiếu userId. Vui lòng kiểm tra lại!", android.widget.Toast.LENGTH_LONG).show();
+                CustomToast.showCustomToast(getContext(), "Lỗi API", "Lỗi API hoặc thiếu userId. Vui lòng kiểm tra lại!");
                 adapter.updateData(new ArrayList<>()); // Clear data on error
                 return;
             }

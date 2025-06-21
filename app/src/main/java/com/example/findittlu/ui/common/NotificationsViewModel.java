@@ -32,7 +32,21 @@ public class NotificationsViewModel extends ViewModel {
                     // Chuyển đổi sang NotificationItem nếu cần
                     List<NotificationItem> list = new ArrayList<>();
                     for (Notification n : response.body().getData()) {
-                        list.add(new NotificationItem(NotificationItem.TYPE_SUCCESS, n.getData().getTitle(), n.getCreatedAt()));
+                        int type = NotificationItem.TYPE_INFO; // mặc định là chờ duyệt
+                        String notifType = n.getType();
+                        String dataType = n.getData() != null ? n.getData().getType() : null;
+                        // Ưu tiên lấy type từ data nếu có
+                        if (dataType != null) notifType = dataType;
+                        if (notifType != null) {
+                            if (notifType.toLowerCase().contains("approved") || notifType.toLowerCase().contains("success") || notifType.toLowerCase().contains("duyệt")) {
+                                type = NotificationItem.TYPE_SUCCESS;
+                            } else if (notifType.toLowerCase().contains("pending") || notifType.toLowerCase().contains("chờ")) {
+                                type = NotificationItem.TYPE_INFO;
+                            } else if (notifType.toLowerCase().contains("rejected") || notifType.toLowerCase().contains("từ chối") || notifType.toLowerCase().contains("warning")) {
+                                type = NotificationItem.TYPE_WARNING;
+                            }
+                        }
+                        list.add(new NotificationItem(type, n.getData().getTitle(), n.getCreatedAt()));
                     }
                     notifications.setValue(list);
                 } else {

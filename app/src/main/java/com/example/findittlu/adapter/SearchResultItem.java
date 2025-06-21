@@ -2,16 +2,16 @@ package com.example.findittlu.adapter;
 
 public class SearchResultItem {
     private long postId;
-    private int imageRes;
+    private String imageUrl;
     private boolean isLost; // true: Đã mất, false: Đã tìm thấy
     private String title;
     private String category;
     private String location;
     private String date;
 
-    public SearchResultItem(long postId, int imageRes, boolean isLost, String title, String category, String location, String date) {
+    public SearchResultItem(long postId, String imageUrl, boolean isLost, String title, String category, String location, String date) {
         this.postId = postId;
-        this.imageRes = imageRes;
+        this.imageUrl = imageUrl;
         this.isLost = isLost;
         this.title = title;
         this.category = category;
@@ -20,7 +20,7 @@ public class SearchResultItem {
     }
 
     public long getPostId() { return postId; }
-    public int getImageRes() { return imageRes; }
+    public String getImageUrl() { return imageUrl; }
     public boolean isLost() { return isLost; }
     public String getTitle() { return title; }
     public String getCategory() { return category; }

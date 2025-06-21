@@ -39,4 +39,7 @@
     <!-- CardView -->
     <dimen name="card_corner_radius">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
+
+    <!-- Category Button -->
+    <dimen name="category_button_margin_end">12dp</dimen>
 </resources>

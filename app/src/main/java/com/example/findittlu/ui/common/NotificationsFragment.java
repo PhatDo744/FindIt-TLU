@@ -15,7 +15,7 @@ import com.example.findittlu.adapter.NotificationsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import androidx.lifecycle.ViewModelProvider;
-import android.widget.Toast;
+import com.example.findittlu.utils.CustomToast;
 
 public class NotificationsFragment extends Fragment {
     private NotificationsViewModel notificationsViewModel;
@@ -37,7 +37,7 @@ public class NotificationsFragment extends Fragment {
         NotificationsAdapter adapter = new NotificationsAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
         notificationsViewModel.getIsApiConnected().observe(getViewLifecycleOwner(), connected -> {
-            if (!connected) Toast.makeText(getContext(), "Không thể kết nối API!", Toast.LENGTH_SHORT).show();
+            if (!connected) CustomToast.showCustomToast(getContext(), "Lỗi kết nối", "Không thể kết nối API!");
         });
         notificationsViewModel.getNotifications().observe(getViewLifecycleOwner(), list -> {
             recyclerView.setAdapter(new NotificationsAdapter(list));

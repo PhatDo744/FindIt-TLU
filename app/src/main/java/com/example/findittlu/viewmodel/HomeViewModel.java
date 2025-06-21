@@ -16,6 +16,7 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<Post>> posts = new MutableLiveData<>();
     private MutableLiveData<List<LostFoundItem>> postList = new MutableLiveData<>();
     private MutableLiveData<Boolean> isApiConnected = new MutableLiveData<>(true);
+    private boolean showAllPosts = false;
     public HomeViewModel() {
         postRepository = new PostRepository();
     }
@@ -35,16 +36,21 @@ public class HomeViewModel extends ViewModel {
                         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
                         date = sdf.format(post.getDateLostOrFound());
                     }
+                    String imageUrl = null;
+                    if (post.getImages() != null && !post.getImages().isEmpty()) {
+                        imageUrl = post.getImages().get(0).getImageUrl();
+                    }
                     LostFoundItem item = new LostFoundItem(
                             post.getId(),
                             post.getTitle(),
                             location,
                             date,
                             isLost,
-                            com.example.findittlu.R.drawable.image_placeholder_background
+                            imageUrl
                     );
                     items.add(item);
                 }
+                if (!showAllPosts && items.size() > 5) items = items.subList(0, 5);
                 postList.postValue(items);
             } else {
                 postList.postValue(new ArrayList<>());
@@ -64,16 +70,21 @@ public class HomeViewModel extends ViewModel {
                         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
                         date = sdf.format(post.getDateLostOrFound());
                     }
+                    String imageUrl = null;
+                    if (post.getImages() != null && !post.getImages().isEmpty()) {
+                        imageUrl = post.getImages().get(0).getImageUrl();
+                    }
                     LostFoundItem item = new LostFoundItem(
                             post.getId(),
                             post.getTitle(),
                             location,
                             date,
                             isLost,
-                            com.example.findittlu.R.drawable.image_placeholder_background
+                            imageUrl
                     );
                     items.add(item);
                 }
+                if (!showAllPosts && items.size() > 5) items = items.subList(0, 5);
                 postList.postValue(items);
             } else {
                 postList.postValue(new ArrayList<>());
@@ -95,16 +106,21 @@ public class HomeViewModel extends ViewModel {
                             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
                             date = sdf.format(post.getDateLostOrFound());
                         }
+                        String imageUrl = null;
+                        if (post.getImages() != null && !post.getImages().isEmpty()) {
+                            imageUrl = post.getImages().get(0).getImageUrl();
+                        }
                         LostFoundItem item = new LostFoundItem(
                                 post.getId(),
                                 post.getTitle(),
                                 location,
                                 date,
                                 isLost,
-                                com.example.findittlu.R.drawable.image_placeholder_background
+                                imageUrl
                         );
                         items.add(item);
                     }
+                    if (!showAllPosts && items.size() > 5) items = items.subList(0, 5);
                     postList.postValue(items);
                 } else {
                     postList.postValue(new ArrayList<>());
@@ -127,5 +143,11 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsApiConnected() {
         return isApiConnected;
+    }
+
+    public void setShowAllPosts(boolean showAll) {
+        this.showAllPosts = showAll;
+        // Gọi lại fetchPosts để cập nhật danh sách
+        fetchPosts();
     }
 }

@@ -16,13 +16,13 @@
 
         <!-- Ảnh và trạng thái -->
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_width="118dp"
             android:layout_height="100dp">
 
             <ImageView
                 android:id="@+id/item_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:contentDescription="Ảnh đồ vật"
                 android:scaleType="centerCrop"
                 android:src="@drawable/image_placeholder_background" />

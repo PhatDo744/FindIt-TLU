@@ -5,10 +5,10 @@ public class LostFoundItem {
     private String location;
     private String date;
     private boolean isLost; // true if lost, false if found
-    private int imageUrl; // For simplicity, using a drawable resource ID
+    private String imageUrl; // Đổi từ int sang String để lưu URL ảnh từ server
     private long postId;
 
-    public LostFoundItem(long postId, String title, String location, String date, boolean isLost, int imageUrl) {
+    public LostFoundItem(long postId, String title, String location, String date, boolean isLost, String imageUrl) {
         this.postId = postId;
         this.title = title;
         this.location = location;
@@ -33,7 +33,7 @@ public class LostFoundItem {
         return isLost;
     }
 
-    public int getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 

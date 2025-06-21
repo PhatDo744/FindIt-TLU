@@ -17,6 +17,7 @@ import retrofit2.Response;
 public class SearchViewModel extends ViewModel {
     private final MutableLiveData<List<SearchResultItem>> searchResults = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isApiConnected = new MutableLiveData<>(true); // Giả lập trạng thái API
+    private boolean showAllResults = false;
 
     public LiveData<List<SearchResultItem>> getSearchResults() {
         return searchResults;
@@ -34,9 +35,13 @@ public class SearchViewModel extends ViewModel {
                     List<SearchResultItem> list = new ArrayList<>();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     for (Post post : response.body().getData()) {
+                        String imageUrl = null;
+                        if (post.getImages() != null && !post.getImages().isEmpty()) {
+                            imageUrl = post.getImages().get(0).getImageUrl();
+                        }
                         list.add(new SearchResultItem(
                             post.getId(),
-                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            imageUrl,
                             "lost".equalsIgnoreCase(post.getItemType()),
                             post.getTitle(),
                             post.getCategory() != null ? post.getCategory().getName() : "",
@@ -44,6 +49,7 @@ public class SearchViewModel extends ViewModel {
                             post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
                         ));
                     }
+                    if (!showAllResults && list.size() > 5) list = list.subList(0, 5);
                     searchResults.setValue(list);
                 } else {
                     searchResults.setValue(new ArrayList<>());
@@ -66,9 +72,13 @@ public class SearchViewModel extends ViewModel {
                     List<SearchResultItem> list = new ArrayList<>();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     for (Post post : response.body().getData()) {
+                        String imageUrl = null;
+                        if (post.getImages() != null && !post.getImages().isEmpty()) {
+                            imageUrl = post.getImages().get(0).getImageUrl();
+                        }
                         list.add(new SearchResultItem(
                             post.getId(),
-                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            imageUrl,
                             "lost".equalsIgnoreCase(post.getItemType()),
                             post.getTitle(),
                             post.getCategory() != null ? post.getCategory().getName() : "",
@@ -76,6 +86,7 @@ public class SearchViewModel extends ViewModel {
                             post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
                         ));
                     }
+                    if (!showAllResults && list.size() > 5) list = list.subList(0, 5);
                     searchResults.setValue(list);
                 } else {
                     searchResults.setValue(new ArrayList<>());
@@ -98,9 +109,13 @@ public class SearchViewModel extends ViewModel {
                     List<SearchResultItem> list = new ArrayList<>();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     for (Post post : response.body().getData()) {
+                        String imageUrl = null;
+                        if (post.getImages() != null && !post.getImages().isEmpty()) {
+                            imageUrl = post.getImages().get(0).getImageUrl();
+                        }
                         list.add(new SearchResultItem(
                             post.getId(),
-                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            imageUrl,
                             "lost".equalsIgnoreCase(post.getItemType()),
                             post.getTitle(),
                             post.getCategory() != null ? post.getCategory().getName() : "",
@@ -108,6 +123,7 @@ public class SearchViewModel extends ViewModel {
                             post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
                         ));
                     }
+                    if (!showAllResults && list.size() > 5) list = list.subList(0, 5);
                     searchResults.setValue(list);
                 } else {
                     searchResults.setValue(new ArrayList<>());
@@ -130,9 +146,13 @@ public class SearchViewModel extends ViewModel {
                     List<SearchResultItem> list = new ArrayList<>();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     for (Post post : response.body().getData()) {
+                        String imageUrl = null;
+                        if (post.getImages() != null && !post.getImages().isEmpty()) {
+                            imageUrl = post.getImages().get(0).getImageUrl();
+                        }
                         list.add(new SearchResultItem(
                             post.getId(),
-                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            imageUrl,
                             "lost".equalsIgnoreCase(post.getItemType()),
                             post.getTitle(),
                             post.getCategory() != null ? post.getCategory().getName() : "",
@@ -140,6 +160,7 @@ public class SearchViewModel extends ViewModel {
                             post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
                         ));
                     }
+                    if (!showAllResults && list.size() > 5) list = list.subList(0, 5);
                     searchResults.setValue(list);
                 } else {
                     searchResults.setValue(new ArrayList<>());
@@ -162,9 +183,13 @@ public class SearchViewModel extends ViewModel {
                     List<SearchResultItem> list = new ArrayList<>();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     for (Post post : response.body().getData()) {
+                        String imageUrl = null;
+                        if (post.getImages() != null && !post.getImages().isEmpty()) {
+                            imageUrl = post.getImages().get(0).getImageUrl();
+                        }
                         list.add(new SearchResultItem(
                             post.getId(),
-                            com.example.findittlu.R.drawable.image_placeholder_background,
+                            imageUrl,
                             "lost".equalsIgnoreCase(post.getItemType()),
                             post.getTitle(),
                             post.getCategory() != null ? post.getCategory().getName() : "",
@@ -172,6 +197,7 @@ public class SearchViewModel extends ViewModel {
                             post.getDateLostOrFound() != null ? sdf.format(post.getDateLostOrFound()) : ""
                         ));
                     }
+                    if (!showAllResults && list.size() > 5) list = list.subList(0, 5);
                     searchResults.setValue(list);
                 } else {
                     searchResults.setValue(new ArrayList<>());
@@ -183,5 +209,15 @@ public class SearchViewModel extends ViewModel {
                 searchResults.setValue(new ArrayList<>());
             }
         });
+    }
+
+    public void setShowAllResults(boolean showAll) {
+        this.showAllResults = showAll;
+        // Gọi lại fetchSearchResults để cập nhật danh sách
+        fetchSearchResults("");
+    }
+
+    public boolean isShowAllResults() {
+        return showAllResults;
     }
 } 

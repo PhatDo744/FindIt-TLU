@@ -1,5 +1,6 @@
 package com.example.findittlu.ui.common;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,9 @@ import com.example.findittlu.data.model.Category;
 import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.view.ContextThemeWrapper;
+import android.widget.TextView;
+import com.example.findittlu.utils.CustomToast;
 
 public class SearchFragment extends Fragment {
     private RecyclerView searchResultRecyclerView;
@@ -58,11 +62,21 @@ public class SearchFragment extends Fragment {
             setupCategoryButtonsDynamic(view, categories);
         });
         searchViewModel.getIsApiConnected().observe(getViewLifecycleOwner(), connected -> {
-            if (!connected) Toast.makeText(getContext(), "Không thể kết nối API!", Toast.LENGTH_SHORT).show();
+            if (!connected) CustomToast.showCustomToast(getContext(), "Lỗi kết nối", "Không thể kết nối API!");
         });
         searchViewModel.getSearchResults().observe(getViewLifecycleOwner(), list -> {
             searchResultAdapter = new SearchResultAdapter(list);
             searchResultRecyclerView.setAdapter(searchResultAdapter);
+            // Cập nhật số kết quả
+            TextView tvResultCount = view.findViewById(R.id.tvResultCount);
+            tvResultCount.setText("Tìm thấy " + list.size() + " kết quả");
+            // Ẩn/hiện nút xem thêm
+            MaterialButton btnLoadMore = view.findViewById(R.id.btnLoadMore);
+            if (list.size() < 5 || searchViewModel.isShowAllResults()) {
+                btnLoadMore.setVisibility(View.GONE);
+            } else {
+                btnLoadMore.setVisibility(View.VISIBLE);
+            }
         });
         searchViewModel.fetchSearchResults("");
 
@@ -74,31 +88,44 @@ public class SearchFragment extends Fragment {
                 searchViewModel.fetchSearchResultsByKeyword(keyword);
             }
         });
+
+        // Sự kiện bấm 'Xem thêm kết quả'
+        view.findViewById(R.id.btnLoadMore).setOnClickListener(v -> {
+            searchViewModel.setShowAllResults(true);
+        });
     }
 
     private void setupFilterButtons(View view) {
-        MaterialButton btnStatusAll = view.findViewById(R.id.btnStatusAll);
-        MaterialButton btnStatusLost = view.findViewById(R.id.btnStatusLost);
-        MaterialButton btnStatusFound = view.findViewById(R.id.btnStatusFound);
-        MaterialButton[] statusButtons = {btnStatusAll, btnStatusLost, btnStatusFound};
-        MaterialButton btnCategoryAll = view.findViewById(R.id.btnCategoryAll);
-        MaterialButton btnCategoryElectronics = view.findViewById(R.id.btnCategoryElectronics);
-        MaterialButton btnCategoryPaper = view.findViewById(R.id.btnCategoryPaper);
-        MaterialButton btnCategoryWallet = view.findViewById(R.id.btnCategoryWallet);
-        MaterialButton[] categoryButtons = {btnCategoryAll, btnCategoryElectronics, btnCategoryPaper, btnCategoryWallet};
-        selectButton(btnStatusAll, statusButtons);
-        btnStatusAll.setOnClickListener(v -> {
-            selectButton(btnStatusAll, statusButtons);
+        LinearLayout statusLayout = (LinearLayout) ((ViewGroup) view.findViewById(R.id.statusLayout));
+        statusLayout.removeAllViews();
+        Context themedContext = new android.view.ContextThemeWrapper(requireContext(), R.style.CategoryButton);
+        String[] statusTexts = {"Tất cả", "Đã mất", "Đã tìm thấy"};
+        MaterialButton[] statusButtons = new MaterialButton[statusTexts.length];
+        for (int i = 0; i < statusTexts.length; i++) {
+            MaterialButton btn = new MaterialButton(themedContext, null, 0);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMarginEnd((int) getResources().getDimension(R.dimen.category_button_margin_end));
+            btn.setLayoutParams(params);
+            btn.setText(statusTexts[i]);
+            btn.setAllCaps(false);
+            statusLayout.addView(btn);
+            statusButtons[i] = btn;
+        }
+        // Gán sự kiện click
+        statusButtons[0].setOnClickListener(v -> {
+            selectCategoryButton(statusButtons[0], statusLayout);
             searchViewModel.fetchSearchResults("");
         });
-        btnStatusLost.setOnClickListener(v -> {
-            selectButton(btnStatusLost, statusButtons);
+        statusButtons[1].setOnClickListener(v -> {
+            selectCategoryButton(statusButtons[1], statusLayout);
             searchViewModel.fetchSearchResultsByType("lost");
         });
-        btnStatusFound.setOnClickListener(v -> {
-            selectButton(btnStatusFound, statusButtons);
+        statusButtons[2].setOnClickListener(v -> {
+            selectCategoryButton(statusButtons[2], statusLayout);
             searchViewModel.fetchSearchResultsByType("found");
         });
+        // Mặc định chọn "Tất cả"
+        selectCategoryButton(statusButtons[0], statusLayout);
     }
 
     private void selectButton(MaterialButton selected, MaterialButton[] group) {
@@ -120,11 +147,13 @@ public class SearchFragment extends Fragment {
         LinearLayout layout = (LinearLayout) ((ViewGroup) view.findViewById(R.id.categoryLayout));
         layout.removeAllViews();
         categoryNameToId.clear();
-        com.google.android.material.button.MaterialButton btnAll = new com.google.android.material.button.MaterialButton(requireContext(), null, R.style.CategoryButton);
+        Context themedContext = new android.view.ContextThemeWrapper(requireContext(), R.style.CategoryButton);
+        com.google.android.material.button.MaterialButton btnAll = new com.google.android.material.button.MaterialButton(themedContext, null, 0);
         LinearLayout.LayoutParams paramsAll = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        paramsAll.setMarginEnd(16);
+        paramsAll.setMarginEnd((int) getResources().getDimension(R.dimen.category_button_margin_end));
         btnAll.setLayoutParams(paramsAll);
         btnAll.setText("Tất cả");
+        btnAll.setAllCaps(false);
         btnAll.setOnClickListener(v -> {
             selectCategoryButton(btnAll, layout);
             selectedCategoryId = null;
@@ -134,11 +163,12 @@ public class SearchFragment extends Fragment {
         if (categories != null) {
             for (Category cat : categories) {
                 categoryNameToId.put(cat.getName(), cat.getId());
-                com.google.android.material.button.MaterialButton btn = new com.google.android.material.button.MaterialButton(requireContext(), null, R.style.CategoryButton);
+                com.google.android.material.button.MaterialButton btn = new com.google.android.material.button.MaterialButton(themedContext, null, 0);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMarginEnd(16);
+                params.setMarginEnd((int) getResources().getDimension(R.dimen.category_button_margin_end));
                 btn.setLayoutParams(params);
                 btn.setText(cat.getName());
+                btn.setAllCaps(false);
                 btn.setOnClickListener(v -> {
                     selectCategoryButton(btn, layout);
                     selectedCategoryId = cat.getId();

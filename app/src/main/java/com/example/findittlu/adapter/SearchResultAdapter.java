@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findittlu.R;
+import com.example.findittlu.utils.ImageUtils;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public void onBindViewHolder(@NonNull SearchResultViewHolder holder, int position) {
         SearchResultItem item = itemList.get(position);
-        holder.itemImage.setImageResource(item.getImageRes());
+        ImageUtils.loadItemImage(holder.itemView.getContext(), item.getImageUrl(), holder.itemImage);
         holder.itemTitle.setText(item.getTitle());
         holder.itemCategory.setText(item.getCategory());
         holder.itemLocation.setText(item.getLocation());

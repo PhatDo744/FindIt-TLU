@@ -12,6 +12,7 @@ import android.content.Context;
 
 import com.example.findittlu.R;
 import com.example.findittlu.ui.common.DetailFragment;
+import com.example.findittlu.utils.ImageUtils;
 
 public class LostFoundItemAdapter extends RecyclerView.Adapter<LostFoundItemAdapter.LostFoundItemViewHolder> {
 
@@ -35,8 +36,7 @@ public class LostFoundItemAdapter extends RecyclerView.Adapter<LostFoundItemAdap
     @Override
     public void onBindViewHolder(@NonNull LostFoundItemViewHolder holder, int position) {
         LostFoundItem item = itemList.get(position);
-
-        holder.itemImage.setImageResource(item.getImageUrl());
+        ImageUtils.loadItemImage(context, item.getImageUrl(), holder.itemImage);
         holder.itemTitle.setText(item.getTitle());
         holder.itemLocation.setText(item.getLocation());
         holder.itemDate.setText(item.getDate());
@@ -57,7 +57,7 @@ public class LostFoundItemAdapter extends RecyclerView.Adapter<LostFoundItemAdap
             args.putString("location", item.getLocation());
             args.putString("date", item.getDate());
             args.putBoolean("isLost", item.isLost());
-            args.putInt("imageRes", item.getImageUrl());
+            args.putString("imageUrl", item.getImageUrl());
             args.putLong("postId", item.getPostId());
             androidx.navigation.NavController navController = androidx.navigation.Navigation.findNavController(holder.itemView);
             navController.navigate(com.example.findittlu.R.id.detailFragment, args);

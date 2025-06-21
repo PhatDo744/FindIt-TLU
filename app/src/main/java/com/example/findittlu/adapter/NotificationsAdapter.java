@@ -35,19 +35,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             case NotificationItem.TYPE_SUCCESS:
                 holder.icon.setImageResource(R.drawable.ic_check_circle);
                 holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.primary_blue));
-                holder.itemView.setBackgroundResource(R.color.primary_blue_light);
                 break;
             case NotificationItem.TYPE_INFO:
-                holder.icon.setImageResource(R.drawable.ic_info);
+                holder.icon.setImageResource(R.drawable.ic_check);
                 holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.primary_blue));
-                holder.itemView.setBackgroundResource(android.R.color.transparent);
                 break;
             case NotificationItem.TYPE_WARNING:
                 holder.icon.setImageResource(R.drawable.ic_warning);
                 holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.logout_red));
-                holder.itemView.setBackgroundResource(android.R.color.transparent);
                 break;
         }
+        holder.itemView.setBackgroundResource(R.color.primary_blue_light);
     }
 
     @Override

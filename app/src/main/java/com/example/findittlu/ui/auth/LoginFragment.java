@@ -2,13 +2,13 @@ package com.example.findittlu.ui.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,6 +17,8 @@ import androidx.navigation.Navigation;
 
 import com.example.findittlu.R;
 import com.example.findittlu.viewmodel.LoginViewModel;
+import com.example.findittlu.utils.CustomToast;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
@@ -43,6 +45,9 @@ public class LoginFragment extends Fragment {
 
         EditText emailEditText = view.findViewById(R.id.emailEditText);
         CheckBox rememberEmailCheckBox = view.findViewById(R.id.rememberEmailCheckBox);
+        TextInputLayout emailInputLayout = view.findViewById(R.id.emailInputLayout);
+        EditText passwordEditText = view.findViewById(R.id.passwordEditText);
+        TextInputLayout passwordInputLayout = view.findViewById(R.id.passwordInputLayout);
 
         // Lấy email đã lưu (nếu có)
         String savedEmail = prefs.getString("remembered_email", "");
@@ -54,11 +59,23 @@ public class LoginFragment extends Fragment {
         // Xử lý nút đăng nhập
         view.findViewById(R.id.loginButton).setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
-            String password = ((EditText) view.findViewById(R.id.passwordEditText)).getText().toString().trim();
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(getContext(), "Vui lòng nhập đầy đủ email và mật khẩu!", Toast.LENGTH_SHORT).show();
-                return;
+            String password = passwordEditText.getText().toString().trim();
+            boolean hasError = false;
+            Drawable errorIcon = getResources().getDrawable(R.drawable.ic_warning, null);
+            errorIcon.setBounds(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
+            if (email.isEmpty()) {
+                emailInputLayout.setError("Bắt buộc");
+                hasError = true;
+            } else {
+                emailInputLayout.setError(null);
             }
+            if (password.isEmpty()) {
+                passwordInputLayout.setError("Bắt buộc");
+                hasError = true;
+            } else {
+                passwordInputLayout.setError(null);
+            }
+            if (hasError) return;
             // Lưu hoặc xóa email tuỳ theo checkbox
             if (rememberEmailCheckBox.isChecked()) {
                 prefs.edit().putString("remembered_email", email).apply();
@@ -76,7 +93,7 @@ public class LoginFragment extends Fragment {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
                     navController.navigate(R.id.homeFragment);
                 } else {
-                    Toast.makeText(getContext(), "Sai tài khoản hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
+                    CustomToast.showCustomToast(getContext(), "Đăng nhập thất bại", "Sai tài khoản hoặc mật khẩu!");
                 }
             });
         });
@@ -85,6 +102,22 @@ public class LoginFragment extends Fragment {
         view.findViewById(R.id.registerTextView).setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
             navController.navigate(R.id.registerFragment);
+        });
+
+        // Thêm TextWatcher để clear lỗi khi nhập lại
+        emailEditText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                emailInputLayout.setError(null);
+            }
+            @Override public void afterTextChanged(android.text.Editable s) {}
+        });
+        passwordEditText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                passwordInputLayout.setError(null);
+            }
+            @Override public void afterTextChanged(android.text.Editable s) {}
         });
 
         return view;
