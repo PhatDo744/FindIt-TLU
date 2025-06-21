@@ -6,9 +6,6 @@
         <item name="colorPrimaryVariant">@color/primary_dark_blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/accent_orange</item>
-        <item name="colorSecondaryVariant">@color/accent_orange_dark</item>
-        <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
@@ -16,5 +13,5 @@
         <item name="android:colorEdgeEffect">@color/primary_blue</item>
     </style>
 
-    <style name="Theme.FindItTLU" parent="Base.Theme.FindItTLU" />
+    <style name="Theme.FindItTLU" parent="Base.Theme.FindItTLU"></style>
 </resources>

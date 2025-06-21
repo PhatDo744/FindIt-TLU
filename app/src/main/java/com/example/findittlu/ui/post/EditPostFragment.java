@@ -2,6 +2,7 @@ package com.example.findittlu.ui.post;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,12 +20,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.view.ContextThemeWrapper;
 
 import com.example.findittlu.R;
 import com.example.findittlu.data.model.ItemImage;
@@ -153,8 +156,8 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
     private void setupCategorySpinner() {
         // This should be populated from a remote source or a string array
         categories = new String[]{"Chọn danh mục", "Đồ điện tử", "Giấy tờ", "Ví/Túi", "Quần áo", "Chìa khóa", "Khác"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categories);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_white, categories);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white);
         categorySpinner.setAdapter(adapter);
     }
     
@@ -179,8 +182,11 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+            // Create a ContextThemeWrapper to apply the custom theme
+            final Context themedContext = new ContextThemeWrapper(requireContext(), R.style.MyDatePickerTheme);
+
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    requireContext(),
+                    themedContext,
                     (dpView, year1, monthOfYear, dayOfMonth) -> {
                         Calendar selectedDate = Calendar.getInstance();
                         selectedDate.set(year1, monthOfYear, dayOfMonth);
@@ -188,7 +194,16 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
                         dateEditText.setText(sdf.format(selectedDate.getTime()));
                     },
                     year, month, day);
-            
+            datePickerDialog.setOnShowListener(dialog -> {
+                // Lấy màu từ resources
+                int blueColor = ContextCompat.getColor(requireContext(), R.color.primary_blue);
+
+                // Đặt màu cho nút "OK" (Positive)
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(blueColor);
+
+                // Đặt màu cho nút "Hủy" (Negative)
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(blueColor);
+            });
             // Chỉ cho phép chọn ngày từ quá khứ đến hôm nay
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.show();

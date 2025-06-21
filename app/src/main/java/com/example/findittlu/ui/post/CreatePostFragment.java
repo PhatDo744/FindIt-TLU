@@ -40,6 +40,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import android.content.Context;
+import android.view.ContextThemeWrapper;
 
 public class CreatePostFragment extends Fragment {
 
@@ -286,8 +288,11 @@ public class CreatePostFragment extends Fragment {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+            // Create a ContextThemeWrapper to apply the custom theme
+            final Context themedContext = new ContextThemeWrapper(requireContext(), R.style.MyDatePickerTheme);
+
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    requireContext(),
+                    themedContext,
                     (dpView, year1, monthOfYear, dayOfMonth) -> {
                         Calendar selectedDate = Calendar.getInstance();
                         selectedDate.set(year1, monthOfYear, dayOfMonth);
@@ -295,7 +300,16 @@ public class CreatePostFragment extends Fragment {
                         dateEditText.setText(sdf.format(selectedDate.getTime()));
                     },
                     year, month, day);
-            
+            datePickerDialog.setOnShowListener(dialog -> {
+                // Lấy màu từ resources
+                int blueColor = ContextCompat.getColor(requireContext(), R.color.primary_blue);
+
+                // Đặt màu cho nút "OK" (Positive)
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(blueColor);
+
+                // Đặt màu cho nút "Hủy" (Negative)
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(blueColor);
+            });
             // Chỉ cho phép chọn ngày từ quá khứ đến hôm nay
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.show();
@@ -305,7 +319,7 @@ public class CreatePostFragment extends Fragment {
     private void setupCategorySpinner() {
         String[] categories = new String[]{"Chọn danh mục", "Đồ điện tử", "Giấy tờ", "Ví/Túi", "Quần áo", "Chìa khóa", "Khác"};
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, categories) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.spinner_item_white, categories) {
             @Override
             public boolean isEnabled(int position) {
                 return position != 0;
@@ -324,7 +338,7 @@ public class CreatePostFragment extends Fragment {
             }
         };
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white);
         categorySpinner.setAdapter(adapter);
     }
 
