@@ -18,13 +18,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.findittlu.ui.profile.adapter.MyPostsViewPagerAdapter;
-import com.example.findittlu.databinding.ActivityMyPostsBinding;
+import com.example.findittlu.databinding.FragmentMyPostsBinding;  // ✅ ĐÃ SỬA
 import com.example.findittlu.viewmodel.MyPostsViewModel;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MyPostsFragment extends Fragment {
 
-    private ActivityMyPostsBinding binding;
+    private FragmentMyPostsBinding binding;  // ✅ ĐÃ SỬA
     private MyPostsViewPagerAdapter viewPagerAdapter;
     private MyPostsViewModel viewModel;
 
@@ -35,7 +35,7 @@ public class MyPostsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = ActivityMyPostsBinding.inflate(inflater, container, false);
+        binding = FragmentMyPostsBinding.inflate(inflater, container, false);  // ✅ ĐÃ SỬA
         return binding.getRoot();
     }
 
@@ -102,10 +102,10 @@ public class MyPostsFragment extends Fragment {
             return false;
         });
     }
-    
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null; // Tránh memory leak
     }
-} 
+}

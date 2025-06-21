@@ -98,9 +98,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/editButton"
                     style="@style/MyPostTextActionButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="60dp"
                     android:layout_height="35dp"
-                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -110,14 +109,14 @@
                     android:textColor="@color/tlu_info"
                     app:backgroundTint="@color/primary_blue_light"
                     app:icon="@drawable/ic_edit_pencil"
-                    app:iconPadding="2dp"
+                    app:iconPadding="0dp"
                     app:iconTint="@color/tlu_info" />
 
                 <!-- Nút Xóa -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/deleteButton"
                     style="@style/MyPostTextActionButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="60dp"
                     android:layout_height="35dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
@@ -130,7 +129,7 @@
                     android:textColor="@color/lost_red"
                     app:backgroundTint="@color/lost_red_light"
                     app:icon="@drawable/ic_delete"
-                    app:iconPadding="2dp"
+                    app:iconPadding="0dp"
                     app:iconTint="@color/lost_red" />
 
                 <!-- Nút Đã xong -->
@@ -139,7 +138,7 @@
                     style="@style/MyPostTextActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_marginStart="4dp"
+
                     android:layout_weight="1"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -149,7 +148,7 @@
                     android:textColor="@color/found_green"
                     app:backgroundTint="@color/found_green_light"
                     app:icon="@drawable/ic_check_circle"
-                    app:iconPadding="2dp"
+                    app:iconPadding="0dp"
                     app:iconTint="@color/found_green" />
             </LinearLayout>
         </LinearLayout>

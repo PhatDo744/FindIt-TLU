@@ -10,10 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.findittlu.R;
-import com.example.findittlu.adapter.NotificationItem;
 import com.example.findittlu.adapter.NotificationsAdapter;
 import java.util.ArrayList;
-import java.util.List;
+
 import androidx.lifecycle.ViewModelProvider;
 import com.example.findittlu.utils.CustomToast;
 
@@ -27,7 +26,7 @@ public class NotificationsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_notifications, container, false);
+        return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
 
     @Override

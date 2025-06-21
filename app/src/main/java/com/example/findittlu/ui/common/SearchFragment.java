@@ -18,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import android.content.res.ColorStateList;
 import androidx.lifecycle.ViewModelProvider;
-import android.widget.Toast;
+
 import com.example.findittlu.viewmodel.CategoryViewModel;
 import com.example.findittlu.data.model.Category;
 import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 import com.example.findittlu.utils.CustomToast;
 
@@ -44,7 +43,7 @@ public class SearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_search, container, false);
+        return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
     @Override

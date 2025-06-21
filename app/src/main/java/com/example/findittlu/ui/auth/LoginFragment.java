@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +23,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
+    private ScrollView leftScrollView;
+    private ScrollView rightScrollView;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -30,7 +33,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Kiểm tra nếu đã đăng nhập thì chuyển sang HomeFragment
         SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
@@ -54,6 +57,14 @@ public class LoginFragment extends Fragment {
         if (!savedEmail.isEmpty()) {
             emailEditText.setText(savedEmail);
             rememberEmailCheckBox.setChecked(true);
+        }
+
+        // Xử lý đồng bộ cuộn cho layout landscape
+        leftScrollView = view.findViewById(R.id.leftScrollView);
+        rightScrollView = view.findViewById(R.id.rightScrollView);
+        
+        if (leftScrollView != null && rightScrollView != null) {
+            setupScrollSync();
         }
 
         // Xử lý nút đăng nhập
@@ -104,6 +115,11 @@ public class LoginFragment extends Fragment {
             navController.navigate(R.id.registerFragment);
         });
 
+        // Sự kiện quên mật khẩu
+        view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(v -> {
+            CustomToast.showCustomToast(getContext(), "Thông báo", "Tính năng quên mật khẩu đang được phát triển!");
+        });
+
         // Thêm TextWatcher để clear lỗi khi nhập lại
         emailEditText.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -121,5 +137,18 @@ public class LoginFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void setupScrollSync() {
+        // Chỉ cho phép cuộn từ cột phải, cột trái sẽ theo dõi
+        leftScrollView.setOnTouchListener((v, event) -> {
+            // Vô hiệu hóa touch events trên cột trái
+            return true;
+        });
+
+        // Đồng bộ cuộn từ phải sang trái
+        rightScrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
+            leftScrollView.scrollTo(0, rightScrollView.getScrollY());
+        });
     }
 }

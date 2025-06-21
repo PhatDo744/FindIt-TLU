@@ -18,9 +18,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.findittlu.viewmodel.UserViewModel;
-import com.example.findittlu.data.model.User;
+
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
+
 import com.example.findittlu.utils.ImageUtils;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,7 +46,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_profile, container, false);
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override

@@ -79,7 +79,7 @@ public class CreatePostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_post_item, container, false);
+        return inflater.inflate(R.layout.fragment_post_item, container, false);
     }
 
     @Override

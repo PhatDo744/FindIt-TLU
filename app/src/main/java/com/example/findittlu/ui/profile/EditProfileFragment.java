@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +20,7 @@ import com.example.findittlu.viewmodel.UserViewModel;
 import com.example.findittlu.data.model.User;
 import android.widget.EditText;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
+
 import com.example.findittlu.utils.ImageUtils;
 import android.content.Intent;
 import android.net.Uri;
@@ -49,7 +48,7 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_edit_profile, container, false);
+        return inflater.inflate(R.layout.fragment_edit_profile, container, false);
     }
 
     @Override

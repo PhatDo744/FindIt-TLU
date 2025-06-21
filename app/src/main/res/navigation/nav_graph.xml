@@ -15,12 +15,12 @@
         android:id="@+id/createPostFragment"
         android:name="com.example.findittlu.ui.post.CreatePostFragment"
         android:label="fragment_create_post"
-        tools:layout="@layout/activity_post_item" />
+        tools:layout="@layout/fragment_post_item" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.findittlu.ui.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/activity_profile">
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
@@ -40,7 +40,7 @@
         android:id="@+id/loginFragment"
         android:name="com.example.findittlu.ui.auth.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/activity_login" />
+        tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.findittlu.ui.auth.RegisterFragment"
@@ -50,12 +50,12 @@
         android:id="@+id/editProfileFragment"
         android:name="com.example.findittlu.ui.profile.EditProfileFragment"
         android:label="fragment_edit_profile"
-        tools:layout="@layout/activity_edit_profile" />
+        tools:layout="@layout/fragment_edit_profile" />
     <fragment
         android:id="@+id/myPostsFragment"
         android:name="com.example.findittlu.ui.profile.MyPostsFragment"
         android:label="fragment_my_posts"
-        tools:layout="@layout/activity_my_posts">
+        tools:layout="@layout/fragment_my_posts">
         <action
             android:id="@+id/action_myPostsFragment_to_editPostFragment"
             app:destination="@id/editPostFragment" />
@@ -64,27 +64,27 @@
         android:id="@+id/policyFragment"
         android:name="com.example.findittlu.ui.common.PolicyFragment"
         android:label="fragment_policy"
-        tools:layout="@layout/activity_policy" />
+        tools:layout="@layout/fragment_policy" />
     <fragment
         android:id="@+id/helpFragment"
         android:name="com.example.findittlu.ui.common.HelpFragment"
         android:label="fragment_help"
-        tools:layout="@layout/activity_help" />
+        tools:layout="@layout/fragment_help" />
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.findittlu.ui.common.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/activity_detail" />
+        tools:layout="@layout/fragment_detail" />
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.findittlu.ui.common.NotificationsFragment"
         android:label="fragment_notifications"
-        tools:layout="@layout/activity_notifications" />
+        tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.findittlu.ui.common.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/activity_search" />
+        tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/editPostFragment"
         android:name="com.example.findittlu.ui.post.EditPostFragment"
