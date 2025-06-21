@@ -231,20 +231,69 @@ public class PostRepository {
     // Sửa tin đăng
     public LiveData<Post> updatePost(long id, Post post) {
         MutableLiveData<Post> data = new MutableLiveData<>();
+        
+        android.util.Log.d("PostRepository", "Updating post with ID: " + id);
+        android.util.Log.d("PostRepository", "Post data: title=" + post.getTitle() + 
+            ", description=" + post.getDescription() + 
+            ", categoryId=" + post.getCategoryId() + 
+            ", location=" + post.getLocationDescription() + 
+            ", itemType=" + post.getItemType() + 
+            ", date=" + post.getDateLostOrFound());
+        
         RetrofitClient.getApiService().updatePost(id, post).enqueue(new Callback<PostResponse>() {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                android.util.Log.d("PostRepository", "Update response: code=" + response.code());
+                if (!response.isSuccessful()) {
+                    try {
+                        android.util.Log.e("PostRepository", "Update error: " + response.errorBody().string());
+                    } catch (Exception e) {
+                        android.util.Log.e("PostRepository", "Update error: cannot parse error body", e);
+                    }
+                }
                 if (response.isSuccessful() && response.body() != null) {
+                    android.util.Log.d("PostRepository", "Update successful, new status: " + response.body().getPost().getStatus());
                     data.setValue(response.body().getPost());
                 } else {
+                    android.util.Log.e("PostRepository", "Update failed: response not successful or body null");
                     data.setValue(null);
                 }
             }
             @Override
             public void onFailure(Call<PostResponse> call, Throwable t) {
+                android.util.Log.e("PostRepository", "Update failure: " + t.getMessage(), t);
                 data.setValue(null);
             }
         });
+        return data;
+    }
+
+    // Sửa tin đăng với Map data
+    public LiveData<Post> updatePostWithMap(long id, java.util.Map<String, Object> postData) {
+        MutableLiveData<Post> data = new MutableLiveData<>();
+        
+        android.util.Log.d("PostRepository", "Updating post with Map data, ID: " + id);
+        android.util.Log.d("PostRepository", "Post data: " + postData.toString());
+        
+        RetrofitClient.getApiService().updatePostWithMap(id, postData).enqueue(new Callback<PostResponse>() {
+            @Override
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    android.util.Log.d("PostRepository", "Update successful");
+                    data.setValue(response.body().getPost());
+                } else {
+                    android.util.Log.e("PostRepository", "Update failed: " + response.code() + " " + response.message());
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostResponse> call, Throwable t) {
+                android.util.Log.e("PostRepository", "Update error: " + t.getMessage());
+                data.setValue(null);
+            }
+        });
+        
         return data;
     }
 

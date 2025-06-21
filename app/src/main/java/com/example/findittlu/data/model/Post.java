@@ -7,12 +7,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonObject;
+import java.lang.reflect.Type;
 
 public class Post {
     @SerializedName("id")
-    private long id;
+    private long id = 0;
     @SerializedName("user_id")
-    private long userId;
+    private long userId = 0;
     @SerializedName("category_id")
     private long categoryId;
     @SerializedName("title")
@@ -286,6 +291,49 @@ public class Post {
         
         long diff = expirationDate.getTime() - new Date().getTime();
         return (int) (diff / (1000 * 60 * 60 * 24));
+    }
+
+    // Custom serializer để không gửi id và userId khi chúng bằng 0
+    public static class PostSerializer implements JsonSerializer<Post> {
+        @Override
+        public JsonElement serialize(Post post, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jsonObject = new JsonObject();
+            
+            // Chỉ thêm id và userId nếu chúng khác 0
+            if (post.id != 0) {
+                jsonObject.addProperty("id", post.id);
+            }
+            if (post.userId != 0) {
+                jsonObject.addProperty("user_id", post.userId);
+            }
+            
+            // Thêm các trường khác
+            if (post.categoryId != 0) {
+                jsonObject.addProperty("category_id", post.categoryId);
+            }
+            if (post.title != null) {
+                jsonObject.addProperty("title", post.title);
+            }
+            if (post.description != null) {
+                jsonObject.addProperty("description", post.description);
+            }
+            if (post.locationDescription != null) {
+                jsonObject.addProperty("location_description", post.locationDescription);
+            }
+            if (post.itemType != null) {
+                jsonObject.addProperty("item_type", post.itemType);
+            }
+            if (post.status != null) {
+                jsonObject.addProperty("status", post.status);
+            }
+            if (post.dateLostOrFound != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                jsonObject.addProperty("date_lost_or_found", sdf.format(post.dateLostOrFound));
+            }
+            jsonObject.addProperty("is_contact_info_public", post.isContactInfoPublic);
+            
+            return jsonObject;
+        }
     }
 }
 

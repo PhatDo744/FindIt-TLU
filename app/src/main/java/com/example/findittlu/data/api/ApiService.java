@@ -96,6 +96,9 @@ public interface ApiService {
     @PUT("items/{id}")
     Call<PostResponse> updatePost(@Path("id") long id, @Body Post post);
 
+    @PUT("items/{id}")
+    Call<PostResponse> updatePostWithMap(@Path("id") long id, @Body java.util.Map<String, Object> postData);
+
     @DELETE("items/{id}")
     Call<Void> deletePost(@Path("id") long id);
     

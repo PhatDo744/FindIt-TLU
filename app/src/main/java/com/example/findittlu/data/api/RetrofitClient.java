@@ -6,9 +6,17 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonPrimitive;
+import com.example.findittlu.data.model.Post;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -26,13 +34,25 @@ import okio.Buffer;
 public class RetrofitClient {
     private static final String TAG = "RetrofitClient";
     // TODO: Thay đổi URL khi có API thực tế
-    private static final String BASE_URL = "http://192.168.1.4:8000/api/"; // Localhost cho quang
+    //private static final String BASE_URL = "http://192.168.1.4:8000/api/"; // Localhost cho quang
     // private static final String BASE_URL = "http://10.0.2.2:8000/api/"; // Localhost cho emulator
-    //private static final String BASE_URL = "http://192.168.1.5:8000/api/"; // Device IP ch phat
+    private static final String BASE_URL = "http://192.168.1.5:8000/api/"; // Device IP ch phat
     // private static final String BASE_URL = "https://findit-tlu.com/api/"; // Production
     
     private static Retrofit retrofit = null;
     private static Context appContext;
+    
+    // Custom Date Serializer
+    public static class DateSerializer implements JsonSerializer<Date> {
+        @Override
+        public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
+            if (src == null) {
+                return null;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            return new JsonPrimitive(sdf.format(src));
+        }
+    }
     
     private static String getToken() {
         if (appContext != null) {
@@ -52,6 +72,7 @@ public class RetrofitClient {
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                     .registerTypeAdapter(Date.class, new DateSerializer())
+                    .registerTypeAdapter(Post.class, new Post.PostSerializer())
                     .create();
             
             // Logging interceptor (chỉ dùng trong debug)

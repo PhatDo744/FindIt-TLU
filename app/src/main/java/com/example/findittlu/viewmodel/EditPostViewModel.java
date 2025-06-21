@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import android.net.Uri;
+import java.util.Date;
 
 public class EditPostViewModel extends AndroidViewModel {
     private PostRepository postRepository;
@@ -25,6 +26,7 @@ public class EditPostViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> updateResult = new MutableLiveData<>();
     private final MutableLiveData<Boolean> imageUploadResult = new MutableLiveData<>();
     private final MutableLiveData<ImageDeleteResult> imageDeleteResult = new MutableLiveData<>();
+    private Post originalPost; // Lưu trữ bài viết gốc để lấy thông tin cần thiết
 
 
     public static class ImageDeleteResult {
@@ -68,6 +70,7 @@ public class EditPostViewModel extends AndroidViewModel {
     public void fetchPostDetails(String postId) {
         long id = Long.parseLong(postId);
         postRepository.getPostDetails(id).observeForever(post -> {
+            originalPost = post; // Lưu trữ bài viết gốc
             postDetails.setValue(post);
         });
     }
@@ -75,21 +78,42 @@ public class EditPostViewModel extends AndroidViewModel {
     public void savePostChanges(String postId, String title, String description, long categoryId, String location, String date) {
         long id = Long.parseLong(postId);
         
-        Post postToUpdate = new Post();
-        postToUpdate.setTitle(title);
-        postToUpdate.setDescription(description);
-        postToUpdate.setCategoryId(categoryId);
-        postToUpdate.setLocationDescription(location);
+        // Tạo Map thay vì Post object để tránh vấn đề với serializer
+        java.util.Map<String, Object> postData = new java.util.HashMap<>();
+        postData.put("title", title);
+        postData.put("description", description);
+        postData.put("category_id", categoryId);
+        postData.put("location_description", location);
+        postData.put("is_contact_info_public", true);
+        
+        // Lấy item_type từ bài viết gốc
+        if (originalPost != null) {
+            postData.put("item_type", originalPost.getItemType());
+        }
         
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            postToUpdate.setDateLostOrFound(sdf.parse(date));
+            // Parse date từ format dd/MM/yyyy và chuyển thành YYYY-MM-DD
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date parsedDate = inputFormat.parse(date);
+            String formattedDate = outputFormat.format(parsedDate);
+            
+            // Gửi date dưới dạng string với format YYYY-MM-DD
+            postData.put("date_lost_or_found", formattedDate);
+            
+            android.util.Log.d("EditPostViewModel", "Sending date: " + formattedDate);
+            android.util.Log.d("EditPostViewModel", "Sending post data: " + postData.toString());
         } catch (ParseException e) {
-            // In a real app, handle this error properly
-            e.printStackTrace();
+            android.util.Log.e("EditPostViewModel", "Error parsing date: " + e.getMessage());
+            // Sử dụng ngày hiện tại nếu parse lỗi
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            String currentDate = outputFormat.format(new Date());
+            postData.put("date_lost_or_found", currentDate);
+            android.util.Log.d("EditPostViewModel", "Using current date instead: " + currentDate);
         }
 
-        postRepository.updatePost(id, postToUpdate).observeForever(updatedPost -> {
+        // Gọi API với Map thay vì Post object
+        postRepository.updatePostWithMap(id, postData).observeForever(updatedPost -> {
             updateResult.setValue(updatedPost != null);
         });
     }
