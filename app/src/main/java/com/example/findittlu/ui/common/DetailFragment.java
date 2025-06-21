@@ -43,19 +43,26 @@ public class DetailFragment extends Fragment {
         });
         detailViewModel.getDetailData().observe(getViewLifecycleOwner(), data -> {
             if (data == null) return;
-            
+
             android.util.Log.d("DetailFragment", "Received detail data: " + data.title + ", images: " + (data.imageUrls != null ? data.imageUrls.size() : 0));
-            
+
             ((TextView) view.findViewById(R.id.detail_title)).setText(data.title);
             ((TextView) view.findViewById(R.id.detail_desc)).setText(data.description);
             ((TextView) view.findViewById(R.id.detail_date)).setText(data.date);
             ((TextView) view.findViewById(R.id.detail_time_ago)).setText(data.timeAgo);
             ((TextView) view.findViewById(R.id.detail_location)).setText(data.location);
-            ((TextView) view.findViewById(R.id.detail_status)).setText(data.isLost ? "Đồ vật bị mất" : "Đồ vật đã tìm thấy");
+            TextView statusView = view.findViewById(R.id.detail_status);
+            if (data.isLost) {
+                statusView.setText("Đồ vật bị mất");
+                statusView.setBackgroundResource(R.color.logout_red);
+            } else {
+                statusView.setText("Đồ vật đã tìm thấy");
+                statusView.setBackgroundResource(R.color.found_green);
+            }
             ((TextView) view.findViewById(R.id.detail_user_name)).setText(data.userName);
             ((TextView) view.findViewById(R.id.detail_user_email)).setText(data.userEmail);
             ((TextView) view.findViewById(R.id.detail_user_phone)).setText(data.userPhone);
-            
+            ((TextView) view.findViewById(R.id.detail_category)).setText(data.categoryName);
             // Hiển thị avatar user
             ImageView avatarView = view.findViewById(R.id.detail_user_avatar);
             if (data.userAvatarUrl != null && !data.userAvatarUrl.isEmpty()) {
@@ -64,7 +71,7 @@ public class DetailFragment extends Fragment {
             } else {
                 avatarView.setImageResource(R.drawable.ic_person);
             }
-            
+
             // Hiển thị ảnh sản phẩm
             if (data.imageUrls != null && !data.imageUrls.isEmpty()) {
                 android.util.Log.d("DetailFragment", "Setting up image pager with " + data.imageUrls.size() + " images");
@@ -78,7 +85,56 @@ public class DetailFragment extends Fragment {
         detailViewModel.fetchDetail(postId);
         Button btnContact = view.findViewById(R.id.btn_contact);
         btnContact.setOnClickListener(v -> {
-            // TODO: Xử lý logic liên hệ (ví dụ mở email hoặc gọi điện)
+            detailViewModel.getDetailData().observe(getViewLifecycleOwner(), data -> {
+                if (data == null) return;
+                String phone = data.userPhone;
+                String email = data.userEmail;
+                android.content.pm.PackageManager pm = requireContext().getPackageManager();
+                // Liệt kê app gọi điện
+                if (phone != null && !phone.isEmpty()) {
+                    android.content.Intent callIntent = new android.content.Intent(android.content.Intent.ACTION_DIAL, android.net.Uri.parse("tel:" + phone));
+                    java.util.List<android.content.pm.ResolveInfo> callApps = pm.queryIntentActivities(callIntent, 0);
+                    for (android.content.pm.ResolveInfo info : callApps) {
+                        String appName = info.loadLabel(pm).toString();
+                        String packageName = info.activityInfo.packageName;
+                        android.util.Log.d("ContactApps", "Gọi điện: " + appName + " (" + packageName + ")");
+                    }
+                }
+                // Liệt kê app gửi email
+                if (email != null && !email.isEmpty()) {
+                    android.content.Intent emailIntent = new android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:" + email));
+                    java.util.List<android.content.pm.ResolveInfo> emailApps = pm.queryIntentActivities(emailIntent, 0);
+                    for (android.content.pm.ResolveInfo info : emailApps) {
+                        String appName = info.loadLabel(pm).toString();
+                        String packageName = info.activityInfo.packageName;
+                        android.util.Log.d("ContactApps", "Gửi email: " + appName + " (" + packageName + ")");
+                    }
+                }
+                // Giữ logic mở app như trước
+                if (phone != null && !phone.isEmpty() && email != null && !email.isEmpty()) {
+                    android.content.Intent callIntent = new android.content.Intent(android.content.Intent.ACTION_DIAL);
+                    callIntent.setData(android.net.Uri.parse("tel:" + phone));
+                    android.content.Intent emailIntent = new android.content.Intent(android.content.Intent.ACTION_SENDTO);
+                    emailIntent.setData(android.net.Uri.parse("mailto:" + email));
+                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
+                    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Liên hệ về tin đăng trên FindIt@TLU");
+                    android.content.Intent chooser = android.content.Intent.createChooser(callIntent, "Chọn ứng dụng liên hệ");
+                    chooser.putExtra(android.content.Intent.EXTRA_INITIAL_INTENTS, new android.content.Intent[]{emailIntent});
+                    startActivity(chooser);
+                } else if (phone != null && !phone.isEmpty()) {
+                    android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_DIAL);
+                    intent.setData(android.net.Uri.parse("tel:" + phone));
+                    startActivity(intent);
+                } else if (email != null && !email.isEmpty()) {
+                    android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_SENDTO);
+                    intent.setData(android.net.Uri.parse("mailto:" + email));
+                    intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
+                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Liên hệ về tin đăng trên FindIt@TLU");
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), "Không có thông tin liên hệ", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
         WebView mapWebView = view.findViewById(R.id.detail_map_webview);
         mapWebView.getSettings().setJavaScriptEnabled(true);

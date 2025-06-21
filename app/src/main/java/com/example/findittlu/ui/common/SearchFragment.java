@@ -36,6 +36,7 @@ public class SearchFragment extends Fragment {
     private CategoryViewModel categoryViewModel;
     private LinearLayout categoryLayout;
     private java.util.Map<String, Long> categoryNameToId = new java.util.HashMap<>();
+    private String selectedItemType = null; // "lost", "found" hoặc null
     private Long selectedCategoryId = null;
 
     public SearchFragment() {}
@@ -114,15 +115,18 @@ public class SearchFragment extends Fragment {
         // Gán sự kiện click
         statusButtons[0].setOnClickListener(v -> {
             selectCategoryButton(statusButtons[0], statusLayout);
-            searchViewModel.fetchSearchResults("");
+            selectedItemType = null;
+            triggerFilter();
         });
         statusButtons[1].setOnClickListener(v -> {
             selectCategoryButton(statusButtons[1], statusLayout);
-            searchViewModel.fetchSearchResultsByType("lost");
+            selectedItemType = "lost";
+            triggerFilter();
         });
         statusButtons[2].setOnClickListener(v -> {
             selectCategoryButton(statusButtons[2], statusLayout);
-            searchViewModel.fetchSearchResultsByType("found");
+            selectedItemType = "found";
+            triggerFilter();
         });
         // Mặc định chọn "Tất cả"
         selectCategoryButton(statusButtons[0], statusLayout);
@@ -157,7 +161,7 @@ public class SearchFragment extends Fragment {
         btnAll.setOnClickListener(v -> {
             selectCategoryButton(btnAll, layout);
             selectedCategoryId = null;
-            searchViewModel.fetchSearchResults("");
+            triggerFilter();
         });
         layout.addView(btnAll);
         if (categories != null) {
@@ -172,7 +176,7 @@ public class SearchFragment extends Fragment {
                 btn.setOnClickListener(v -> {
                     selectCategoryButton(btn, layout);
                     selectedCategoryId = cat.getId();
-                    searchViewModel.fetchSearchResultsByCategory(selectedCategoryId);
+                    triggerFilter();
                 });
                 layout.addView(btn);
             }
@@ -192,5 +196,17 @@ public class SearchFragment extends Fragment {
         }
         selectedBtn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.primary_blue)));
         selectedBtn.setTextColor(getResources().getColor(R.color.white));
+    }
+
+    private void triggerFilter() {
+        if (selectedCategoryId != null && selectedItemType != null) {
+            searchViewModel.fetchSearchResultsByCategoryAndType(selectedCategoryId, selectedItemType);
+        } else if (selectedCategoryId != null) {
+            searchViewModel.fetchSearchResultsByCategory(selectedCategoryId);
+        } else if (selectedItemType != null) {
+            searchViewModel.fetchSearchResultsByType(selectedItemType);
+        } else {
+            searchViewModel.fetchSearchResults("");
+        }
     }
 }
