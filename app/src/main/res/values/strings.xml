@@ -48,7 +48,7 @@
     <string name="date_found_label">Ngày nhặt được*</string>
     <string name="date_hint">Chọn ngày</string>
     <string name="add_images_optional">Thêm hình ảnh (Tùy chọn)</string>
-    <string name="tap_to_add_images">Nhấn để thêm ảnh (Tối đa 5 ảnh)</string>
+    <string name="tap_to_add_images">Nhấn để thêm ảnh (Tối đa 3 ảnh)</string>
     <string name="add_image_icon_desc">Biểu tượng thêm ảnh</string>
     <string name="selected_image">Ảnh đã chọn</string>
     <string name="remove_image">Xóa ảnh</string>
@@ -63,7 +63,7 @@
     <string name="change_avatar_desc">Thay đổi ảnh đại diện</string>
     <string name="section_basic_info">Thông tin cơ bản</string>
     <string name="hint_full_name">Họ và tên</string>
-    <string name="hint_student_id">Mã số sinh viên</string>
+    <string name="hint_student_id">Mã số sinh viên (Nếu có)</string>
     <string name="helper_student_id_uneditable">Mã số sinh viên không thể thay đổi</string>
     <string name="section_contact_info">Thông tin liên hệ</string>
     <string name="hint_phone_number">Số điện thoại</string>
@@ -174,4 +174,5 @@
     <string name="help_contact_hotline_value">0123.456.789</string>
     <string name="help_contact_office_label">Văn phòng</string>
     <string name="help_contact_office_value">Phòng A1-101, Đại học Thủy Lợi</string>
+    <string name="helper_email">Email không thể thay đổi</string>
 </resources>

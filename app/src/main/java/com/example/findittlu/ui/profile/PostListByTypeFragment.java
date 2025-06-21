@@ -41,7 +41,8 @@ public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.O
         if (getArguments() != null) {
             postType = getArguments().getString(ARG_POST_TYPE);
         }
-        viewModel = new ViewModelProvider(this).get(MyPostsViewModel.class);
+        // Sử dụng ViewModel từ fragment cha (MyPostsFragment) thay vì tạo mới
+        viewModel = new ViewModelProvider(requireParentFragment()).get(MyPostsViewModel.class);
     }
 
     @Nullable
@@ -73,7 +74,7 @@ public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.O
     }
 
     private void setupObservers() {
-        // Observer cho danh sách bài đăng
+        // Observer cho danh sách bài đăng (đã được lọc bởi MyPostsViewModel)
         viewModel.getMyPosts().observe(getViewLifecycleOwner(), posts -> {
             if (posts == null) {
                 android.util.Log.e("DEBUG_MyPosts", "posts null - Lỗi API hoặc thiếu userId");
