@@ -7,5 +7,5 @@
     android:background="@color/background_gray"
     android:clipToPadding="false"
     android:paddingTop="8dp"
-    tools:context=".ui.fragment.PostsListFragment"
+    tools:context=".ui.profile.PostListByTypeFragment"
     tools:listitem="@layout/item_my_post" />

@@ -5,23 +5,28 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.findittlu.ui.profile.adapter.MyPostsViewPagerAdapter;
 import com.example.findittlu.databinding.ActivityMyPostsBinding;
+import com.example.findittlu.viewmodel.MyPostsViewModel;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MyPostsFragment extends Fragment {
 
     private ActivityMyPostsBinding binding;
     private MyPostsViewPagerAdapter viewPagerAdapter;
+    private MyPostsViewModel viewModel;
 
     public MyPostsFragment() {
         // Required empty public constructor
@@ -39,8 +44,12 @@ public class MyPostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
 
+        // Khởi tạo ViewModel
+        viewModel = new ViewModelProvider(this).get(MyPostsViewModel.class);
+
         setupToolbar(navController);
         setupViewPagerAndTabs();
+        setupSearch();
     }
 
     private void setupToolbar(NavController navController) {
@@ -71,6 +80,27 @@ public class MyPostsFragment extends Fragment {
                     tab.setCustomView(tabTextView);
                 }
         ).attach();
+    }
+
+    private void setupSearch() {
+        EditText searchEditText = binding.searchEditText;
+        ImageButton searchButton = binding.searchButton;
+
+        // Xử lý sự kiện click nút tìm kiếm
+        searchButton.setOnClickListener(v -> {
+            String searchQuery = searchEditText.getText().toString().trim();
+            viewModel.setSearchQuery(searchQuery);
+        });
+
+        // Xử lý sự kiện nhấn Enter trên thanh tìm kiếm
+        searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                String searchQuery = searchEditText.getText().toString().trim();
+                viewModel.setSearchQuery(searchQuery);
+                return true;
+            }
+            return false;
+        });
     }
     
     @Override
