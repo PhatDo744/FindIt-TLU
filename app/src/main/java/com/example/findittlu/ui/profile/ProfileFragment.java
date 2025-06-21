@@ -122,6 +122,10 @@ public class ProfileFragment extends Fragment {
     private void setupToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(view);
+            navController.popBackStack();
+        });
     }
 
     private void setupMenuItems(View view, NavController navController) {

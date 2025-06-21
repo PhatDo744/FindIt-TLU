@@ -31,8 +31,17 @@ public class DetailViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     Post post = response.body();
                     String imageUrl = null;
+                    java.util.List<String> imageUrls = new java.util.ArrayList<>();
+                    String BASE_URL = "http://192.168.1.4:8000";
                     if (post.getImages() != null && !post.getImages().isEmpty()) {
                         imageUrl = post.getImages().get(0).getImageUrl();
+                        for (com.example.findittlu.data.model.ItemImage img : post.getImages()) {
+                            String url = img.getImageUrl();
+                            if (url != null && url.startsWith("/storage")) {
+                                url = BASE_URL + url;
+                            }
+                            imageUrls.add(url);
+                        }
                     }
                     String userEmail = post.getUser() != null ? post.getUser().getEmail() : "";
                     String userPhone = post.getUser() != null ? post.getUser().getPhoneNumber() : "";
@@ -47,7 +56,8 @@ public class DetailViewModel extends ViewModel {
                         imageUrl,
                         userEmail,
                         userPhone,
-                        userAvatarUrl
+                        userAvatarUrl,
+                        imageUrls
                     ));
                 } else {
                     detailData.setValue(null);
@@ -63,7 +73,8 @@ public class DetailViewModel extends ViewModel {
     public static class DetailData {
         public String title, description, date, timeAgo, location, userName, imageUrl, userEmail, userPhone, userAvatarUrl;
         public boolean isLost;
-        public DetailData(String title, String description, Date dateObj, String location, boolean isLost, String userName, String imageUrl, String userEmail, String userPhone, String userAvatarUrl) {
+        public java.util.List<String> imageUrls;
+        public DetailData(String title, String description, Date dateObj, String location, boolean isLost, String userName, String imageUrl, String userEmail, String userPhone, String userAvatarUrl, java.util.List<String> imageUrls) {
             this.title = title;
             this.description = description;
             // Định dạng ngày
@@ -78,6 +89,7 @@ public class DetailViewModel extends ViewModel {
             this.userEmail = userEmail;
             this.userPhone = userPhone;
             this.userAvatarUrl = userAvatarUrl;
+            this.imageUrls = imageUrls;
         }
         private String getTimeAgo(Date dateObj) {
             if (dateObj == null) return "";

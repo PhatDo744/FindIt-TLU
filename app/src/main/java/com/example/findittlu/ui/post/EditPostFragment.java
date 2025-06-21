@@ -144,7 +144,10 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
             ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        toolbar.setNavigationOnClickListener(v -> navController.popBackStack());
+        toolbar.setNavigationOnClickListener(v -> {
+
+            navController.popBackStack();
+        });
     }
 
     private void setupCategorySpinner() {

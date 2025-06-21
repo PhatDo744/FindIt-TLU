@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.findittlu.utils.ImageUtils;
 import com.example.findittlu.utils.CustomToast;
 import android.webkit.WebView;
+import androidx.viewpager2.widget.ViewPager2;
+import com.example.findittlu.adapter.ImagePagerAdapter;
 
 public class DetailFragment extends Fragment {
     private DetailViewModel detailViewModel;
@@ -35,10 +37,7 @@ public class DetailFragment extends Fragment {
         Bundle args = getArguments();
         long postId = args != null && args.containsKey("postId") ? args.getLong("postId", 1) : 1;
         String imageUrl = args != null ? args.getString("imageUrl", null) : null;
-        ImageView imageView = view.findViewById(R.id.detail_image);
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            com.example.findittlu.utils.ImageUtils.loadItemImage(requireContext(), imageUrl, imageView);
-        }
+        ViewPager2 imagePager = view.findViewById(R.id.detail_image_pager);
         detailViewModel.getIsApiConnected().observe(getViewLifecycleOwner(), connected -> {
             if (!connected) CustomToast.showCustomToast(getContext(), "Lỗi kết nối", "Không thể kết nối API!");
         });
@@ -60,8 +59,8 @@ public class DetailFragment extends Fragment {
             } else {
                 avatarView.setImageResource(R.drawable.ic_person);
             }
-            if ((imageUrl == null || imageUrl.isEmpty()) && data.imageUrl != null && !data.imageUrl.isEmpty()) {
-                com.example.findittlu.utils.ImageUtils.loadItemImage(requireContext(), data.imageUrl, imageView);
+            if (data.imageUrls != null && !data.imageUrls.isEmpty()) {
+                imagePager.setAdapter(new ImagePagerAdapter(requireContext(), data.imageUrls));
             }
         });
         detailViewModel.fetchDetail(postId);

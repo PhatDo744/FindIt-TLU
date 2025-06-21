@@ -32,6 +32,4 @@
         android:clipToPadding="false"
         android:background="@color/white" />
 
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout> 
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
