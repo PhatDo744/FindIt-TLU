@@ -223,14 +223,26 @@ public class CreatePostFragment extends Fragment {
                 
                 if (!shouldShowRationale) {
                     // Người dùng đã chọn "Không hỏi lại"
-                    Snackbar.make(requireView(), 
-                        "Cần quyền truy cập ảnh để chọn ảnh. Vui lòng vào Cài đặt > Ứng dụng > FindIt@TLU > Quyền để cấp quyền.", 
-                        Snackbar.LENGTH_LONG).show();
+                    if (isAdded() && getActivity() != null) {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), 
+                            "Cần quyền truy cập ảnh để chọn ảnh. Vui lòng vào Cài đặt > Ứng dụng > FindIt@TLU > Quyền để cấp quyền.", 
+                            Snackbar.LENGTH_LONG).show();
+                    } else {
+                        android.widget.Toast.makeText(getContext(), 
+                            "Cần quyền truy cập ảnh để chọn ảnh. Vui lòng vào Cài đặt > Ứng dụng > FindIt@TLU > Quyền để cấp quyền.", 
+                            android.widget.Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     // Người dùng từ chối nhưng có thể hỏi lại
-                    Snackbar.make(requireView(), 
-                        "Cần quyền truy cập ảnh để chọn ảnh. Vui lòng cấp quyền để tiếp tục.", 
-                        Snackbar.LENGTH_LONG).show();
+                    if (isAdded() && getActivity() != null) {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), 
+                            "Cần quyền truy cập ảnh để chọn ảnh. Vui lòng cấp quyền để tiếp tục.", 
+                            Snackbar.LENGTH_LONG).show();
+                    } else {
+                        android.widget.Toast.makeText(getContext(), 
+                            "Cần quyền truy cập ảnh để chọn ảnh. Vui lòng cấp quyền để tiếp tục.", 
+                            android.widget.Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         }
@@ -359,7 +371,11 @@ public class CreatePostFragment extends Fragment {
             
             // Validate contact info
             if (!showEmailCheckBox.isChecked() && !showPhoneCheckBox.isChecked()) {
-                Snackbar.make(requireView(), "Bạn phải chọn ít nhất một thông tin liên hệ để hiển thị.", Snackbar.LENGTH_LONG).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Bạn phải chọn ít nhất một thông tin liên hệ để hiển thị.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Bạn phải chọn ít nhất một thông tin liên hệ để hiển thị.", android.widget.Toast.LENGTH_LONG).show();
+                }
                 return; // Stop submission
             }
 
@@ -377,7 +393,7 @@ public class CreatePostFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        final NavController navController = Navigation.findNavController(requireView());
+        final NavController navController = isAdded() ? Navigation.findNavController(requireView()) : null;
 
         viewModel.getPostCreationState().observe(getViewLifecycleOwner(), state -> {
             if (state == null) return;
@@ -390,13 +406,21 @@ public class CreatePostFragment extends Fragment {
                 case SUCCESS:
                     submitButton.setEnabled(true);
                     submitButton.setText("Đăng tin");
-                    Snackbar.make(requireView(), "Bài viết của bạn đã được gửi để chờ duyệt!", Snackbar.LENGTH_LONG).show();
+                    if (isAdded() && getActivity() != null) {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Bài viết của bạn đã được gửi để chờ duyệt!", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        android.widget.Toast.makeText(getContext(), "Bài viết của bạn đã được gửi để chờ duyệt!", android.widget.Toast.LENGTH_LONG).show();
+                    }
                     navController.popBackStack();
                     break;
                 case ERROR:
                     submitButton.setEnabled(true);
                     submitButton.setText("Đăng tin");
-                    Snackbar.make(requireView(), "Lỗi: " + state.message, Snackbar.LENGTH_LONG).show();
+                    if (isAdded() && getActivity() != null) {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Lỗi: " + state.message, Snackbar.LENGTH_LONG).show();
+                    } else {
+                        android.widget.Toast.makeText(getContext(), "Lỗi: " + state.message, android.widget.Toast.LENGTH_LONG).show();
+                    }
                     break;
             }
         });
@@ -417,7 +441,11 @@ public class CreatePostFragment extends Fragment {
         // Setup image upload container click listener
         imageUploadContainer.setOnClickListener(v -> {
             if (imageItems.size() >= MAX_IMAGES) {
-                Snackbar.make(v, "Bạn chỉ có thể chọn tối đa " + MAX_IMAGES + " ảnh", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Bạn chỉ có thể chọn tối đa " + MAX_IMAGES + " ảnh", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Bạn chỉ có thể chọn tối đa " + MAX_IMAGES + " ảnh", android.widget.Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
             checkPermissionAndOpenGallery();

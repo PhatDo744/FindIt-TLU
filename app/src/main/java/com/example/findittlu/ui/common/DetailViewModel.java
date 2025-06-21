@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.findittlu.data.api.RetrofitClient;
 import com.example.findittlu.data.model.Post;
+import com.example.findittlu.utils.Constants;
+import com.example.findittlu.utils.UrlUtils;
 
 import java.util.Date;
 
@@ -32,20 +34,30 @@ public class DetailViewModel extends ViewModel {
                     Post post = response.body();
                     String imageUrl = null;
                     java.util.List<String> imageUrls = new java.util.ArrayList<>();
-                    String BASE_URL = "http://192.168.1.4:8000";
+                    
                     if (post.getImages() != null && !post.getImages().isEmpty()) {
                         imageUrl = post.getImages().get(0).getImageUrl();
                         for (com.example.findittlu.data.model.ItemImage img : post.getImages()) {
                             String url = img.getImageUrl();
-                            if (url != null && url.startsWith("/storage")) {
-                                url = BASE_URL + url;
+                            if (url != null) {
+                                // Sử dụng UrlUtils để xử lý URL
+                                String absoluteUrl = UrlUtils.toAbsoluteImageUrl(url);
+                                if (absoluteUrl != null) {
+                                    imageUrls.add(absoluteUrl);
+                                }
                             }
-                            imageUrls.add(url);
                         }
                     }
+                    
                     String userEmail = post.getUser() != null ? post.getUser().getEmail() : "";
                     String userPhone = post.getUser() != null ? post.getUser().getPhoneNumber() : "";
                     String userAvatarUrl = post.getUser() != null ? post.getUser().getPhotoUrl() : "";
+                    
+                    // Sử dụng UrlUtils để xử lý URL avatar user
+                    if (userAvatarUrl != null && !userAvatarUrl.isEmpty()) {
+                        userAvatarUrl = UrlUtils.toAbsoluteAvatarUrl(userAvatarUrl);
+                    }
+                    
                     detailData.setValue(new DetailData(
                         post.getTitle(),
                         post.getDescription(),

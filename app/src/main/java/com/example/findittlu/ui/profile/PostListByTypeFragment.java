@@ -119,20 +119,36 @@ public class PostListByTypeFragment extends Fragment implements MyPostsAdapter.O
         // Observer cho kết quả hoàn thành
         viewModel.getCompletionResult().observe(getViewLifecycleOwner(), success -> {
             if (success != null && success) {
-                Snackbar.make(requireView(), "Đã đánh dấu hoàn thành!", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Đã đánh dấu hoàn thành!", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.showCustomToast(getContext(), "Thành công", "Đã đánh dấu hoàn thành!");
+                }
                 viewModel.fetchMyPosts(userId); // Tải lại danh sách
             } else if (success != null) {
-                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.showCustomToast(getContext(), "Lỗi", "Có lỗi xảy ra, vui lòng thử lại.");
+                }
             }
         });
 
         // Observer cho kết quả xóa
         viewModel.getDeletionResult().observe(getViewLifecycleOwner(), success -> {
             if (success != null && success) {
-                Snackbar.make(requireView(), "Đã xóa bài đăng thành công!", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Đã xóa bài đăng thành công!", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.showCustomToast(getContext(), "Thành công", "Đã xóa bài đăng thành công!");
+                }
                 viewModel.fetchMyPosts(userId); // Tải lại danh sách
             } else if (success != null) {
-                Snackbar.make(requireView(), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Có lỗi xảy ra, vui lòng thử lại.", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    CustomToast.showCustomToast(getContext(), "Lỗi", "Có lỗi xảy ra, vui lòng thử lại.");
+                }
             }
         });
     }

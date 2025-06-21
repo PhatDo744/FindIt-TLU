@@ -8,7 +8,7 @@ import android.widget.ImageView;
 public class ImageUtils {
     
     private static final String BASE_URL_EMULATOR = "http://10.0.2.2:8000";
-    private static final String BASE_URL_DEVICE = "http://192.168.1.5:8000"; // Thay đổi IP theo mạng của Phát
+    private static final String BASE_URL_DEVICE = "http://192.168.1.3:8000"; // Thay đổi IP theo mạng của Phát
 //    private static final String BASE_URL_DEVICE = "http://192.168.1.4:8000"; // Thay đổi IP theo mạng của Quang
     
     /**
