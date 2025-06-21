@@ -10,6 +10,7 @@ import com.example.findittlu.data.model.Notification;
 import com.example.findittlu.data.model.PostListResponse;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -26,6 +27,7 @@ import retrofit2.http.Query;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
+import retrofit2.http.PartMap;
 
 public interface ApiService {
     // Authentication
@@ -92,6 +94,19 @@ public interface ApiService {
 
     @POST("items")
     Call<PostResponse> createPost(@Body Post post);
+
+    @Multipart
+    @POST("posts")
+    Call<PostResponse> createPostWithImages(
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part("location_description") RequestBody location,
+            @Part("category_id") RequestBody categoryId,
+            @Part("item_type") RequestBody itemType,
+            @Part("date_lost_or_found") RequestBody date,
+            @Part("is_contact_info_public") RequestBody isPublic,
+            @Part List<MultipartBody.Part> images
+    );
 
     @PUT("items/{id}")
     Call<PostResponse> updatePost(@Path("id") long id, @Body Post post);

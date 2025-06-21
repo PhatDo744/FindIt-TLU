@@ -38,6 +38,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class CreatePostFragment extends Fragment {
 
@@ -54,6 +56,7 @@ public class CreatePostFragment extends Fragment {
     private android.widget.CheckBox showEmailCheckBox, showPhoneCheckBox;
     
     // Image upload components
+    private ActivityResultLauncher<Intent> pickImageLauncher;
     private FrameLayout imageUploadContainer;
     private RecyclerView selectedImagesRecyclerView;
     private SelectedImagesAdapter selectedImagesAdapter;
@@ -61,6 +64,12 @@ public class CreatePostFragment extends Fragment {
 
     public CreatePostFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupImagePickerLauncher();
     }
 
     @Override
@@ -104,33 +113,34 @@ public class CreatePostFragment extends Fragment {
         selectedImagesRecyclerView = view.findViewById(R.id.selectedImagesRecyclerView);
     }
 
-    private void setupImageUpload() {
-        // Setup RecyclerView for selected images
-        selectedImagesAdapter = new SelectedImagesAdapter(imageItems, new SelectedImagesAdapter.OnImageRemoveListener() {
-            @Override
-            public void onImageRemove(Object imageItem, int position) {
-                imageItems.remove(position);
-                selectedImagesAdapter.notifyItemRemoved(position);
-                selectedImagesAdapter.notifyItemRangeChanged(position, imageItems.size());
-                updateImageUploadVisibility();
-            }
-        });
-        
-        selectedImagesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        selectedImagesRecyclerView.setAdapter(selectedImagesAdapter);
-        
-        // Setup image upload container click listener
-        imageUploadContainer.setOnClickListener(v -> {
-            if (imageItems.size() >= MAX_IMAGES) {
-                Snackbar.make(v, "Bạn chỉ có thể chọn tối đa " + MAX_IMAGES + " ảnh", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            checkPermissionAndOpenGallery();
-        });
-        
-        updateImageUploadVisibility();
+    private void setupImagePickerLauncher() {
+        pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
+                    Intent data = result.getData();
+                    if (data.getClipData() != null) { // User selected multiple images
+                        int count = data.getClipData().getItemCount();
+                        int availableSlots = MAX_IMAGES - imageItems.size();
+                        int limit = Math.min(count, availableSlots);
+                        
+                        for (int i = 0; i < limit; i++) {
+                            Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                            imageItems.add(imageUri);
+                        }
+                    } else if (data.getData() != null) { // User selected a single image
+                        if (imageItems.size() < MAX_IMAGES) {
+                            Uri imageUri = data.getData();
+                            imageItems.add(imageUri);
+                        }
+                    }
+                    
+                    selectedImagesAdapter.notifyDataSetChanged();
+                    updateImageUploadVisibility();
+                }
+            });
     }
-    
+
     private void checkPermissionAndOpenGallery() {
         // Kiểm tra quyền truy cập ảnh
         boolean hasPermission = false;
@@ -234,7 +244,7 @@ public class CreatePostFragment extends Fragment {
         String[] mimeTypes = {"image/jpeg", "image/png", "image/webp"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        pickImageLauncher.launch(intent);
     }
     
     private void updateImageUploadVisibility() {
@@ -243,39 +253,6 @@ public class CreatePostFragment extends Fragment {
         
         // Hiển thị nút upload nếu chưa đạt giới hạn
         imageUploadContainer.setVisibility(imageItems.size() >= MAX_IMAGES ? View.GONE : View.VISIBLE);
-    }
-    
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == AppCompatActivity.RESULT_OK && data != null) {
-            // Trường hợp người dùng chọn nhiều ảnh
-            if (data.getClipData() != null) {
-                int count = data.getClipData().getItemCount();
-                for (int i = 0; i < count; i++) {
-                    if (imageItems.size() < MAX_IMAGES) {
-                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                        imageItems.add(imageUri);
-                    } else {
-                        Snackbar.make(requireView(), "Đã đạt giới hạn " + MAX_IMAGES + " ảnh", Snackbar.LENGTH_SHORT).show();
-                        break;
-                    }
-                }
-            } 
-            // Trường hợp người dùng chỉ chọn một ảnh
-            else if (data.getData() != null) {
-                if (imageItems.size() < MAX_IMAGES) {
-                    Uri imageUri = data.getData();
-                    imageItems.add(imageUri);
-                } else {
-                    Snackbar.make(requireView(), "Đã đạt giới hạn " + MAX_IMAGES + " ảnh", Snackbar.LENGTH_SHORT).show();
-                }
-            }
-            
-            selectedImagesAdapter.notifyDataSetChanged();
-            updateImageUploadVisibility();
-        }
     }
 
     private void setupToolbar(View view, NavController navController) {
@@ -379,48 +356,74 @@ public class CreatePostFragment extends Fragment {
             String location = locationEditText.getText().toString().trim();
             int categoryId = categorySpinner.getSelectedItemPosition();
             String status = isFoundSelected ? "found" : "lost";
-            boolean isContactPublic = showEmailCheckBox.isChecked() || showPhoneCheckBox.isChecked();
             
-            if (title.isEmpty() || date.isEmpty() || categoryId == 0 || description.isEmpty() || location.isEmpty()) {
-                Snackbar.make(v, "Vui lòng điền đầy đủ thông tin", Snackbar.LENGTH_SHORT).show();
-                return;
+            // Validate contact info
+            if (!showEmailCheckBox.isChecked() && !showPhoneCheckBox.isChecked()) {
+                Snackbar.make(requireView(), "Bạn phải chọn ít nhất một thông tin liên hệ để hiển thị.", Snackbar.LENGTH_LONG).show();
+                return; // Stop submission
             }
-            
+
+            // Disable the button to prevent multiple clicks
+            submitButton.setEnabled(false);
+            submitButton.setText("Đang đăng...");
+
             List<Uri> imageUris = imageItems.stream()
                     .filter(item -> item instanceof Uri)
                     .map(item -> (Uri) item)
                     .collect(Collectors.toList());
 
-            viewModel.createPostWithImages(title, date, status, description, location, (int) categoryId, isContactPublic, imageUris);
+            viewModel.createPostWithImages(title, date, status, description, location, (int) categoryId, showEmailCheckBox.isChecked() || showPhoneCheckBox.isChecked(), imageUris);
         });
     }
 
     private void observeViewModel() {
         final NavController navController = Navigation.findNavController(requireView());
 
-        viewModel.getCreationResult().observe(getViewLifecycleOwner(), post -> {
-            // This observer is mainly to know that the post object has been created.
-            // The final success/failure message is handled by the imageUploadResult observer.
-            if (post == null) {
-                // This means post creation itself failed.
-                Snackbar.make(requireView(), "Tạo bài đăng thất bại. Vui lòng thử lại.", Snackbar.LENGTH_LONG).show();
+        viewModel.getPostCreationState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null) return;
+
+            switch (state.status) {
+                case LOADING:
+                    submitButton.setEnabled(false);
+                    submitButton.setText("Đang đăng...");
+                    break;
+                case SUCCESS:
+                    submitButton.setEnabled(true);
+                    submitButton.setText("Đăng tin");
+                    Snackbar.make(requireView(), "Bài viết của bạn đã được gửi để chờ duyệt!", Snackbar.LENGTH_LONG).show();
+                    navController.popBackStack();
+                    break;
+                case ERROR:
+                    submitButton.setEnabled(true);
+                    submitButton.setText("Đăng tin");
+                    Snackbar.make(requireView(), "Lỗi: " + state.message, Snackbar.LENGTH_LONG).show();
+                    break;
             }
         });
+    }
 
-        viewModel.getImageUploadResult().observe(getViewLifecycleOwner(), uploadSuccess -> {
-            if (uploadSuccess) {
-                Snackbar.make(requireView(), "Bài viết của bạn đã được gửi để chờ duyệt!", Snackbar.LENGTH_LONG).show();
-                navController.popBackStack();
-            } else {
-                // This case is handled by the creationMessage observer
-            }
+    private void setupImageUpload() {
+        // Setup RecyclerView for selected images
+        selectedImagesAdapter = new SelectedImagesAdapter(imageItems, (imageItem, position) -> {
+            imageItems.remove(position);
+            selectedImagesAdapter.notifyItemRemoved(position);
+            selectedImagesAdapter.notifyItemRangeChanged(position, imageItems.size());
+            updateImageUploadVisibility();
         });
         
-        viewModel.getCreationMessage().observe(getViewLifecycleOwner(), message -> {
-            if (message != null && !message.isEmpty()) {
-                Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show();
+        selectedImagesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        selectedImagesRecyclerView.setAdapter(selectedImagesAdapter);
+        
+        // Setup image upload container click listener
+        imageUploadContainer.setOnClickListener(v -> {
+            if (imageItems.size() >= MAX_IMAGES) {
+                Snackbar.make(v, "Bạn chỉ có thể chọn tối đa " + MAX_IMAGES + " ảnh", Snackbar.LENGTH_SHORT).show();
+                return;
             }
+            checkPermissionAndOpenGallery();
         });
+        
+        updateImageUploadVisibility();
     }
 }
  

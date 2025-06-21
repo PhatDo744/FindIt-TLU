@@ -2,6 +2,9 @@
 <resources>
     <!-- Các màu chính của ứng dụng -->
     <color name="primary_blue">#0055A4</color>
+    <color name="primary_dark_blue">#003366</color>
+    <color name="accent_orange">#F57C00</color>
+    <color name="accent_orange_dark">#E65100</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
 

@@ -19,8 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             app:title="Thông báo"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back" />
+            app:titleTextColor="@color/white"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -29,7 +28,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="56dp"
         android:paddingTop="0dp"
-        android:paddingBottom="0dp"
+        android:paddingBottom="72dp"
         android:clipToPadding="false"
         android:background="@color/white" />
 

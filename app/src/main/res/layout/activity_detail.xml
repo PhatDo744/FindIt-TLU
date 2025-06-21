@@ -17,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             app:title="Chi tiết đồ vật"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back" />
+            app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
@@ -176,7 +175,7 @@
                         android:textSize="15sp"
                         android:layout_marginStart="4dp" />
                 </LinearLayout>
-                
+
                 <WebView
                     android:id="@+id/detail_map_webview"
                     android:layout_width="match_parent"
