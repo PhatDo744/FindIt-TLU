@@ -70,6 +70,12 @@ public class HomeFragment extends Fragment {
         homeViewModel.getPostList().observe(getViewLifecycleOwner(), list -> {
             lostFoundItemAdapter = new LostFoundItemAdapter(this, list);
             recentItemsRecyclerView.setAdapter(lostFoundItemAdapter);
+            View viewAllText = getView().findViewById(R.id.viewAllText);
+            if (list.size() < 5) {
+                viewAllText.setVisibility(View.GONE);
+            } else {
+                viewAllText.setVisibility(View.VISIBLE);
+            }
         });
         homeViewModel.fetchPosts();
         // Tìm kiếm theo từ khóa

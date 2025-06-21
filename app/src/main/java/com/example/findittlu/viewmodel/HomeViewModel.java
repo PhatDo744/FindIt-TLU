@@ -93,6 +93,10 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void fetchPostsByKeyword(String keyword) {
+        // Chuẩn hóa từ khóa: loại bỏ khoảng trắng thừa, chuyển về chữ thường
+        if (keyword != null) {
+            keyword = keyword.trim().replaceAll("\\s+", " ").toLowerCase();
+        }
         RetrofitClient.getApiService().searchItems(keyword).enqueue(new retrofit2.Callback<com.example.findittlu.data.model.PostListResponse>() {
             @Override
             public void onResponse(retrofit2.Call<com.example.findittlu.data.model.PostListResponse> call, retrofit2.Response<com.example.findittlu.data.model.PostListResponse> response) {

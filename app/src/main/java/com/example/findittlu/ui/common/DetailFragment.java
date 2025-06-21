@@ -48,10 +48,18 @@ public class DetailFragment extends Fragment {
             ((TextView) view.findViewById(R.id.detail_date)).setText(data.date);
             ((TextView) view.findViewById(R.id.detail_time_ago)).setText(data.timeAgo);
             ((TextView) view.findViewById(R.id.detail_location)).setText(data.location);
-            ((TextView) view.findViewById(R.id.detail_status)).setText(data.isLost ? "Đồ vật bị mất" : "Đồ vật đã tìm thấy");
+            TextView statusView = view.findViewById(R.id.detail_status);
+            if (data.isLost) {
+                statusView.setText("Đồ vật bị mất");
+                statusView.setBackgroundResource(R.color.logout_red);
+            } else {
+                statusView.setText("Đồ vật đã tìm thấy");
+                statusView.setBackgroundResource(R.color.found_green);
+            }
             ((TextView) view.findViewById(R.id.detail_user_name)).setText(data.userName);
             ((TextView) view.findViewById(R.id.detail_user_email)).setText(data.userEmail);
             ((TextView) view.findViewById(R.id.detail_user_phone)).setText(data.userPhone);
+            ((TextView) view.findViewById(R.id.detail_category)).setText(data.categoryName);
             // Hiển thị avatar user
             ImageView avatarView = view.findViewById(R.id.detail_user_avatar);
             if (data.userAvatarUrl != null && !data.userAvatarUrl.isEmpty()) {
