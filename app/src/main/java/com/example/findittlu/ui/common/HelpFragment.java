@@ -44,7 +44,9 @@ public class HelpFragment extends Fragment {
         mainContentLayout = view.findViewById(R.id.main_content_layout);
 
         // Thiết lập Toolbar
-        toolbar.setNavigationOnClickListener(v -> navController.popBackStack());
+        toolbar.setNavigationOnClickListener(v -> {
+            navController.popBackStack();
+        });
 
         // Thiết lập các mục FAQ
         setupFaqItems(view);

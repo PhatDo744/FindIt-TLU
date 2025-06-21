@@ -29,10 +29,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="56dp"
         android:paddingTop="0dp"
-        android:paddingBottom="72dp"
+        android:paddingBottom="0dp"
         android:clipToPadding="false"
         android:background="@color/white" />
 
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout> 
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

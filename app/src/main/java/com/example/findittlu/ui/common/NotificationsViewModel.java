@@ -46,7 +46,8 @@ public class NotificationsViewModel extends ViewModel {
                                 type = NotificationItem.TYPE_WARNING;
                             }
                         }
-                        list.add(new NotificationItem(type, n.getData().getTitle(), n.getCreatedAt()));
+                        boolean isRead = n.isRead();
+                        list.add(new NotificationItem(n.getId(), type, n.getData().getTitle(), n.getCreatedAt(), isRead));
                     }
                     notifications.setValue(list);
                 } else {
@@ -57,6 +58,39 @@ public class NotificationsViewModel extends ViewModel {
             public void onFailure(Call<com.example.findittlu.data.model.NotificationListResponse> call, Throwable t) {
                 isApiConnected.setValue(false);
                 notifications.setValue(new ArrayList<>());
+            }
+        });
+    }
+    // Đánh dấu tất cả thông báo là đã đọc
+    public void markAllAsRead() {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().markAllNotificationsAsRead().enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // Sau khi đánh dấu, fetch lại danh sách thông báo
+                    fetchNotifications(1, 20);
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isApiConnected.setValue(false);
+            }
+        });
+    }
+    // Đánh dấu 1 thông báo là đã đọc
+    public void markAsRead(NotificationItem item) {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().markNotificationAsRead(item.getId()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    fetchNotifications(1, 20);
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isApiConnected.setValue(false);
             }
         });
     }

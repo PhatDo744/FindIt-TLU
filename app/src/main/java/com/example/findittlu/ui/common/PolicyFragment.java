@@ -42,6 +42,8 @@ public class PolicyFragment extends Fragment {
 
     private void setupToolbar(MaterialToolbar toolbar, NavController navController) {
         // Sử dụng popBackStack() của NavController để quay lại màn hình trước đó
-        toolbar.setNavigationOnClickListener(v -> navController.popBackStack());
+        toolbar.setNavigationOnClickListener(v -> {
+            navController.popBackStack();
+        });
     }
 } 
