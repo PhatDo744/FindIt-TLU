@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonPrimitive;
 import com.example.findittlu.data.model.Post;
+import com.example.findittlu.utils.Constants;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -125,7 +126,7 @@ public class RetrofitClient {
 
             // Build Retrofit
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constants.getApiBaseUrl())
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();

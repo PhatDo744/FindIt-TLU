@@ -204,7 +204,11 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
             String date = dateEditText.getText().toString().trim();
 
             if (title.isEmpty() || description.isEmpty() || categoryId == 0 || location.isEmpty() || date.isEmpty()) {
-                Snackbar.make(v, "Vui lòng điền đầy đủ thông tin", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Vui lòng điền đầy đủ thông tin", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Vui lòng điền đầy đủ thông tin", android.widget.Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
 
@@ -250,7 +254,11 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
                 // Tiếp tục xóa ảnh tiếp theo
                 deleteImagesAndContinue(imagesToDelete, imagesToUpload, title, description, categoryId, location, date, navController);
             } else {
-                Snackbar.make(requireView(), "Xóa ảnh thất bại: " + result.getError(), Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Xóa ảnh thất bại: " + result.getError(), Snackbar.LENGTH_SHORT).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Xóa ảnh thất bại: " + result.getError(), android.widget.Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -267,7 +275,11 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
                 // Sau khi upload xong ảnh mới, cập nhật bài đăng
                 viewModel.savePostChanges(postId, title, description, categoryId, location, date);
             } else {
-                Snackbar.make(requireView(), "Tải ảnh mới lên thất bại.", Snackbar.LENGTH_LONG).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Tải ảnh mới lên thất bại.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Tải ảnh mới lên thất bại.", android.widget.Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -286,33 +298,60 @@ public class EditPostFragment extends Fragment implements SelectedImagesAdapter.
                     viewModel.uploadNewImages(postId, newImageUris);
                 } else {
                     // If no new images, we're done
-                    Snackbar.make(requireView(), "Cập nhật thành công! Bài viết của bạn đã được gửi để duyệt lại.", Snackbar.LENGTH_LONG).show();
-                    Navigation.findNavController(requireView()).popBackStack();
+                    if (isAdded() && getActivity() != null) {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Cập nhật thành công! Bài viết của bạn đã được gửi để duyệt lại.", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        android.widget.Toast.makeText(getContext(), "Cập nhật thành công! Bài viết của bạn đã được gửi để duyệt lại.", android.widget.Toast.LENGTH_LONG).show();
+                    }
+                    if (isAdded()) {
+                        Navigation.findNavController(requireView()).popBackStack();
+                    }
                 }
 
             } else {
-                Snackbar.make(requireView(), "Cập nhật thông tin thất bại.", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Cập nhật thông tin thất bại.", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Cập nhật thông tin thất bại.", android.widget.Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         viewModel.getImageUploadResult().observe(getViewLifecycleOwner(), success -> {
             if (success) {
-                Snackbar.make(requireView(), "Cập nhật thành công! Bài viết của bạn đã được gửi để duyệt lại.", Snackbar.LENGTH_LONG).show();
-                Navigation.findNavController(requireView()).popBackStack();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Cập nhật thành công! Bài viết của bạn đã được gửi để duyệt lại.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Cập nhật thành công! Bài viết của bạn đã được gửi để duyệt lại.", android.widget.Toast.LENGTH_LONG).show();
+                }
+                if (isAdded()) {
+                    Navigation.findNavController(requireView()).popBackStack();
+                }
             } else {
-                Snackbar.make(requireView(), "Cập nhật thông tin thành công, nhưng tải ảnh lên thất bại.", Snackbar.LENGTH_LONG).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Cập nhật thông tin thành công, nhưng tải ảnh lên thất bại.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Cập nhật thông tin thành công, nhưng tải ảnh lên thất bại.", android.widget.Toast.LENGTH_LONG).show();
+                }
             }
         });
 
         viewModel.getImageDeleteResult().observe(getViewLifecycleOwner(), result -> {
             if (result.getSuccess()) {
-                Snackbar.make(requireView(), "Đã xóa ảnh.", Snackbar.LENGTH_SHORT).show();
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Đã xóa ảnh.", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Đã xóa ảnh.", android.widget.Toast.LENGTH_SHORT).show();
+                }
                 imageItems.remove(result.getDeletedItem());
                 selectedImagesAdapter.notifyDataSetChanged();
                 updateImageUploadVisibility();
             } else {
-                Snackbar.make(requireView(), "Xóa ảnh thất bại: " + result.getError(), Snackbar.LENGTH_SHORT).show();
-                // Optionally, add the item back to the list to reflect the failed state
+                if (isAdded() && getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Xóa ảnh thất bại: " + result.getError(), Snackbar.LENGTH_SHORT).show();
+                } else {
+                    android.widget.Toast.makeText(getContext(), "Xóa ảnh thất bại: " + result.getError(), android.widget.Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

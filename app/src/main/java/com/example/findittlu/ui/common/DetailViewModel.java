@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.findittlu.data.api.RetrofitClient;
 import com.example.findittlu.data.model.Post;
+import com.example.findittlu.utils.Constants;
+import com.example.findittlu.utils.UrlUtils;
 
 import java.util.Date;
 
@@ -37,8 +39,12 @@ public class DetailViewModel extends ViewModel {
                         imageUrl = post.getImages().get(0).getImageUrl();
                         for (com.example.findittlu.data.model.ItemImage img : post.getImages()) {
                             String url = img.getImageUrl();
-                            if (url != null && url.startsWith("/storage")) {
-                                url = BASE_URL + url;
+                            if (url != null) {
+                                // Sử dụng UrlUtils để xử lý URL
+                                String absoluteUrl = UrlUtils.toAbsoluteImageUrl(url);
+                                if (absoluteUrl != null) {
+                                    imageUrls.add(absoluteUrl);
+                                }
                             }
                             imageUrls.add(url);
                         }
@@ -47,6 +53,12 @@ public class DetailViewModel extends ViewModel {
                     String userPhone = post.getUser() != null ? post.getUser().getPhoneNumber() : "";
                     String userAvatarUrl = post.getUser() != null ? post.getUser().getPhotoUrl() : "";
                     String categoryName = post.getCategory() != null ? post.getCategory().getName() : "";
+
+                    // Sử dụng UrlUtils để xử lý URL avatar user
+                    if (userAvatarUrl != null && !userAvatarUrl.isEmpty()) {
+                        userAvatarUrl = UrlUtils.toAbsoluteAvatarUrl(userAvatarUrl);
+                    }
+
                     detailData.setValue(new DetailData(
                         post.getTitle(),
                         post.getDescription(),

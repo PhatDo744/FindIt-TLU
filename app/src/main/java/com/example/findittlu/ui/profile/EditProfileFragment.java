@@ -38,6 +38,8 @@ public class EditProfileFragment extends Fragment {
     private ActivityResultLauncher<Intent> pickAvatarLauncher;
     private UserViewModel userViewModel;
     private Uri selectedAvatarUri;
+    private boolean hasAvatarChanged = false; // Flag để kiểm tra ảnh có thay đổi không
+    private String originalAvatarUrl; // Lưu URL ảnh gốc
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -58,9 +60,6 @@ public class EditProfileFragment extends Fragment {
         // Thiết lập Toolbar
         setupToolbar(view, navController);
 
-        // Thiết lập các nút
-        setupButtons(view, navController);
-
         // Khởi tạo view và ViewModel
         avatarImageView = view.findViewById(R.id.avatarImageView);
         cameraIcon = view.findViewById(R.id.cameraIcon);
@@ -75,24 +74,9 @@ public class EditProfileFragment extends Fragment {
                     Uri uri = result.getData().getData();
                     if (uri != null) {
                         selectedAvatarUri = uri;
-                        avatarImageView.setImageURI(uri); // Preview
-                        // Upload lên server
-                        userViewModel.uploadAvatar(requireContext(), uri).observe(getViewLifecycleOwner(), user -> {
-                            if (user != null && user.getPhotoUrl() != null) {
-                                CustomToast.showCustomToast(getContext(), "Thành công", "Đổi ảnh đại diện thành công!");
-                                ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
-                            } else {
-                                // Có thể API trả về body rỗng nhưng thực tế đã thành công
-                                userViewModel.getProfile().observe(getViewLifecycleOwner(), refreshedUser -> {
-                                    if (refreshedUser != null && refreshedUser.getPhotoUrl() != null) {
-                                        ImageUtils.loadAvatar(requireContext(), refreshedUser.getPhotoUrl(), avatarImageView);
-                                        CustomToast.showCustomToast(getContext(), "Thành công", "Đổi ảnh đại diện thành công!");
-                                    } else {
-                                        CustomToast.showCustomToast(getContext(), "Thất bại", "Đổi ảnh đại diện thất bại!");
-                                    }
-                                });
-                            }
-                        });
+                        hasAvatarChanged = true; // Đánh dấu ảnh đã thay đổi
+                        avatarImageView.setImageURI(uri); // Chỉ hiển thị preview, không upload
+                        CustomToast.showCustomToast(getContext(), "Thông báo", "Ảnh đã được chọn. Nhấn 'Lưu' để cập nhật!");
                     }
                 }
             });
@@ -105,11 +89,13 @@ public class EditProfileFragment extends Fragment {
         EditText fullNameEditText = view.findViewById(R.id.fullNameEditText);
         EditText phoneEditText = view.findViewById(R.id.phoneEditText);
         EditText emailEditText = view.findViewById(R.id.emailEditText);
+        
         userViewModel.getProfile().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 fullNameEditText.setText(user.getFullName());
                 phoneEditText.setText(user.getPhoneNumber());
                 emailEditText.setText(user.getEmail());
+                originalAvatarUrl = user.getPhotoUrl(); // Lưu URL ảnh gốc
                 if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
                     ImageUtils.loadAvatar(requireContext(), user.getPhotoUrl(), avatarImageView);
                 } else {
@@ -118,13 +104,8 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        // Lưu thay đổi
-        MaterialButton saveButton = view.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(v -> {
-            CustomToast.showCustomToast(getContext(), "Lưu thay đổi", "Đã lưu thay đổi");
-            // Sau khi lưu, có thể quay lại màn hình Profile
-            navController.popBackStack();
-        });
+        // Thiết lập các nút
+        setupButtons(view, navController, fullNameEditText, phoneEditText, emailEditText);
     }
 
     private void setupToolbar(View view, NavController navController) {
@@ -137,18 +118,72 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
-    private void setupButtons(View view, NavController navController) {
+    private void setupButtons(View view, NavController navController, EditText fullNameEditText, EditText phoneEditText, EditText emailEditText) {
         MaterialButton saveButton = view.findViewById(R.id.saveButton);
         MaterialButton cancelButton = view.findViewById(R.id.cancelButton);
 
         saveButton.setOnClickListener(v -> {
-            CustomToast.showCustomToast(getContext(), "Lưu thay đổi", "Đã lưu thay đổi");
-            // Sau khi lưu, có thể quay lại màn hình Profile
-            navController.popBackStack();
+            String fullName = fullNameEditText.getText().toString().trim();
+            String phone = phoneEditText.getText().toString().trim();
+            String email = emailEditText.getText().toString().trim();
+
+            // Kiểm tra dữ liệu đầu vào
+            if (fullName.isEmpty()) {
+                CustomToast.showCustomToast(getContext(), "Lỗi", "Vui lòng nhập họ tên!");
+                return;
+            }
+
+            if (phone.isEmpty()) {
+                CustomToast.showCustomToast(getContext(), "Lỗi", "Vui lòng nhập số điện thoại!");
+                return;
+            }
+
+            // Disable nút để tránh click nhiều lần
+            saveButton.setEnabled(false);
+            saveButton.setText("Đang lưu...");
+
+            // Nếu có ảnh mới được chọn, upload ảnh trước
+            if (hasAvatarChanged && selectedAvatarUri != null) {
+                userViewModel.uploadAvatar(requireContext(), selectedAvatarUri).observe(getViewLifecycleOwner(), user -> {
+                    // Luôn tiếp tục cập nhật thông tin, bất kể kết quả upload ảnh
+                    // Vì API có thể đã upload thành công ngay cả khi trả về null
+                    updateUserProfile(fullName, phone, email, navController, saveButton);
+                });
+            } else {
+                // Không có ảnh mới, chỉ cập nhật thông tin
+                updateUserProfile(fullName, phone, email, navController, saveButton);
+            }
         });
 
         cancelButton.setOnClickListener(v -> {
+            // Nếu có ảnh đã thay đổi, khôi phục lại ảnh cũ
+            if (hasAvatarChanged && originalAvatarUrl != null) {
+                ImageUtils.loadAvatar(requireContext(), originalAvatarUrl, avatarImageView);
+            }
             navController.popBackStack();
+        });
+    }
+
+    private void updateUserProfile(String fullName, String phone, String email, NavController navController, MaterialButton saveButton) {
+        User user = new User();
+        user.setFullName(fullName);
+        user.setPhoneNumber(phone);
+        user.setEmail(email);
+
+        userViewModel.updateProfile(user).observe(getViewLifecycleOwner(), updatedUser -> {
+            saveButton.setEnabled(true);
+            saveButton.setText("Lưu thay đổi");
+            
+            if (updatedUser != null) {
+                String message = "Cập nhật thông tin thành công!";
+                if (hasAvatarChanged) {
+                    message += " (bao gồm ảnh đại diện)";
+                }
+                CustomToast.showCustomToast(getContext(), "Thành công", message);
+                navController.popBackStack();
+            } else {
+                CustomToast.showCustomToast(getContext(), "Thất bại", "Cập nhật thông tin thất bại!");
+            }
         });
     }
 

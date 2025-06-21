@@ -43,6 +43,9 @@ public class DetailFragment extends Fragment {
         });
         detailViewModel.getDetailData().observe(getViewLifecycleOwner(), data -> {
             if (data == null) return;
+
+            android.util.Log.d("DetailFragment", "Received detail data: " + data.title + ", images: " + (data.imageUrls != null ? data.imageUrls.size() : 0));
+
             ((TextView) view.findViewById(R.id.detail_title)).setText(data.title);
             ((TextView) view.findViewById(R.id.detail_desc)).setText(data.description);
             ((TextView) view.findViewById(R.id.detail_date)).setText(data.date);
@@ -63,12 +66,20 @@ public class DetailFragment extends Fragment {
             // Hiển thị avatar user
             ImageView avatarView = view.findViewById(R.id.detail_user_avatar);
             if (data.userAvatarUrl != null && !data.userAvatarUrl.isEmpty()) {
+                android.util.Log.d("DetailFragment", "Loading user avatar: " + data.userAvatarUrl);
                 ImageUtils.loadAvatar(requireContext(), data.userAvatarUrl, avatarView);
             } else {
                 avatarView.setImageResource(R.drawable.ic_person);
             }
+
+            // Hiển thị ảnh sản phẩm
             if (data.imageUrls != null && !data.imageUrls.isEmpty()) {
+                android.util.Log.d("DetailFragment", "Setting up image pager with " + data.imageUrls.size() + " images");
                 imagePager.setAdapter(new ImagePagerAdapter(requireContext(), data.imageUrls));
+                imagePager.setVisibility(View.VISIBLE);
+            } else {
+                android.util.Log.d("DetailFragment", "No images to display");
+                imagePager.setVisibility(View.GONE);
             }
         });
         detailViewModel.fetchDetail(postId);
