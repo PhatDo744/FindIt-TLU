@@ -41,6 +41,66 @@ public class PostRepository {
         createDummyData();
     }
 
+    public interface PostCallback {
+        void onSuccess(Post post);
+        void onError(String message);
+    }
+
+    public void createPost(String title, String description, String location, long categoryId, String itemType, String date, boolean isPublic, List<MultipartBody.Part> imageParts, final PostCallback callback) {
+        RequestBody titleBody = RequestBody.create(MultipartBody.FORM, title);
+        RequestBody descriptionBody = RequestBody.create(MultipartBody.FORM, description);
+        RequestBody locationBody = RequestBody.create(MultipartBody.FORM, location);
+        RequestBody categoryIdBody = RequestBody.create(MultipartBody.FORM, String.valueOf(categoryId));
+        RequestBody itemTypeBody = RequestBody.create(MultipartBody.FORM, itemType);
+        RequestBody dateBody = RequestBody.create(MultipartBody.FORM, date);
+        RequestBody isPublicBody = RequestBody.create(MultipartBody.FORM, isPublic ? "1" : "0");
+
+        RetrofitClient.getApiService().createPostWithImages(titleBody, descriptionBody, locationBody, categoryIdBody, itemTypeBody, dateBody, isPublicBody, imageParts).enqueue(new Callback<PostResponse>() {
+            @Override
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getPost() != null) {
+                    callback.onSuccess(response.body().getPost());
+                } else {
+                    String errorMsg = "Lỗi không xác định";
+                    if (response.errorBody() != null) {
+                        try {
+                            // Cố gắng parse lỗi từ server
+                            errorMsg = response.errorBody().string();
+                        } catch (Exception e) {
+                            Log.e("PostRepository", "Không thể parse error body", e);
+                        }
+                    }
+                    callback.onError("Lỗi " + response.code() + ": " + errorMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostResponse> call, Throwable t) {
+                callback.onError("Lỗi mạng: " + t.getMessage());
+            }
+        });
+    }
+
+    public List<MultipartBody.Part> prepareImageParts(Context context, List<Uri> imageUris) {
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        if (imageUris == null) {
+            return parts;
+        }
+
+        for (int i = 0; i < imageUris.size(); i++) {
+            try {
+                Uri uri = imageUris.get(i);
+                File file = getFileFromUri(uri);
+                RequestBody requestFile = RequestBody.create(MediaType.parse(context.getContentResolver().getType(uri)), file);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("images[]", file.getName(), requestFile);
+                parts.add(body);
+            } catch (Exception e) {
+                Log.e("PostRepository", "Lỗi khi chuẩn bị file ảnh", e);
+            }
+        }
+        return parts;
+    }
+
     // Giả lập việc lấy dữ liệu từ API hoặc DB
     public LiveData<List<Post>> getPosts() {
         MutableLiveData<List<Post>> data = new MutableLiveData<>();

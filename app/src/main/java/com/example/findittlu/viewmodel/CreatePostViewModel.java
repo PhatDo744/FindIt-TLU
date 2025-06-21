@@ -1,12 +1,12 @@
 package com.example.findittlu.viewmodel;
 
+import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
 import com.example.findittlu.data.model.Post;
 import com.example.findittlu.data.model.ItemImage;
 import com.example.findittlu.data.repository.PostRepository;
@@ -16,6 +16,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import com.example.findittlu.utils.Resource;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,32 +30,40 @@ import java.util.Locale;
 import java.util.ArrayList;
 
 public class CreatePostViewModel extends AndroidViewModel {
-    private PostRepository postRepository;
-    private MutableLiveData<Post> creationResult = new MutableLiveData<>();
-    private MutableLiveData<String> creationMessage = new MutableLiveData<>();
-    private MutableLiveData<Boolean> imageUploadResult = new MutableLiveData<>();
 
-    public CreatePostViewModel(Application application) {
+    private final PostRepository postRepository;
+    private final MutableLiveData<Resource<Post>> postCreationState = new MutableLiveData<>();
+
+    public CreatePostViewModel(@NonNull Application application) {
         super(application);
         this.postRepository = new PostRepository(application);
     }
 
-    public LiveData<Post> getCreationResult() {
-        return creationResult;
+    public LiveData<Resource<Post>> getPostCreationState() {
+        return postCreationState;
     }
 
-    public LiveData<String> getCreationMessage() {
-        return creationMessage;
-    }
+    public void createPost(String title, String description, String location, long categoryId, String itemType, String date, boolean isPublic, List<Uri> imageUris) {
+        postCreationState.setValue(Resource.loading(null));
 
-    public LiveData<Boolean> getImageUploadResult() {
-        return imageUploadResult;
+        List<MultipartBody.Part> imageParts = postRepository.prepareImageParts(getApplication(), imageUris);
+
+        postRepository.createPost(title, description, location, categoryId, itemType, date, isPublic, imageParts, new PostRepository.PostCallback() {
+            @Override
+            public void onSuccess(Post post) {
+                postCreationState.setValue(Resource.success(post));
+            }
+
+            @Override
+            public void onError(String message) {
+                postCreationState.setValue(Resource.error(message, null));
+            }
+        });
     }
 
     public void createPost(String title, String date, String status, String description, String location, int categoryId, boolean isContactInfoPublic) {
         if (title.isEmpty() || date.isEmpty() || description.isEmpty() || location.isEmpty() || categoryId == 0) {
-            creationResult.setValue(null);
-            creationMessage.setValue("Vui lòng điền đầy đủ thông tin");
+            postCreationState.postValue(Resource.error("Vui lòng điền đầy đủ thông tin", null));
             return;
         }
         Post newPost = new Post();
@@ -80,14 +89,12 @@ public class CreatePostViewModel extends AndroidViewModel {
         newPost.setContactInfoPublic(isContactInfoPublic);
         newPost.setItemType(status.equals("FOUND") ? "found" : "lost");
         postRepository.createPost(newPost);
-        creationResult.setValue(newPost);
-        creationMessage.setValue("Đăng bài thành công!");
+        postCreationState.postValue(Resource.success(newPost));
     }
 
     public void createPostWithImages(String title, String date, String status, String description, String location, int categoryId, boolean isContactInfoPublic, List<Uri> imageUris) {
         if (title.isEmpty() || date.isEmpty() || description.isEmpty() || location.isEmpty() || categoryId == 0) {
-            creationMessage.setValue("Vui lòng điền đầy đủ thông tin");
-            creationResult.setValue(null);
+            postCreationState.postValue(Resource.error("Vui lòng điền đầy đủ thông tin", null));
             return;
         }
 
@@ -110,16 +117,15 @@ public class CreatePostViewModel extends AndroidViewModel {
 
         postRepository.createPost(newPost).observeForever(post -> {
             if (post != null && post.getId() > 0) {
-                creationResult.setValue(post); // Trả về post đã tạo
+                postCreationState.postValue(Resource.success(post)); // Trả về post đã tạo
                 if (imageUris != null && !imageUris.isEmpty()) {
                     uploadImages(post.getId(), imageUris);
                 } else {
                     // Không có ảnh, coi như upload thành công
-                    imageUploadResult.setValue(true);
+                    postCreationState.postValue(Resource.success(post));
                 }
             } else {
-                creationMessage.setValue("Đăng bài thất bại. Vui lòng thử lại.");
-                creationResult.setValue(null);
+                postCreationState.postValue(Resource.error("Đăng bài thất bại. Vui lòng thử lại.", null));
             }
         });
     }
@@ -128,13 +134,12 @@ public class CreatePostViewModel extends AndroidViewModel {
         postRepository.uploadImages(postId, imageUris, new PostRepository.UploadCallbacks() {
             @Override
             public void onUploadSuccess() {
-                imageUploadResult.postValue(true);
+                postCreationState.postValue(Resource.success(null));
             }
 
             @Override
             public void onUploadFailure(String message) {
-                imageUploadResult.postValue(false);
-                creationMessage.postValue("Đăng bài thành công nhưng tải ảnh lên thất bại: " + message);
+                postCreationState.postValue(Resource.error("Đăng bài thành công nhưng tải ảnh lên thất bại: " + message, null));
             }
         });
     }
