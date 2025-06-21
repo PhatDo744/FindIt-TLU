@@ -72,11 +72,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.primary_blue));
                 break;
             case NotificationItem.TYPE_INFO:
-                holder.icon.setImageResource(R.drawable.ic_check);
+                holder.icon.setImageResource(R.drawable.ic_clock);
                 holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.primary_blue));
                 break;
             case NotificationItem.TYPE_WARNING:
                 holder.icon.setImageResource(R.drawable.ic_warning_blue);
+                break;
+            case NotificationItem.TYPE_DELETED:
+                holder.icon.setImageResource(R.drawable.ic_delete);
+                holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.primary_blue));
                 break;
         }
         if (item.isRead()) {

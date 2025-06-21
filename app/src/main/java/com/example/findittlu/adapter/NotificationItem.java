@@ -4,6 +4,7 @@ public class NotificationItem {
     public static final int TYPE_SUCCESS = 0;
     public static final int TYPE_INFO = 1;
     public static final int TYPE_WARNING = 2;
+    public static final int TYPE_DELETED = 3;
 
     private String id;
     private int type;

@@ -65,6 +65,9 @@ public class RegisterFragment extends Fragment {
             if (email.isEmpty()) {
                 emailInputLayout.setError("Bắt buộc");
                 hasError = true;
+            } else if (!email.endsWith("@tlu.edu.vn")) {
+                emailInputLayout.setError("Email phải có đuôi @tlu.edu.vn");
+                hasError = true;
             } else {
                 emailInputLayout.setError(null);
             }
@@ -82,6 +85,9 @@ public class RegisterFragment extends Fragment {
             }
             if (phone.isEmpty()) {
                 phoneInputLayout.setError("Bắt buộc");
+                hasError = true;
+            } else if (!phone.matches("0\\d{9}")) {
+                phoneInputLayout.setError("Số điện thoại phải đủ 10 số và bắt đầu bằng 0");
                 hasError = true;
             } else {
                 phoneInputLayout.setError(null);

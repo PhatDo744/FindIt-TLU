@@ -12,7 +12,7 @@ public class Constants {
     public static final String BASE_URL_PRODUCTION = "https://findit-tlu.com";
     
     // Chọn môi trường hiện tại - thay đổi ở đây để chuyển môi trường
-    public static final String CURRENT_ENVIRONMENT = "LOCAL_PHAT"; // LOCAL_QUANG, LOCAL_PHAT, EMULATOR, PRODUCTION
+    public static final String CURRENT_ENVIRONMENT = "LOCAL_QUANG"; // LOCAL_QUANG, LOCAL_PHAT, EMULATOR, PRODUCTION
     
     /**
      * Lấy BASE_URL dựa trên môi trường hiện tại
