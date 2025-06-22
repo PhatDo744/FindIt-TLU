@@ -13,7 +13,7 @@ public class UserViewModel extends ViewModel {
         return userRepository.getProfile();
     }
 
-    public LiveData<User> updateProfile(User user) {
+    public LiveData<UserRepository.ApiResponse<User>> updateProfile(User user) {
         return userRepository.updateProfile(user);
     }
 

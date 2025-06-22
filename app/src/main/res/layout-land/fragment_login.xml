@@ -190,7 +190,8 @@
                         android:layout_marginBottom="24dp"
                         app:boxStrokeColor="@color/primary_blue"
                         app:hintTextColor="@color/primary_blue"
-                        app:passwordToggleEnabled="true">
+                        app:passwordToggleEnabled="true"
+                        app:passwordToggleTint="@color/text_secondary">
 
                         <EditText
                             android:id="@+id/passwordEditText"

@@ -154,7 +154,24 @@ public class ProfileFragment extends Fragment {
         logout.setOnClickListener(v -> {
             // Xử lý logic đăng xuất
             SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+            
+            // Lấy email của user hiện tại
+            String currentUserEmail = prefs.getString("user_email", "");
+            
+            // Kiểm tra xem có checkbox "Ghi nhớ email" đã được check không
+            boolean rememberEmail = prefs.getBoolean("remember_email_checked", false);
+            
+            // Clear tất cả dữ liệu
             prefs.edit().clear().apply();
+            
+            // Nếu checkbox "Ghi nhớ email" đã được check, lưu lại email
+            if (rememberEmail && !currentUserEmail.isEmpty()) {
+                prefs.edit()
+                    .putString("remembered_email", currentUserEmail)
+                    .putBoolean("remember_email_checked", true)
+                    .apply();
+            }
+            
             CustomToast.showCustomToast(getContext(), "Đăng xuất", "Đăng xuất thành công!");
             navController.navigate(R.id.loginFragment);
         });

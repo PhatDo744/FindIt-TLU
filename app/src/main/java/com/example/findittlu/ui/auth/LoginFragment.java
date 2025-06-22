@@ -20,39 +20,63 @@ import com.example.findittlu.R;
 import com.example.findittlu.viewmodel.LoginViewModel;
 import com.example.findittlu.utils.CustomToast;
 import com.google.android.material.textfield.TextInputLayout;
+import android.text.TextWatcher;
+import android.text.Editable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
+    private NavController navController;
+    private SharedPreferences prefs;
     private ScrollView leftScrollView;
     private ScrollView rightScrollView;
+    
+    // View bindings
+    private TextInputLayout emailInputLayout;
+    private TextInputLayout passwordInputLayout;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private CheckBox rememberEmailCheckBox;
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_login, container, false);
+    }
 
-        // Kiểm tra nếu đã đăng nhập thì chuyển sang HomeFragment
-        SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        long userId = prefs.getLong("user_id", -1);
-        if (userId != -1) {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-            navController.navigate(R.id.homeFragment);
-            return view;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+
+        // Check if already logged in
+        String token = prefs.getString("token", null);
+        if (token != null && !token.isEmpty()) {
+            navController.navigate(R.id.action_loginFragment_to_homeFragment);
+            return; // Stop further execution
         }
 
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        // Initialize views
+        emailEditText = view.findViewById(R.id.emailEditText);
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        rememberEmailCheckBox = view.findViewById(R.id.rememberEmailCheckBox);
+        emailInputLayout = view.findViewById(R.id.emailInputLayout);
+        passwordInputLayout = view.findViewById(R.id.passwordInputLayout);
 
-        EditText emailEditText = view.findViewById(R.id.emailEditText);
-        CheckBox rememberEmailCheckBox = view.findViewById(R.id.rememberEmailCheckBox);
-        TextInputLayout emailInputLayout = view.findViewById(R.id.emailInputLayout);
-        EditText passwordEditText = view.findViewById(R.id.passwordEditText);
-        TextInputLayout passwordInputLayout = view.findViewById(R.id.passwordInputLayout);
-
-        // Lấy email đã lưu (nếu có)
+        // Restore remembered email
         String savedEmail = prefs.getString("remembered_email", "");
         if (!savedEmail.isEmpty()) {
             emailEditText.setText(savedEmail);
@@ -67,76 +91,101 @@ public class LoginFragment extends Fragment {
             setupScrollSync();
         }
 
-        // Xử lý nút đăng nhập
-        view.findViewById(R.id.loginButton).setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
-            boolean hasError = false;
-            Drawable errorIcon = getResources().getDrawable(R.drawable.ic_warning, null);
-            errorIcon.setBounds(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
-            if (email.isEmpty()) {
-                emailInputLayout.setError("Bắt buộc");
-                hasError = true;
-            } else {
-                emailInputLayout.setError(null);
+        setupTextWatchers();
+        setupClickListeners(view);
+    }
+
+    private void setupTextWatchers() {
+        TextWatcher errorClearingWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (emailInputLayout.getError() != null) emailInputLayout.setError(null);
+                if (passwordInputLayout.getError() != null) passwordInputLayout.setError(null);
             }
-            if (password.isEmpty()) {
-                passwordInputLayout.setError("Bắt buộc");
-                hasError = true;
-            } else {
-                passwordInputLayout.setError(null);
-            }
-            if (hasError) return;
-            // Lưu hoặc xóa email tuỳ theo checkbox
-            if (rememberEmailCheckBox.isChecked()) {
-                prefs.edit().putString("remembered_email", email).apply();
-            } else {
-                prefs.edit().remove("remembered_email").apply();
-            }
-            loginViewModel.login(email, password).observe(getViewLifecycleOwner(), response -> {
-                if (response != null && response.getUser() != null) {
-                    // Lưu userId, token vào SharedPreferences
-                    prefs.edit()
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+        emailEditText.addTextChangedListener(errorClearingWatcher);
+        passwordEditText.addTextChangedListener(errorClearingWatcher);
+    }
+
+    private void setupClickListeners(View view) {
+        view.findViewById(R.id.loginButton).setOnClickListener(v -> handleLogin());
+        view.findViewById(R.id.registerTextView).setOnClickListener(v ->
+                navController.navigate(R.id.action_loginFragment_to_registerFragment));
+        view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(v ->
+                navController.navigate(R.id.action_loginFragment_to_forgotPasswordFragment));
+    }
+
+    private void handleLogin() {
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+
+        if (!validateInput(email, password)) {
+            return;
+        }
+
+        // Save or remove remembered email
+        prefs.edit().putBoolean("remember_email_checked", rememberEmailCheckBox.isChecked()).apply();
+        if (rememberEmailCheckBox.isChecked()) {
+            prefs.edit().putString("remembered_email", email).apply();
+        } else {
+            prefs.edit().remove("remembered_email").apply();
+        }
+
+        loginViewModel.login(email, password).observe(getViewLifecycleOwner(), response -> {
+            if (response != null && response.getUser() != null) {
+                // Save user session
+                prefs.edit()
                         .putLong("user_id", response.getUser().getId())
                         .putString("token", response.getToken())
+                        .putString("user_email", response.getUser().getEmail())
                         .apply();
-                    // Chuyển sang HomeFragment
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                    navController.navigate(R.id.homeFragment);
-                } else {
-                    CustomToast.showCustomToast(getContext(), "Đăng nhập thất bại", "Sai tài khoản hoặc mật khẩu!");
-                }
-            });
-        });
-
-        // Sự kiện chuyển sang giao diện đăng ký
-        view.findViewById(R.id.registerTextView).setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-            navController.navigate(R.id.registerFragment);
-        });
-
-        // Sự kiện quên mật khẩu
-        view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(v -> {
-            CustomToast.showCustomToast(getContext(), "Thông báo", "Tính năng quên mật khẩu đang được phát triển!");
-        });
-
-        // Thêm TextWatcher để clear lỗi khi nhập lại
-        emailEditText.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                emailInputLayout.setError(null);
+                // Navigate to Home
+                navController.navigate(R.id.action_loginFragment_to_homeFragment);
+            } else {
+                CustomToast.showCustomToast(getContext(), "Đăng nhập thất bại", "Sai tài khoản hoặc mật khẩu!");
             }
-            @Override public void afterTextChanged(android.text.Editable s) {}
         });
-        passwordEditText.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                passwordInputLayout.setError(null);
-            }
-            @Override public void afterTextChanged(android.text.Editable s) {}
-        });
+    }
 
-        return view;
+    private boolean validateInput(String email, String password) {
+        clearAllErrors();
+        boolean hasError = false;
+
+        if (email.isEmpty()) {
+            emailInputLayout.setError("Vui lòng nhập email!");
+            hasError = true;
+        } else if (!isValidEmail(email)) {
+            emailInputLayout.setError("Email không đúng định dạng!");
+            hasError = true;
+        }
+
+        if (password.isEmpty()) {
+            passwordInputLayout.setError("Vui lòng nhập mật khẩu!");
+            hasError = true;
+        } else if (password.length() < 8) {
+            passwordInputLayout.setError("Mật khẩu phải có ít nhất 8 ký tự!");
+            hasError = true;
+        }
+        return !hasError;
+    }
+
+    private void clearAllErrors() {
+        emailInputLayout.setError(null);
+        passwordInputLayout.setError(null);
+    }
+
+    private boolean isValidEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+
+        // Kiểm tra định dạng email cơ bản
+        String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return email.matches(emailPattern);
     }
 
     private void setupScrollSync() {
