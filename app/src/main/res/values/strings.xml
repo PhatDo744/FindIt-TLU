@@ -176,4 +176,9 @@
     <string name="help_contact_office_value">Phòng A1-101, Đại học Thủy Lợi</string>
     <string name="helper_email">Email không thể thay đổi</string>
     <string name="login_title">Đăng nhập</string>
+
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="large_text">"Material is the metaphor."</string>
+
+    <string name="back_button">Back Button</string>
 </resources>

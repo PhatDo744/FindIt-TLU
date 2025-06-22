@@ -56,6 +56,13 @@ public interface ApiService {
     Call<Void> forgotPassword(@Field("email") String email);
     
     @FormUrlEncoded
+    @POST("auth/verify-otp")
+    Call<Void> verifyOtp(
+            @Field("email") String email,
+            @Field("token") String token
+    );
+
+    @FormUrlEncoded
     @POST("auth/reset-password")
     Call<Void> resetPassword(
         @Field("email") String email,
