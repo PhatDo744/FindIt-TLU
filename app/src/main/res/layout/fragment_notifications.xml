@@ -10,7 +10,6 @@
     <!-- Header -->
     <com.google.android.material.appbar.AppBarLayout
         app:liftOnScroll="false"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary_blue">
@@ -22,14 +21,29 @@
             app:titleTextColor="@color/white"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notificationsRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="56dp"
-        android:paddingTop="0dp"
-        android:paddingBottom="72dp"
-        android:clipToPadding="false"
-        android:background="@color/white" />
+        android:layout_marginTop="56dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notificationsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="0dp"
+            android:paddingBottom="72dp"
+            android:clipToPadding="false"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/tvNoNotifications"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Không có thông báo"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:visibility="gone"/>
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

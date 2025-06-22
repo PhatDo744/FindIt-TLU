@@ -40,11 +40,34 @@ public class NotificationsFragment extends Fragment {
         adapter.setOnMarkAllAsReadListener(() -> notificationsViewModel.markAllAsRead());
         adapter.setOnNotificationLongClickListener((position, item) -> {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Đánh dấu đã đọc")
-                .setMessage("Bạn có muốn đánh dấu tin này là đã đọc không?")
-                .setPositiveButton("Đánh dấu", (dialog, which) -> {
-                    notificationsViewModel.markAsRead(item);
+                .setTitle("Tùy chọn thông báo")
+                .setItems(new CharSequence[]{"Đánh dấu đã đọc", "Xóa thông báo"}, (dialog, which) -> {
+                    if (which == 0) {
+                        // Đánh dấu đã đọc
+                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                            .setTitle("Đánh dấu đã đọc")
+                            .setMessage("Bạn có muốn đánh dấu tin này là đã đọc không?")
+                            .setPositiveButton("Đánh dấu", (d, w) -> notificationsViewModel.markAsRead(item))
+                            .setNegativeButton("Hủy", null)
+                            .show();
+                    } else if (which == 1) {
+                        // Xóa thông báo
+                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                            .setTitle("Xóa thông báo")
+                            .setMessage("Bạn có chắc chắn muốn xóa thông báo này không?")
+                            .setPositiveButton("Xóa", (d, w) -> notificationsViewModel.deleteNotification(item))
+                            .setNegativeButton("Hủy", null)
+                            .show();
+                    }
                 })
+                .setNegativeButton("Đóng", null)
+                .show();
+        });
+        adapter.setOnDeleteAllListener(() -> {
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Xóa tất cả thông báo")
+                .setMessage("Bạn có chắc chắn muốn xóa tất cả thông báo không?")
+                .setPositiveButton("Xóa tất cả", (dialog, which) -> notificationsViewModel.deleteAllNotifications())
                 .setNegativeButton("Hủy", null)
                 .show();
         });
@@ -54,6 +77,14 @@ public class NotificationsFragment extends Fragment {
         notificationsViewModel.getNotifications().observe(getViewLifecycleOwner(), list -> {
             adapter.setData(list);
             adapter.notifyDataSetChanged();
+            View tvNoNotifications = view.findViewById(R.id.tvNoNotifications);
+            if (list == null || list.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                tvNoNotifications.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                tvNoNotifications.setVisibility(View.GONE);
+            }
         });
         notificationsViewModel.fetchNotifications(1, 20);
         // TODO: Xử lý Toolbar và BottomNavigationView nếu cần (nên đặt ở MainActivity)

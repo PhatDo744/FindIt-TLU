@@ -21,6 +21,15 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
     private static final String TAG = "ImagePagerAdapter";
     private List<String> imageUrls;
     private Context context;
+    private OnImageClickListener onImageClickListener;
+
+    public interface OnImageClickListener {
+        void onImageClick(String imageUrl);
+    }
+
+    public void setOnImageClickListener(OnImageClickListener listener) {
+        this.onImageClickListener = listener;
+    }
 
     public ImagePagerAdapter(Context context, List<String> imageUrls) {
         this.context = context;
@@ -71,6 +80,12 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
                     }
                 })
                 .into(holder.imageView);
+
+        holder.imageView.setOnClickListener(v -> {
+            if (onImageClickListener != null) {
+                onImageClickListener.onImageClick(url);
+            }
+        });
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.example.findittlu.utils.CustomToast;
 import android.webkit.WebView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.findittlu.adapter.ImagePagerAdapter;
+import androidx.appcompat.widget.Toolbar;
 
 public class DetailFragment extends Fragment {
     private DetailViewModel detailViewModel;
@@ -63,6 +64,8 @@ public class DetailFragment extends Fragment {
             ((TextView) view.findViewById(R.id.detail_user_email)).setText(data.userEmail);
             ((TextView) view.findViewById(R.id.detail_user_phone)).setText(data.userPhone);
             ((TextView) view.findViewById(R.id.detail_category)).setText(data.categoryName);
+            // Hiển thị ngày đăng động
+            ((TextView) view.findViewById(R.id.detail_user_date)).setText("Đăng ngày " + (data.createdAt != null ? data.createdAt : ""));
             // Hiển thị avatar user
             ImageView avatarView = view.findViewById(R.id.detail_user_avatar);
             if (data.userAvatarUrl != null && !data.userAvatarUrl.isEmpty()) {
@@ -75,7 +78,21 @@ public class DetailFragment extends Fragment {
             // Hiển thị ảnh sản phẩm
             if (data.imageUrls != null && !data.imageUrls.isEmpty()) {
                 android.util.Log.d("DetailFragment", "Setting up image pager with " + data.imageUrls.size() + " images");
-                imagePager.setAdapter(new ImagePagerAdapter(requireContext(), data.imageUrls));
+                ImagePagerAdapter adapter = new ImagePagerAdapter(requireContext(), data.imageUrls);
+                adapter.setOnImageClickListener(clickedImageUrl -> {
+                    // Hiển thị dialog toàn màn hình
+                    android.app.Dialog dialog = new android.app.Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                    dialog.setContentView(R.layout.dialog_fullscreen_image);
+                    ImageView imgFull = dialog.findViewById(R.id.img_fullscreen);
+                    com.bumptech.glide.Glide.with(requireContext())
+                        .load(clickedImageUrl)
+                        .placeholder(R.drawable.bg_avatar_placeholder)
+                        .error(R.drawable.bg_avatar_placeholder)
+                        .into(imgFull);
+                    imgFull.setOnClickListener(v2 -> dialog.dismiss());
+                    dialog.show();
+                });
+                imagePager.setAdapter(adapter);
                 imagePager.setVisibility(View.VISIBLE);
             } else {
                 android.util.Log.d("DetailFragment", "No images to display");
@@ -140,5 +157,10 @@ public class DetailFragment extends Fragment {
         mapWebView.getSettings().setJavaScriptEnabled(true);
         String mapHtml = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6374893374127!2d105.82223027596942!3d21.0071636885187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac8109765ba5%3A0xd84740ece05680ee!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBUaOG7p3kgbOG7o2k!5e0!3m2!1svi!2s!4v1750478363302!5m2!1svi!2s\" width=\"100%\" height=\"200\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>";
         mapWebView.loadData(mapHtml, "text/html", "UTF-8");
+
+        androidx.appcompat.widget.Toolbar toolbar = view.findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> {
+            requireActivity().onBackPressed();
+        });
     }
 } 

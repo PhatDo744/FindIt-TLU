@@ -16,6 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            app:navigationIcon="@drawable/ic_arrow_back"
             app:title="Chi tiết đồ vật"
             app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -67,19 +68,20 @@
                     android:padding="12dp" />
 
                 <!-- Dòng icon loại, ngày, thời gian -->
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:paddingBottom="8dp">
+
                     <ImageView
+                        android:id="@+id/icon_tag"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_tag"
                         app:tint="@color/text_secondary" />
+
                     <TextView
                         android:id="@+id/detail_category"
                         android:layout_width="wrap_content"
@@ -89,11 +91,14 @@
                         android:textSize="14sp"
                         android:layout_marginStart="4dp"
                         android:layout_marginEnd="12dp" />
+
                     <ImageView
+                        android:id="@+id/icon_calendar"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_calendar"
                         app:tint="@color/text_secondary" />
+
                     <TextView
                         android:id="@+id/detail_date"
                         android:layout_width="wrap_content"
@@ -103,11 +108,14 @@
                         android:textSize="14sp"
                         android:layout_marginStart="4dp"
                         android:layout_marginEnd="12dp" />
+
                     <ImageView
+                        android:id="@+id/icon_clock"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_clock"
                         app:tint="@color/text_secondary" />
+
                     <TextView
                         android:id="@+id/detail_time_ago"
                         android:layout_width="wrap_content"
@@ -116,7 +124,20 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:layout_marginStart="4dp" />
-                </LinearLayout>
+
+                    <androidx.constraintlayout.helper.widget.Flow
+                        android:id="@+id/flow_icons"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="icon_tag,detail_category,icon_calendar,detail_date,icon_clock,detail_time_ago"
+                        app:flow_wrapMode="chain"
+                        app:flow_horizontalGap="8dp"
+                        app:flow_verticalGap="8dp"
+                        app:flow_horizontalAlign="start"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Mô tả -->
                 <TextView

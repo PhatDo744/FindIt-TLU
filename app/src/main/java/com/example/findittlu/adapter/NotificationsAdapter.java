@@ -33,12 +33,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         this.longClickListener = listener;
     }
 
+    public interface OnDeleteAllListener {
+        void onDeleteAll();
+    }
+    private OnDeleteAllListener deleteAllListener;
+    public void setOnDeleteAllListener(OnDeleteAllListener listener) {
+        this.deleteAllListener = listener;
+    }
+
     public NotificationsAdapter(List<NotificationItem> notificationList) {
         this.notificationList = notificationList;
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (notificationList.isEmpty()) return TYPE_NOTIFICATION; // Không có footer
         if (position == notificationList.size()) return TYPE_FOOTER;
         return TYPE_NOTIFICATION;
     }
@@ -61,14 +70,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             footerHolder.btnMarkAllAsRead.setOnClickListener(v -> {
                 if (markAllAsReadListener != null) markAllAsReadListener.onMarkAllAsRead();
             });
+            android.widget.Button btnDeleteAll = holder.itemView.findViewById(R.id.btnDeleteAllNotifications);
+            btnDeleteAll.setOnClickListener(v -> {
+                if (deleteAllListener != null) deleteAllListener.onDeleteAll();
+            });
             return;
         }
         NotificationItem item = notificationList.get(position);
         holder.content.setText(item.getContent());
-        holder.time.setText(item.getTime());
+        holder.time.setText(item.getFormattedTime());
         switch (item.getType()) {
             case NotificationItem.TYPE_SUCCESS:
-                holder.icon.setImageResource(R.drawable.ic_check_circle);
+                holder.icon.setImageResource(R.drawable.ic_check);
                 holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.primary_blue));
                 break;
             case NotificationItem.TYPE_INFO:
@@ -76,7 +89,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.icon.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.primary_blue));
                 break;
             case NotificationItem.TYPE_WARNING:
-                holder.icon.setImageResource(R.drawable.ic_warning_blue);
+                holder.icon.setImageResource(R.drawable.ic_warning_amber);
                 break;
             case NotificationItem.TYPE_DELETED:
                 holder.icon.setImageResource(R.drawable.ic_delete);
@@ -99,7 +112,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public int getItemCount() {
-        return notificationList.size() + 1; // +1 cho footer
+        // Nếu không có thông báo thì không hiển thị footer
+        return notificationList.isEmpty() ? 0 : notificationList.size() + 1;
     }
 
     public static class NotificationViewHolder extends RecyclerView.ViewHolder {
@@ -122,5 +136,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     public void setData(List<NotificationItem> list) {
         this.notificationList = list;
+        notifyDataSetChanged();
     }
 } 

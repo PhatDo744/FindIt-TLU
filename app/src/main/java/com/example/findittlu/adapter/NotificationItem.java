@@ -25,4 +25,19 @@ public class NotificationItem {
     public String getContent() { return content; }
     public String getTime() { return time; }
     public boolean isRead() { return isRead; }
+
+    // Trả về ngày dạng dd-MM-yyyy
+    public String getFormattedTime() {
+        if (time == null) return "";
+        try {
+            java.text.SimpleDateFormat isoFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", java.util.Locale.getDefault());
+            isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+            java.util.Date date = isoFormat.parse(time);
+            java.text.SimpleDateFormat outputFormat = new java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault());
+            return outputFormat.format(date);
+        } catch (Exception e) {
+            // Nếu lỗi parse, trả về chuỗi gốc
+            return time;
+        }
+    }
 } 

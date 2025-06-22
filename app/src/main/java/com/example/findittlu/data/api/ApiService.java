@@ -159,4 +159,10 @@ public interface ApiService {
 
     @GET("items/search/{keyword}")
     Call<PostListResponse> searchItems(@Path("keyword") String keyword);
+
+    @DELETE("notifications/{id}")
+    Call<Void> deleteNotification(@Path("id") String notificationId);
+
+    @DELETE("notifications")
+    Call<Void> deleteAllNotifications();
 }

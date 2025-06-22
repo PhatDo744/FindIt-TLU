@@ -96,4 +96,36 @@ public class NotificationsViewModel extends ViewModel {
             }
         });
     }
+    // Xóa 1 thông báo
+    public void deleteNotification(NotificationItem item) {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().deleteNotification(item.getId()).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    fetchNotifications(1, 20);
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isApiConnected.setValue(false);
+            }
+        });
+    }
+    // Xóa tất cả thông báo
+    public void deleteAllNotifications() {
+        isApiConnected.setValue(true);
+        RetrofitClient.getApiService().deleteAllNotifications().enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    fetchNotifications(1, 20);
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isApiConnected.setValue(false);
+            }
+        });
+    }
 } 

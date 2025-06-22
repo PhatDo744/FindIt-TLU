@@ -1,9 +1,20 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="17dp"
-    android:height="16dp"
-    android:viewportWidth="17"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="16"
     android:viewportHeight="16">
+
+  <!-- Nắp thùng -->
   <path
-      android:pathData="M4.647,12.667C4.647,13.4 5.247,14 5.98,14H11.313C12.047,14 12.647,13.4 12.647,12.667V4.667H4.647V12.667ZM13.313,2.667H10.98L10.313,2H6.98L6.313,2.667H3.98V4H13.313V2.667Z"
-      android:fillColor="#E53935"/>
+      android:fillColor="@color/primary_blue"
+      android:fillType="nonZero"
+      android:pathData="M5.5,1a1,1 0 0 0 -1,1v1H1.5a.5.5 0 0 0 0,1h13a.5.5 0 0 0 0,-1H11.5v-1a1,1 0 0 0 -1,-1h-5zM6.5,2h3v1h-3V2z" />
+
+  <!-- Thân thùng rỗng với viền -->
+  <path
+      android:strokeColor="@color/primary_blue"
+      android:strokeWidth="1"
+      android:fillColor="@android:color/transparent"
+      android:pathData="M2.5,5h11l-1,9a1,1 0 0 1 -1,1h-7a1,1 0 0 1 -1,-1z" />
+
 </vector>
