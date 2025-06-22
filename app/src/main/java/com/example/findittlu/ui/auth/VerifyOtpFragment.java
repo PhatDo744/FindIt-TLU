@@ -53,6 +53,8 @@ public class VerifyOtpFragment extends Fragment {
         viewModel.getVerifyOtpResult().observe(getViewLifecycleOwner(), this::handleVerifyApiResponse);
         viewModel.getForgotPasswordResult().observe(getViewLifecycleOwner(), this::handleResendApiResponse);
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), this::handleLoading);
+        viewModel.getCanResendOtp().observe(getViewLifecycleOwner(), this::handleCanResendOtp);
+        viewModel.getResendCountdown().observe(getViewLifecycleOwner(), this::handleResendCountdown);
     }
 
     private void handleVerifyOtp() {
@@ -67,8 +69,10 @@ public class VerifyOtpFragment extends Fragment {
     }
 
     private void resendOtp() {
-        CustomToast.showCustomToast(requireContext(), "Thông báo", "Đang gửi lại OTP...");
-        viewModel.forgotPassword(); // Re-use the forgotPassword method to send a new OTP
+        if (viewModel.getCanResendOtp().getValue() != null && viewModel.getCanResendOtp().getValue()) {
+            CustomToast.showCustomToast(requireContext(), "Thông báo", "Đang gửi lại OTP...");
+            viewModel.forgotPassword(); // Re-use the forgotPassword method to send a new OTP
+        }
     }
 
     private void handleVerifyApiResponse(VoidApiResponse apiResponse) {
@@ -81,9 +85,8 @@ public class VerifyOtpFragment extends Fragment {
                 navController.navigate(R.id.action_verifyOtpFragment_to_resetPasswordFragment);
                 break;
             case ERROR:
-                 // TODO: Parse error message for specific errors like 'incorrect' or 'expired'
                 binding.otpInputLayout.setError("OTP không chính xác hoặc đã hết hạn");
-                CustomToast.showCustomToast(requireContext(), "Lỗi", "OTP không chính xác hoặc đã hết hạn", true);
+                CustomToast.showCustomToast(requireContext(), "Lỗi", apiResponse.errorMessage, true);
                 viewModel.clearVerifyOtpResult();
                 break;
             case FAILURE:
@@ -116,6 +119,23 @@ public class VerifyOtpFragment extends Fragment {
         binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         binding.verifyButton.setEnabled(!isLoading);
         binding.resendOtpTextView.setEnabled(!isLoading);
+    }
+    
+    private void handleCanResendOtp(Boolean canResend) {
+        if (canResend != null) {
+            binding.resendOtpTextView.setEnabled(canResend);
+            if (canResend) {
+                binding.resendOtpTextView.setText("Gửi lại OTP");
+                binding.resendOtpTextView.setTextColor(getResources().getColor(R.color.primary_blue));
+            }
+        }
+    }
+    
+    private void handleResendCountdown(Integer countdown) {
+        if (countdown != null && countdown > 0) {
+            binding.resendOtpTextView.setText("Gửi lại OTP (" + countdown + "s)");
+            binding.resendOtpTextView.setTextColor(getResources().getColor(R.color.text_secondary));
+        }
     }
 
     @Override

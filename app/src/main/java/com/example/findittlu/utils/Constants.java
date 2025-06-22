@@ -9,10 +9,10 @@ public class Constants {
     public static final String BASE_URL_LOCAL_QUANG = "http://192.168.1.4:8000";
     public static final String BASE_URL_LOCAL_PHAT = "http://192.168.1.3:8000";
     public static final String BASE_URL_EMULATOR = "http://10.0.2.2:8000";
-    public static final String BASE_URL_PRODUCTION = "https://findit-tlu.com";
+    public static final String BASE_URL_PRODUCTION = "http://findit-tlu.id.vn";
     
     // Chọn môi trường hiện tại - thay đổi ở đây để chuyển môi trường
-    public static final String CURRENT_ENVIRONMENT = "LOCAL_PHAT"; // LOCAL_QUANG, LOCAL_PHAT, EMULATOR, PRODUCTION
+    public static final String CURRENT_ENVIRONMENT = "PRODUCTION"; // LOCAL_QUANG, LOCAL_PHAT, EMULATOR, PRODUCTION
     
     /**
      * Lấy BASE_URL dựa trên môi trường hiện tại

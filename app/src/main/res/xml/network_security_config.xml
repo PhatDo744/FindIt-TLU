@@ -6,5 +6,6 @@
         <domain includeSubdomains="true">192.168.1.4</domain>
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">192.168.1.5</domain>
+        <domain includeSubdomains="true">findit-tlu.id.vn</domain>
     </domain-config>
 </network-security-config> 

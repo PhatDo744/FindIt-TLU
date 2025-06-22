@@ -1,10 +1,10 @@
 package com.example.findittlu.ui.auth;
 
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +46,37 @@ public class ResetPasswordFragment extends Fragment {
     private void setListeners() {
         binding.resetPasswordButton.setOnClickListener(v -> handleResetPassword());
         binding.backButton.setOnClickListener(v -> navController.navigateUp());
+        
+        // Clear errors when user starts typing
+        binding.passwordEditText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (binding.passwordInputLayout.getError() != null) {
+                    binding.passwordInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
+        
+        binding.confirmPasswordEditText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (binding.confirmPasswordInputLayout.getError() != null) {
+                    binding.confirmPasswordInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
     }
 
     private void observeViewModel() {
@@ -54,13 +85,11 @@ public class ResetPasswordFragment extends Fragment {
     }
 
     private void handleResetPassword() {
-        String password = binding.passwordEditText.getText().toString();
-        String confirmPassword = binding.confirmPasswordEditText.getText().toString();
+        String password = binding.passwordEditText.getText().toString().trim();
+        String confirmPassword = binding.confirmPasswordEditText.getText().toString().trim();
 
-        boolean isPasswordValid = validatePassword(binding.passwordInputLayout, password);
-        boolean isConfirmPasswordValid = validateConfirmPassword(binding.confirmPasswordInputLayout, password, confirmPassword);
-
-        if (isPasswordValid && isConfirmPasswordValid) {
+        if (validatePassword(binding.passwordInputLayout, password) &&
+            validateConfirmPassword(binding.confirmPasswordInputLayout, password, confirmPassword)) {
             viewModel.resetPassword(password, confirmPassword);
         }
     }
@@ -74,6 +103,25 @@ public class ResetPasswordFragment extends Fragment {
             layout.setError("Mật khẩu phải có ít nhất 8 ký tự");
             return false;
         }
+        
+        // Kiểm tra độ mạnh mật khẩu
+        boolean hasUpperCase = false;
+        boolean hasLowerCase = false;
+        boolean hasDigit = false;
+        boolean hasSpecialChar = false;
+        
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) hasUpperCase = true;
+            else if (Character.isLowerCase(c)) hasLowerCase = true;
+            else if (Character.isDigit(c)) hasDigit = true;
+            else hasSpecialChar = true;
+        }
+        
+        if (!hasUpperCase || !hasLowerCase || !hasDigit) {
+            layout.setError("Mật khẩu phải chứa chữ hoa, chữ thường và số");
+            return false;
+        }
+        
         layout.setError(null);
         return true;
     }
@@ -102,7 +150,20 @@ public class ResetPasswordFragment extends Fragment {
                 navController.popBackStack(R.id.loginFragment, false);
                 break;
             case ERROR:
-                CustomToast.showCustomToast(requireContext(), "Lỗi", "Không thể đặt lại mật khẩu. " + apiResponse.errorMessage, true);
+                // Hiển thị lỗi cụ thể từ server
+                String errorMessage = apiResponse.errorMessage != null ? apiResponse.errorMessage : "Không thể đặt lại mật khẩu";
+                CustomToast.showCustomToast(requireContext(), "Lỗi", errorMessage, true);
+                
+                // Nếu lỗi liên quan đến mật khẩu, hiển thị trên input
+                if (errorMessage.toLowerCase().contains("password") || 
+                    errorMessage.toLowerCase().contains("mật khẩu")) {
+                    binding.passwordInputLayout.setError(errorMessage);
+                } else if (errorMessage.toLowerCase().contains("token") || 
+                          errorMessage.toLowerCase().contains("otp")) {
+                    // Nếu OTP hết hạn, quay về màn hình verify OTP
+                    CustomToast.showCustomToast(requireContext(), "Lỗi", "OTP đã hết hạn. Vui lòng thử lại.", true);
+                    navController.navigateUp();
+                }
                 viewModel.clearResetPasswordResult();
                 break;
             case FAILURE:
@@ -115,6 +176,7 @@ public class ResetPasswordFragment extends Fragment {
     private void handleLoading(Boolean isLoading) {
         binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         binding.resetPasswordButton.setEnabled(!isLoading);
+        binding.resetPasswordButton.setText(isLoading ? "Đang xử lý..." : "Đặt lại mật khẩu");
     }
 
     @Override

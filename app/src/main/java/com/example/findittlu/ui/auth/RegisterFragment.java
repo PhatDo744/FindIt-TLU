@@ -139,6 +139,9 @@ public class RegisterFragment extends Fragment {
                     CustomToast.showCustomToast(getContext(), "Đăng ký thành công", "Vui lòng đăng nhập.");
                     androidx.navigation.NavController navController = androidx.navigation.Navigation.findNavController(requireActivity(), com.example.findittlu.R.id.nav_host_fragment);
                     navController.navigate(com.example.findittlu.R.id.loginFragment);
+                } else if (response != null && response.getMessage() != null) {
+                    // Hiển thị thông báo lỗi từ API
+                    CustomToast.showCustomToast(getContext(), "Đăng ký thất bại", response.getMessage());
                 } else {
                     CustomToast.showCustomToast(getContext(), "Đăng ký thất bại", "Kiểm tra lại thông tin.");
                 }

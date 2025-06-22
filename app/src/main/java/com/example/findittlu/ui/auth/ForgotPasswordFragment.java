@@ -50,6 +50,22 @@ public class ForgotPasswordFragment extends Fragment {
         binding.sendButton.setOnClickListener(v -> handleSendRequest());
         binding.backButton.setOnClickListener(v -> navController.navigateUp());
         binding.loginTextView.setOnClickListener(v -> navController.navigate(R.id.action_forgotPasswordFragment_to_loginFragment));
+        
+        // Clear error when user starts typing
+        binding.emailEditText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (binding.emailInputLayout.getError() != null) {
+                    binding.emailInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
     }
 
     private void observeViewModel() {
@@ -92,7 +108,15 @@ public class ForgotPasswordFragment extends Fragment {
                 navController.navigate(R.id.action_forgotPasswordFragment_to_verifyOtpFragment);
                 break;
             case ERROR:
-                CustomToast.showCustomToast(requireContext(), "Lỗi", "Không thể gửi OTP. " + apiResponse.errorMessage, true);
+                // Hiển thị lỗi cụ thể từ server
+                String errorMessage = apiResponse.errorMessage != null ? apiResponse.errorMessage : "Không thể gửi OTP";
+                CustomToast.showCustomToast(requireContext(), "Lỗi", errorMessage, true);
+                
+                // Nếu lỗi liên quan đến email, hiển thị trên input
+                if (errorMessage.toLowerCase().contains("email") || 
+                    errorMessage.toLowerCase().contains("không tồn tại")) {
+                    binding.emailInputLayout.setError(errorMessage);
+                }
                 viewModel.clearForgotPasswordResult();
                 break;
             case FAILURE:
@@ -105,6 +129,7 @@ public class ForgotPasswordFragment extends Fragment {
     private void handleLoading(Boolean isLoading) {
         binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         binding.sendButton.setEnabled(!isLoading);
+        binding.sendButton.setText(isLoading ? "Đang gửi..." : "Gửi");
     }
 
     @Override
