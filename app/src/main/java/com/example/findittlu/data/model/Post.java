@@ -327,8 +327,23 @@ public class Post {
                 jsonObject.addProperty("status", post.status);
             }
             if (post.dateLostOrFound != null) {
+                // Sử dụng Calendar để đảm bảo ngày không bị ảnh hưởng timezone
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(post.dateLostOrFound);
+                cal.set(Calendar.HOUR_OF_DAY, 12); // Set giờ về 12:00
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                jsonObject.addProperty("date_lost_or_found", sdf.format(post.dateLostOrFound));
+                sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC")); // Sử dụng UTC để tránh timezone
+                String formattedDate = sdf.format(cal.getTime());
+                
+                android.util.Log.d("PostSerializer", "Original date: " + post.dateLostOrFound);
+                android.util.Log.d("PostSerializer", "Calendar date: " + cal.getTime());
+                android.util.Log.d("PostSerializer", "Formatted date: " + formattedDate);
+                
+                jsonObject.addProperty("date_lost_or_found", formattedDate);
             }
             jsonObject.addProperty("is_contact_info_public", post.isContactInfoPublic);
             

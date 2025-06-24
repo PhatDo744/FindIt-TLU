@@ -31,7 +31,12 @@ public class MainActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-                if (destination.getId() == R.id.loginFragment || destination.getId() == R.id.registerFragment) {
+                // Ẩn bottom navigation cho các fragment auth và quên mật khẩu
+                if (destination.getId() == R.id.loginFragment || 
+                    destination.getId() == R.id.registerFragment ||
+                    destination.getId() == R.id.forgotPasswordFragment ||
+                    destination.getId() == R.id.verifyOtpFragment ||
+                    destination.getId() == R.id.resetPasswordFragment) {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);
@@ -43,12 +48,16 @@ public class MainActivity extends AppCompatActivity {
             if (isVisible) {
                 bottomNavigationView.setVisibility(View.GONE);
             } else {
-                // Chỉ hiện lại nếu không phải màn hình login/register
+                // Chỉ hiện lại nếu không phải màn hình auth và quên mật khẩu
                 NavHostFragment hostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                 if (hostFragment != null) {
                     NavController navController = hostFragment.getNavController();
                     int currentDestinationId = navController.getCurrentDestination().getId();
-                    if (currentDestinationId != R.id.loginFragment && currentDestinationId != R.id.registerFragment) {
+                    if (currentDestinationId != R.id.loginFragment && 
+                        currentDestinationId != R.id.registerFragment && 
+                        currentDestinationId != R.id.forgotPasswordFragment &&
+                        currentDestinationId != R.id.verifyOtpFragment &&
+                        currentDestinationId != R.id.resetPasswordFragment) {
                         bottomNavigationView.setVisibility(View.VISIBLE);
                     }
                 }

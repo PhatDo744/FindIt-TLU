@@ -232,6 +232,12 @@ public class PostRepository {
         }
         if (USE_REAL_API) {
             android.util.Log.d("PostRepository", "Sử dụng REAL API để tạo post");
+            android.util.Log.d("PostRepository", "Sending post data:");
+            android.util.Log.d("PostRepository", "title: " + post.getTitle());
+            android.util.Log.d("PostRepository", "itemType: " + post.getItemType());
+            android.util.Log.d("PostRepository", "status: " + post.getStatus());
+            android.util.Log.d("PostRepository", "categoryId: " + post.getCategoryId());
+            
             RetrofitClient.getApiService().createPost(post).enqueue(new Callback<PostResponse>() {
                 @Override
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
@@ -244,6 +250,9 @@ public class PostRepository {
                         }
                     }
                     if (response.isSuccessful() && response.body() != null) {
+                        android.util.Log.d("DEBUG_CreatePost", "Server response post:");
+                        android.util.Log.d("DEBUG_CreatePost", "itemType: " + response.body().getPost().getItemType());
+                        android.util.Log.d("DEBUG_CreatePost", "status: " + response.body().getPost().getStatus());
                         data.setValue(response.body().getPost());
                     } else {
                         data.setValue(null);
@@ -338,18 +347,33 @@ public class PostRepository {
         RetrofitClient.getApiService().updatePostWithMap(id, postData).enqueue(new Callback<PostResponse>() {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                android.util.Log.d("PostRepository", "Update response: code=" + response.code() + ", message=" + response.message());
+                android.util.Log.d("PostRepository", "Response body: " + response.body());
+                
                 if (response.isSuccessful() && response.body() != null) {
-                    android.util.Log.d("PostRepository", "Update successful");
+                    android.util.Log.d("PostRepository", "Update successful - Response body not null");
+                    android.util.Log.d("PostRepository", "Post from response: " + response.body().getPost());
                     data.setValue(response.body().getPost());
                 } else {
                     android.util.Log.e("PostRepository", "Update failed: " + response.code() + " " + response.message());
+                    if (!response.isSuccessful()) {
+                        try {
+                            String errorBody = response.errorBody().string();
+                            android.util.Log.e("PostRepository", "Error body: " + errorBody);
+                        } catch (Exception e) {
+                            android.util.Log.e("PostRepository", "Cannot read error body", e);
+                        }
+                    }
+                    if (response.body() == null) {
+                        android.util.Log.e("PostRepository", "Response body is null");
+                    }
                     data.setValue(null);
                 }
             }
 
             @Override
             public void onFailure(Call<PostResponse> call, Throwable t) {
-                android.util.Log.e("PostRepository", "Update error: " + t.getMessage());
+                android.util.Log.e("PostRepository", "Update error: " + t.getMessage(), t);
                 data.setValue(null);
             }
         });

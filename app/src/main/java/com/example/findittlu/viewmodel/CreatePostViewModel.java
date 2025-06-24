@@ -75,19 +75,36 @@ public class CreatePostViewModel extends AndroidViewModel {
         // Parse date
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            sdf.setLenient(false); // Không cho phép parse linh hoạt
             Date dateLostOrFound = sdf.parse(date);
-            newPost.setDateLostOrFound(dateLostOrFound);
+            
+            // Debug log
+            android.util.Log.d("CreatePostViewModel", "Parsing date: " + date);
+            android.util.Log.d("CreatePostViewModel", "Parsed date: " + dateLostOrFound);
+            
+            // Đảm bảo ngày không bị ảnh hưởng bởi timezone
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateLostOrFound);
+            cal.set(Calendar.HOUR_OF_DAY, 12); // Set giờ về 12:00 để tránh timezone
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            
+            newPost.setDateLostOrFound(cal.getTime());
+            android.util.Log.d("CreatePostViewModel", "Final date: " + cal.getTime());
+            
         } catch (ParseException e) {
+            android.util.Log.e("CreatePostViewModel", "Error parsing date: " + e.getMessage());
             newPost.setDateLostOrFound(new Date());
         }
         newPost.setCreatedAt(new Date());
         newPost.setUpdatedAt(new Date());
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DAY_OF_MONTH, 14);
-        newPost.setExpirationDate(cal.getTime());
+        Calendar calExpiration = Calendar.getInstance();
+        calExpiration.setTime(new Date());
+        calExpiration.add(Calendar.DAY_OF_MONTH, 14);
+        newPost.setExpirationDate(calExpiration.getTime());
         newPost.setContactInfoPublic(isContactInfoPublic);
-        newPost.setItemType(status.equals("FOUND") ? "found" : "lost");
+        newPost.setItemType(status.equalsIgnoreCase("found") ? "found" : "lost");
         postRepository.createPost(newPost);
         postCreationState.postValue(Resource.success(newPost));
     }
@@ -105,18 +122,41 @@ public class CreatePostViewModel extends AndroidViewModel {
         newPost.setDescription(description);
         newPost.setLocationDescription(location);
         newPost.setCategoryId(categoryId);
-        newPost.setItemType(status.equals("FOUND") ? "found" : "lost");
+        newPost.setItemType(status.equalsIgnoreCase("found") ? "found" : "lost");
         newPost.setContactInfoPublic(isContactInfoPublic);
+
+        // Debug log
+        android.util.Log.d("CreatePostViewModel", "Creating post with status: " + status + ", itemType: " + newPost.getItemType());
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            newPost.setDateLostOrFound(sdf.parse(date));
+            sdf.setLenient(false); // Không cho phép parse linh hoạt
+            Date dateLostOrFound = sdf.parse(date);
+            
+            // Debug log
+            android.util.Log.d("CreatePostViewModel", "Parsing date: " + date);
+            android.util.Log.d("CreatePostViewModel", "Parsed date: " + dateLostOrFound);
+            
+            // Đảm bảo ngày không bị ảnh hưởng bởi timezone
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateLostOrFound);
+            cal.set(Calendar.HOUR_OF_DAY, 12); // Set giờ về 12:00 để tránh timezone
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            
+            newPost.setDateLostOrFound(cal.getTime());
+            android.util.Log.d("CreatePostViewModel", "Final date: " + cal.getTime());
+            
         } catch (ParseException e) {
+            android.util.Log.e("CreatePostViewModel", "Error parsing date: " + e.getMessage());
             newPost.setDateLostOrFound(new Date());
         }
 
         postRepository.createPost(newPost).observeForever(post -> {
             if (post != null && post.getId() > 0) {
+                // Debug log response
+                android.util.Log.d("CreatePostViewModel", "Server response - itemType: " + post.getItemType() + ", status: " + post.getStatus());
                 postCreationState.postValue(Resource.success(post)); // Trả về post đã tạo
                 if (imageUris != null && !imageUris.isEmpty()) {
                     uploadImages(post.getId(), imageUris);

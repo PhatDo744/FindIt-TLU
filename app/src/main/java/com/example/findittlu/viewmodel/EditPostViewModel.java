@@ -114,6 +114,18 @@ public class EditPostViewModel extends AndroidViewModel {
 
         // Gọi API với Map thay vì Post object
         postRepository.updatePostWithMap(id, postData).observeForever(updatedPost -> {
+            android.util.Log.d("EditPostViewModel", "Update response received:");
+            android.util.Log.d("EditPostViewModel", "updatedPost: " + updatedPost);
+            android.util.Log.d("EditPostViewModel", "updatedPost != null: " + (updatedPost != null));
+            
+            if (updatedPost != null) {
+                android.util.Log.d("EditPostViewModel", "Update successful - Post ID: " + updatedPost.getId());
+                android.util.Log.d("EditPostViewModel", "Update successful - Title: " + updatedPost.getTitle());
+                android.util.Log.d("EditPostViewModel", "Update successful - Status: " + updatedPost.getStatus());
+            } else {
+                android.util.Log.e("EditPostViewModel", "Update failed - updatedPost is null");
+            }
+            
             updateResult.setValue(updatedPost != null);
         });
     }
